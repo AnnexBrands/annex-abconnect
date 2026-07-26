@@ -1,0 +1,29 @@
+[
+  {
+    "noteID": 5766382,
+    "isImportant": false,
+    "comments": "sanitized text 816",
+    "category": "bdff4ec5-0f8a-4745-8f74-4a6f53c69302",
+    "dueDate": null,
+    "jobId": null,
+    "crmContactId": null,
+    "contactId": null,
+    "companyId": "5de36dda-9c15-a370-88a4-a0ad1a3c86d3",
+    "userID": null,
+    "importance": null,
+    "author": "Brett",
+    "dueDates": null,
+    "categoryName": "Devon Dunmore",
+    "createdDate": "2022-10-26T08:44:35.543000",
+    "createdBy": "devon.dunmore",
+    "modifiedBy": null,
+    "modifiyDate": null,
+    "franchiseID": null,
+    "isCompleted": false,
+    "isGlobal": false,
+    "isShared": false,
+    "assignedContactNames": null,
+    "assignedUsers": [],
+    "isJobLevel": false
+  }
+]

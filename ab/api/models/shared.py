@@ -1,0 +1,145 @@
+"""Shared response and request models used across multiple endpoints."""
+
+from __future__ import annotations
+
+import logging
+from typing import Generic, List, Optional, TypeVar, Union
+
+from pydantic import Field
+
+from ab.api.models.base import ResponseModel
+from ab.api.models.mixins import PaginatedRequestMixin, SortableRequestMixin
+from ab.api.models.shipments import ShipmentWeight
+
+logger = logging.getLogger(__name__)
+
+T = TypeVar("T")
+
+
+class BookedDocument(ResponseModel):
+    """A document object returned by booking / label-generating operations.
+
+    The ACPortal book response is undocumented in swagger; these fields were
+    observed live (UPS books of jobs 7036373 / 7107421). On a normal book the
+    label is a **path reference** (``documentPath`` + ``documentDescription``,
+    keyed off the PRO in ``ServiceBaseResponse.shipmentId``); ``byteCode`` is
+    only populated when the request sets ``documentByteCodeRequired=True``.
+    ``ResponseModel`` (``extra="allow"``) still tolerates any further keys.
+    """
+
+    document_id: Optional[Union[int, str]] = Field(
+        None, alias="documentId", description="Document identifier"
+    )
+    doc_type: Optional[str] = Field(None, alias="docType", description="Document type/category code")
+    document_type_name: Optional[str] = Field(
+        None, alias="documentTypeName", description="Human-readable document type name"
+    )
+    document_path: Optional[str] = Field(
+        None, alias="documentPath", description="Storage path/reference to the document (e.g. label PDF)"
+    )
+    document_description: Optional[str] = Field(
+        None, alias="documentDescription", description="Document description (e.g. 'Label <PRO>')"
+    )
+    byte_code: Optional[str] = Field(
+        None, alias="byteCode",
+        description="Base64-encoded document bytes (only when documentByteCodeRequired=True)",
+    )
+    error_message: Optional[str] = Field(
+        None, alias="errorMessage", description="Error detail for this document, if any"
+    )
+
+
+class ServiceBaseResponse(ResponseModel):
+    """Standard success/error wrapper returned by many ABConnect endpoints.
+
+    Supports boolean evaluation::
+
+        resp = api.some_endpoint(...)
+        if resp:
+            print("Success")
+        else:
+            resp.raise_for_error()
+    """
+
+    success: Optional[bool] = Field(None, description="Whether the operation succeeded")
+    error_message: Optional[str] = Field(None, alias="errorMessage", description="Error detail when success is False")
+    job_sub_management_status: Optional[dict] = Field(
+        None, alias="jobSubManagementStatus", description="Current job sub-management status"
+    )
+    documents: Optional[List[Union[str, BookedDocument]]] = Field(
+        None,
+        description="Documents from the operation — URL/reference strings or document objects (label byte codes)",
+    )
+    errors: Optional[dict] = Field(None, description="Detailed error object when success is False")
+    confirm_required: Optional[bool] = Field(
+        None, alias="confirmRequired", description="Whether user confirmation is needed"
+    )
+    notifications: Optional[List[str]] = Field(None, description="Notification messages for user")
+    shipment_id: Optional[str] = Field(None, alias="shipmentId", description="Shipment UUID created or modified")
+    shipment_accept_identifier: Optional[str] = Field(
+        None, alias="shipmentAcceptIdentifier", description="Carrier acceptance reference"
+    )
+    weight: Optional[ShipmentWeight] = Field(None, description="Shipment weight details")
+    total_net_charge_amount: Optional[float] = Field(
+        None, alias="totalNetChargeAmount", description="Total net charge amount"
+    )
+    currency_code: Optional[str] = Field(None, alias="currencyCode", description="Currency code (e.g., USD)")
+    international_info_required: Optional[bool] = Field(
+        None, alias="internationalInfoRequired", description="Whether international info is needed"
+    )
+    ship_out_date_required: Optional[bool] = Field(
+        None, alias="shipOutDateRequired", description="Whether ship-out date confirmation is needed"
+    )
+    fed_ex_express_freight_detail_required: Optional[bool] = Field(
+        None,
+        alias="fedExExpressFreightDetailRequired",
+        description="Whether FedEx Express freight details are required",
+    )
+    carrier_api: Optional[int] = Field(None, alias="carrierAPI", description="Carrier API type code")
+
+    def raise_for_error(self) -> None:
+        """Raise ``ValueError`` when ``success`` is ``False``."""
+        if self.success is False:
+            error_msg = self.error_message or "Unknown error"
+            logger.error("API request failed: %s", error_msg)
+            raise ValueError(error_msg)
+
+    def __bool__(self) -> bool:
+        return self.success is True
+
+
+class ServiceWarningResponse(ServiceBaseResponse):
+    """Extends :class:`ServiceBaseResponse` with an optional warning."""
+
+    warning_message: Optional[str] = Field(
+        None, alias="warningMessage", description="Warning present even on success"
+    )
+
+    def raise_for_error(self) -> None:
+        if self.warning_message:
+            logger.warning("API response warning: %s", self.warning_message)
+        super().raise_for_error()
+
+
+class PaginatedList(ResponseModel, Generic[T]):
+    """Generic pagination wrapper used by the Catalog API.
+
+    Example::
+
+        result: PaginatedList[CatalogExpandedDto] = api.catalog.list(page_number=1)
+        for item in result.items:
+            print(item.title)
+    """
+
+    items: List[T] = Field(default_factory=list, description="Page of results")
+    page_number: int = Field(0, alias="pageNumber", description="Current page (1-based)")
+    total_pages: int = Field(0, alias="totalPages", description="Total pages available")
+    total_items: int = Field(0, alias="totalItems", description="Total items across all pages")
+    has_previous_page: bool = Field(False, alias="hasPreviousPage")
+    has_next_page: bool = Field(False, alias="hasNextPage")
+
+
+class ListRequest(PaginatedRequestMixin, SortableRequestMixin):
+    """Shared request body for paginated list endpoints (Companies, Users)."""
+
+    filters: Optional[dict] = Field(None, description="Filter criteria")

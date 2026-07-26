@@ -1,0 +1,17 @@
+{
+  "schema": 2,
+  "_comment": "Committed run evidence. Schema 2 adds environment, mutation_class, fixture_sha256 (content-derived staleness) and the `evidence` block required for restoration-verified certification of mutating endpoints. See ab/progress/certification.py and docs/certification-evidence.md.",
+  "results": {
+    "api.address.validate": {
+      "status": "passing",
+      "checked": "2026-06-06",
+      "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
+      "fixture": "AddressIsValidResult.json",
+      "fixture_sha256": "641bb0d4e83af4d10153f3e5ed8aab035bece99c66c2fb20160a428976f69318",
+      "detail": null,
+      "sanitized": true
+    }
+  }
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "efb9c1ff-6630-afdd-37a4-8437eb75ab80",
+    "key": null,
+    "name": "1 - New Job",
+    "value": null
+  },
+  {
+    "id": "79474542-0944-a6e1-5847-0dcc737889c5",
+    "key": null,
+    "name": "8 - Carrier Pickup Complete",
+    "value": null
+  },
+  {
+    "id": "9c5f1d9b-4911-af19-fcc8-e42fe5eade1b",
+    "key": null,
+    "name": "2.2 Receiving",
+    "value": null
+  },
+  {
+    "id": "a727b426-ba58-a219-3824-31216e0f471c",
+    "key": null,
+    "name": "10 - Delivered",
+    "value": null
+  },
+  {
+    "id": "0404631e-c0de-a0be-f678-e7c0eafba6fc",
+    "key": null,
+    "name": "2.1 Pickup in progress",
+    "value": null
+  },
+  {
+    "id": "decfa66c-8dca-a93b-5e5f-86e0fba68a85",
+    "key": null,
+    "name": "6 - Storage",
+    "value": null
+  },
+  {
+    "id": "5d95a1f1-f0b9-ad8d-1c20-004b2cfe6d98",
+    "key": null,
+    "name": "9.1 Final Mile – Incoming",
+    "value": null
+  },
+  {
+    "id": "bd865e0a-08cd-a011-e290-33434df5dc4e",
+    "key": null,
+    "name": "9.4 Final Mile – In Progress",
+    "value": null
+  },
+  {
+    "id": "7ddf1a5f-375c-a271-ffec-7698df48ac7d",
+    "key": null,
+    "name": "9.3 Final Mile – Scheduled",
+    "value": null
+  },
+  {
+    "id": "e0c36889-9927-a997-55cb-9ba3691704ef",
+    "key": null,
+    "name": "2 - Scheduled",
+    "value": null
+  },
+  {
+    "id": "dc9f1883-b0a7-a1e1-a88a-fcff673b66c0",
+    "key": null,
+    "name": "7 - Carrier Pickup Scheduled",
+    "value": null
+  },
+  {
+    "id": "9fbaf121-0d3e-ac73-6638-77ea9e1dd3ce",
+    "key": null,
+    "name": "9 - Final Mile in Progress",
+    "value": null
+  },
+  {
+    "id": "d35ce086-c328-a840-8d9f-8eb243700516",
+    "key": null,
+    "name": "4 - Packaging Started",
+    "value": null
+  },
+  {
+    "id": "9f7d8558-883a-a2d2-5d95-2875b8985ba2",
+    "key": null,
+    "name": "9.2 Final Mile – Arrived",
+    "value": null
+  },
+  {
+    "id": "233a6a4c-c70c-a13e-bdc3-1e9b494b1ccf",
+    "key": null,
+    "name": "3 - Received",
+    "value": null
+  },
+  {
+    "id": "32cab0fc-10f1-a208-b949-a41c05ad7591",
+    "key": null,
+    "name": "5 - Packaging Completed",
+    "value": null
+  }
+]

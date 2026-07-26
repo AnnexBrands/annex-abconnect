@@ -1,0 +1,152 @@
+[
+  {
+    "id": "4a2f05d4-77bd-ad40-7a5e-51f2dee7374c",
+    "key": null,
+    "name": "Museum",
+    "value": null
+  },
+  {
+    "id": "7c4d21c1-e0ec-a992-bbfc-bc7b46e83a58",
+    "key": null,
+    "name": "Recreation",
+    "value": null
+  },
+  {
+    "id": "aab71943-4ed5-a403-3649-ef3d150b616f",
+    "key": null,
+    "name": "Manufacturing and Industrial",
+    "value": null
+  },
+  {
+    "id": "e11cfc3e-6f94-a3e0-0d71-8e9912036b56",
+    "key": null,
+    "name": "Business and Professional Services",
+    "value": null
+  },
+  {
+    "id": "b3e4e2d4-8d23-ac59-4b9c-b929c8c56000",
+    "key": null,
+    "name": "Transportation &amp; Logistics",
+    "value": null
+  },
+  {
+    "id": "c90091e3-07a4-a3d3-5c51-34a0950bd45c",
+    "key": null,
+    "name": "Energy and Utilities",
+    "value": null
+  },
+  {
+    "id": "f8d2d0de-b60e-a297-f1a7-802021b09745",
+    "key": null,
+    "name": "Retail",
+    "value": null
+  },
+  {
+    "id": "9fa1f935-364a-a5ef-749a-80824cc3d5d9",
+    "key": null,
+    "name": "Engineering",
+    "value": null
+  },
+  {
+    "id": "47dee77f-b646-a81a-c9c1-048dba2ef0ab",
+    "key": null,
+    "name": "Education",
+    "value": null
+  },
+  {
+    "id": "a123cc2f-a0ef-a94a-4a00-e7bbc7998195",
+    "key": null,
+    "name": "Healthcare",
+    "value": null
+  },
+  {
+    "id": "5f54884b-b8be-a1c9-4aaa-bb8e264fe25b",
+    "key": null,
+    "name": "Hospitality",
+    "value": null
+  },
+  {
+    "id": "d9e36db9-b8a5-a017-173a-255b1a3222ec",
+    "key": null,
+    "name": "Information Technology and Telecom",
+    "value": null
+  },
+  {
+    "id": "e26f9cbe-4fc9-ad05-1d0f-6a7a48a4c10b",
+    "key": null,
+    "name": "E-commerce",
+    "value": null
+  },
+  {
+    "id": "075e3fce-d77d-a23d-a34d-d1460d8e2624",
+    "key": null,
+    "name": "Equipment Broker",
+    "value": null
+  },
+  {
+    "id": "a76b6129-217f-af90-473a-e958d10dd0d7",
+    "key": null,
+    "name": "Student",
+    "value": null
+  },
+  {
+    "id": "a4357f48-7be3-a49b-a419-3eebab3a6430",
+    "key": null,
+    "name": "Auction (Business)",
+    "value": null
+  },
+  {
+    "id": "2cc311b2-2650-af8d-0c36-bdaab5759402",
+    "key": null,
+    "name": "Art and Antiques",
+    "value": null
+  },
+  {
+    "id": "213e51fc-64ea-a5d5-39e5-499e1c612fbc",
+    "key": null,
+    "name": "Residential Business",
+    "value": null
+  },
+  {
+    "id": "fab07608-d824-a7c9-7e4e-467d67826a38",
+    "key": null,
+    "name": "Other",
+    "value": null
+  },
+  {
+    "id": "feeca7bf-bb15-ad6f-8d05-a6fed33f027c",
+    "key": null,
+    "name": "Estate and Senior",
+    "value": null
+  },
+  {
+    "id": "c6f1795e-c926-a502-542f-e9c6a2a0d5af",
+    "key": null,
+    "name": "Interior Design",
+    "value": null
+  },
+  {
+    "id": "e2fe4a09-84a6-a8cc-fa41-5d0c41e6b6a0",
+    "key": null,
+    "name": "Financial Services",
+    "value": null
+  },
+  {
+    "id": "d7c95ccb-93bf-a107-afb9-dfe01160a2f4",
+    "key": null,
+    "name": "Entertainment and Media",
+    "value": null
+  },
+  {
+    "id": "2a0e54e4-f696-a0b6-1cb6-571c387fb4fd",
+    "key": null,
+    "name": "Government and Defense",
+    "value": null
+  },
+  {
+    "id": "eef31861-0fb0-a890-b060-f27d7802a628",
+    "key": null,
+    "name": "Home Furnishings",
+    "value": null
+  }
+]

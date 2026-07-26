@@ -1,0 +1,38 @@
+[
+  {
+    "id": "78b13fbc-41c4-abfd-92b2-adaaddfe2653",
+    "key": null,
+    "name": "Booked",
+    "value": null
+  },
+  {
+    "id": "b96fcf3b-0138-aaa3-6100-a96a0c33ca99",
+    "key": null,
+    "name": "Quoted",
+    "value": null
+  },
+  {
+    "id": "452907db-4279-a253-4d10-61aceeaa68b4",
+    "key": null,
+    "name": "Estimate",
+    "value": null
+  },
+  {
+    "id": "7279227c-78c8-a7c2-5c2a-e3392c81b174",
+    "key": null,
+    "name": "Template",
+    "value": null
+  },
+  {
+    "id": "a813dfa1-7df1-a1a2-d16a-82acb7884502",
+    "key": null,
+    "name": "Cancelled",
+    "value": null
+  },
+  {
+    "id": "6e7e666a-cb5b-a0cf-a32d-971a8408e5a9",
+    "key": null,
+    "name": "Completed",
+    "value": null
+  }
+]

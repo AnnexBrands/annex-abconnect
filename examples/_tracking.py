@@ -1,0 +1,32 @@
+"""Example: Tracking operations (2 methods, via api.jobs.*)."""
+
+from examples._runner import ExampleRunner
+from tests.constants import TEST_JOB_DISPLAY_ID
+
+runner = ExampleRunner("Tracking", env="staging")
+
+# ── Needs request data ───────────────────────────────────────────────
+
+runner.add(
+    "get_tracking",
+    lambda api: api.jobs.get_tracking(
+        # TODO: capture fixture — needs shipped job ID with tracking data
+        TEST_JOB_DISPLAY_ID,
+    ),
+    response_model="TrackingInfo",
+    fixture_file="TrackingInfo.json",
+)
+
+runner.add(
+    "get_tracking_v3",
+    lambda api: api.jobs.get_tracking_v3(
+        # TODO: capture fixture — needs shipped job ID with tracking history
+        TEST_JOB_DISPLAY_ID,
+        history_amount=10,
+    ),
+    response_model="TrackingInfoV3",
+    fixture_file="TrackingInfoV3.json",
+)
+
+if __name__ == "__main__":
+    runner.run()

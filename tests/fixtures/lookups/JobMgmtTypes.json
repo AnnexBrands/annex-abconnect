@@ -1,0 +1,26 @@
+[
+  {
+    "id": "554a9aba-308a-ae97-ff3c-bc6b00f42284",
+    "key": null,
+    "name": "Inhouse",
+    "value": null
+  },
+  {
+    "id": "3815748f-97b7-a309-0511-6fbd6b674db1",
+    "key": null,
+    "name": "Inbound",
+    "value": null
+  },
+  {
+    "id": "2902a448-bad1-aba4-276a-9f256d734083",
+    "key": null,
+    "name": "Last Mile",
+    "value": null
+  },
+  {
+    "id": "c6c22f11-55db-ae48-8412-f18d9e9b1c71",
+    "key": null,
+    "name": "Delivered",
+    "value": null
+  }
+]

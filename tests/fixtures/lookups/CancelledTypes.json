@@ -1,0 +1,92 @@
+[
+  {
+    "id": "3679c19e-0e0a-a120-dc0f-078f12a09584",
+    "key": null,
+    "name": "Fraud",
+    "value": null
+  },
+  {
+    "id": "9258ca13-1ed4-a62e-9960-0ff92bc099d5",
+    "key": null,
+    "name": "No longer needs our service",
+    "value": null
+  },
+  {
+    "id": "094e118c-190a-a249-6603-c98d3cd967cb",
+    "key": null,
+    "name": "Insufficient details, cannot reach customer",
+    "value": null
+  },
+  {
+    "id": "75ce558d-023d-aa06-cec1-eccefa77b9d5",
+    "key": null,
+    "name": "Duplicate",
+    "value": null
+  },
+  {
+    "id": "583f29f5-185a-ac6e-865e-5ba4317b0cba",
+    "key": null,
+    "name": "Training",
+    "value": null
+  },
+  {
+    "id": "0058506b-5bee-a18f-d82a-243ca8da2197",
+    "key": null,
+    "name": "Quoted - No Response",
+    "value": null
+  },
+  {
+    "id": "70e25160-e55e-a03a-0be8-3f075c588c0b",
+    "key": null,
+    "name": "We didn't answer",
+    "value": null
+  },
+  {
+    "id": "bf5c62de-4497-a7bb-f3ef-f3cbad9db6dc",
+    "key": null,
+    "name": "Referred to Retail",
+    "value": null
+  },
+  {
+    "id": "e32d91df-14a6-af45-a50f-c4cf152b7637",
+    "key": null,
+    "name": "Price",
+    "value": null
+  },
+  {
+    "id": "f1f24cb2-48d3-a0d4-26fe-8729ad9a9b3e",
+    "key": null,
+    "name": "Spam",
+    "value": null
+  },
+  {
+    "id": "fd5a71b6-2b87-ad2f-6698-56ee892fee1c",
+    "key": null,
+    "name": "A - Hot Lead",
+    "value": null
+  },
+  {
+    "id": "04251fa9-75c4-a60f-65c1-8619d0fd58c2",
+    "key": null,
+    "name": "B - Prospect",
+    "value": null
+  },
+  {
+    "id": "bf4c65fb-bb4c-ad5d-005a-b97c183b2d53",
+    "key": null,
+    "name": "C - Unqualified",
+    "value": null
+  },
+  {
+    "id": "dfe0b15a-149c-aa10-4f5e-de7984930569",
+    "key": null,
+    "name": "Outside of our coverage",
+    "value": null
+  },
+  {
+    "id": "798b7fea-47c9-ad5e-f9ee-357092a97345",
+    "key": null,
+    "name": "Lost to Competition",
+    "value": null
+  }
+]

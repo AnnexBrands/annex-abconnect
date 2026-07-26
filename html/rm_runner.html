@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>AB SDK — ExampleRunner Removal Tracker</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       max-width: 1100px; margin: 0 auto; padding: 24px; color: #1a1a1a;
+       background: #fafafa; line-height: 1.55; }
+h1 { font-size: 1.6rem; margin-bottom: 4px; }
+.subtitle { color: #666; font-size: 0.9rem; margin-bottom: 24px; }
+h2 { font-size: 1.2rem; margin: 28px 0 10px; border-bottom: 2px solid #e0e0e0;
+     padding-bottom: 6px; }
+h3 { font-size: 1.02rem; margin: 18px 0 8px; }
+p { margin-bottom: 10px; }
+ul, ol { margin: 6px 0 12px 22px; }
+li { margin-bottom: 4px; font-size: 0.92rem; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 16px;
+        font-size: 0.9rem; }
+th, td { padding: 7px 11px; text-align: left; border: 1px solid #ddd; }
+th { background: #f3f3f3; font-weight: 600; }
+tr:hover { background: #fcfcfc; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 3px;
+         font-size: 0.74rem; font-weight: 600; letter-spacing: 0.2px; }
+.badge-done { background: #28a745; color: #fff; }
+.badge-stub { background: #6c757d; color: #fff; }
+.badge-todo { background: #ffc107; color: #333; }
+.badge-partial { background: #17a2b8; color: #fff; }
+.badge-deprecated { background: #c757b8; color: #fff; }
+code { background: #eef0f2; padding: 1px 5px; border-radius: 2px;
+       font-size: 0.86em; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+pre { background: #1e1e1e; color: #f1f1f1; padding: 12px 14px;
+      border-radius: 5px; overflow-x: auto; font-size: 0.84rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      margin: 8px 0 14px; }
+.note { background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px 14px;
+        margin: 10px 0; border-radius: 3px; font-size: 0.92rem; }
+.warn { background: #f8d7da; border-left: 4px solid #dc3545; padding: 10px 14px;
+        margin: 10px 0; border-radius: 3px; font-size: 0.92rem; }
+.kv { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86rem; }
+.checklist { list-style: none; margin-left: 4px; }
+.checklist li::before { content: '[ ] '; font-family: ui-monospace, monospace; color: #888; }
+.checklist li.done::before { content: '[x] '; color: #28a745; }
+.totals-row { font-weight: 700; background: #eef0f2 !important; }
+hr { border: none; border-top: 1px solid #ddd; margin: 16px 0; }
+</style>
+</head>
+<body>
+
+<h1>AB SDK &mdash; <code>ExampleRunner</code> Removal Tracker</h1>
+<p class='subtitle'>Hand-curated, operator-in-the-loop. <strong>Not auto-generated.</strong></p>
+
+<div class='warn'>
+<strong>Why this exists:</strong> the previous <code>generate_progress.py</code>
+output (<a href='progress.html'>progress.html</a>) papered over real drift between
+swagger, source-of-truth models, examples, fixtures, and tests. Generated
+scripts cannot enforce harmony &mdash; they just describe state. This page
+tracks the migration to plain example scripts where each conversion forces
+a real reconciliation between the five artefacts.
+</div>
+
+<h2>Goal</h2>
+<ol>
+  <li>Deprecate <code>examples/_runner.py</code> (the <code>ExampleRunner</code>
+      indirection).</li>
+  <li>Convert each example file in <code>examples/</code> into a plain SDK
+      script of the form
+      <code>from ab import ABConnectAPI; api = ABConnectAPI(env='staging')</code>
+      followed by direct method calls.</li>
+  <li>Each conversion must include:
+      <ul>
+        <li>a <strong>fixture</strong> capture path (the script writes
+            <code>tests/fixtures/&lt;Model&gt;.json</code>);</li>
+        <li>a <strong>unit test</strong> with a mocked <code>HttpClient</code>
+            that locks the wire-level call shape (route, params/body keys);</li>
+        <li>an <strong>integration test</strong> in <code>tests/integration/</code>
+            that documents real-world behaviour, including divergences from
+            swagger;</li>
+        <li>any newly discovered <strong>forward references</strong> between
+            endpoints (output of one feeds input of another) explicitly
+            documented in the example and asserted in tests.</li>
+      </ul>
+  </li>
+  <li>Once an example is converted, the corresponding row below moves from
+      <span class='badge badge-stub'>stub</span> to
+      <span class='badge badge-done'>done</span>.</li>
+</ol>
+
+<h2>Current snapshot</h2>
+<p>As of 2026-06-06, <strong>every routed endpoint has a canonical example</strong>:
+<code>ab.progress.example_index</code> reports <strong>209 / 209</strong> canonical,
+<code>uncovered_endpoints() == []</code> and <code>legacy_only_endpoints() == []</code>.
+Both coverage gates in <code>tests/test_example_coverage.py</code> are hardened to
+hard asserts: <code>STRICT_COVERAGE = True</code> and <code>STRICT_NO_LEGACY = True</code>.</p>
+
+<ul>
+  <li><span class='badge badge-done'>done</span> All 114 legacy-only endpoints
+      migrated from <code>examples/_X.py</code> &rarr; canonical plain-script
+      <code>examples/X.py</code> (fan-out 1: catalog, commodities, commodity_maps,
+      companies(+extended), contacts(+extended), documents, jobs/core, lookup,
+      lots, notes, reports, rfq, shipments, views).</li>
+  <li><span class='badge badge-done'>done</span> All 61 author-new endpoints
+      (no prior example) authored (fan-out 2: dashboard reads, jobs.transfer,
+      jobs.status, and the jobs subgroups email, sms, note, on_hold, parcel_items,
+      payment, shipment, rfq, tracking, timeline, form, freight_providers).</li>
+  <li><span class='badge badge-done'>done</span> Canonical example coverage:
+      <strong>209 / 209</strong> routed endpoints (was 34). Offline gates green:
+      ruff, <code>test_example_call_signatures</code> (every call binds to the real
+      signature), no-drift <code>html/progress.html</code>, full
+      <code>pytest -m "not live"</code>.</li>
+  <li><span class='badge badge-todo'>todo</span> Live verification (operator, in
+      <code>serve_progress</code>): GET examples capture fixtures on first run;
+      mutations run under <code>AB_RUN_MUTATIONS=1</code>. Some calls carry a
+      placeholder / discovery-fallback id to replace with a real staging value:
+      commodities/commodity_maps, top-level rfq, <code>views.get_dataset_sp</code>,
+      <code>shipments.get_shipment_document</code>, <code>jobs.email.send_template</code>
+      (template guid), <code>jobs.on_hold</code> / <code>jobs.note</code> /
+      <code>jobs.parcel_items</code> / <code>jobs.shipment.remove_accessorial</code>
+      sub-ids.</li>
+  <li><span class='badge badge-deprecated'>deprecated</span> Legacy
+      <code>examples/_X.py</code> files are retained (no-deletion policy); they are
+      excluded from the canonical set and no longer back any endpoint.</li>
+</ul>
+
+<h2>Reference conversion: <code>dashboard</code></h2>
+
+<p>The <code>dashboard</code> group is the first endpoint to be fully
+converted under the new methodology. Treat it as the template for every
+other group.</p>
+
+<h3>What was produced</h3>
+<ul>
+  <li><code>examples/dashboard.py</code> &mdash; plain SDK script. No runner.</li>
+  <li><code>examples/constants.py::TEST_VIEW_ID</code> &mdash; staging view ID
+      sourced from the discovery chain.</li>
+  <li><code>tests/fixtures/GridViewInfo.json</code> &mdash; six representative
+      view rows shaped to swagger <code>GridViewDetails</code>.</li>
+  <li><code>tests/unit/test_dashboard.py</code> &mdash; 15 wire-level tests
+      with a mocked <code>HttpClient</code>.</li>
+  <li><code>tests/integration/test_dashboard.py</code> &mdash; 3 live tests
+      covering the no-params default and the <code>gridviews &rarr; get</code>
+      chain.</li>
+  <li><code>ab/api/models/dashboard.py::GridViewInfo</code> &mdash; fields
+      realigned to swagger <code>GridViewDetails</code>
+      (<code>id</code>, <code>name</code>, <code>dataKey</code>,
+      <code>isActive</code>, plus optional sp metadata). Previously had
+      <code>isDefault</code> which is not in swagger.</li>
+</ul>
+
+<h3>Operator-in-the-loop discovery sequence</h3>
+
+<p>This is the loop the operator follows when capturing or refreshing
+the dashboard fixture. The same loop becomes the test
+<code>test_grid_views_chain_to_get</code>.</p>
+
+<ol>
+  <li>Call <code>api.dashboard.get_grid_views()</code> &mdash; returns
+      <code>List[GridViewInfo]</code>.</li>
+  <li>From that list, pick the entry whose <code>id</code> matches the
+      view you want; ensure <code>is_active</code> is true.</li>
+  <li>Set <code>TEST_VIEW_ID = &lt;id&gt;</code> in
+      <code>examples/constants.py</code>.</li>
+  <li>Call <code>api.dashboard.get(view_id=TEST_VIEW_ID, company_id=TEST_COMPANY_ID)</code>
+      &mdash; returns <code>DashboardSummary</code>.</li>
+  <li>Capture <code>tests/fixtures/DashboardSummary.json</code> by running
+      <code>python -m examples.dashboard</code>.</li>
+</ol>
+
+<h3>Forward references</h3>
+<table>
+  <tr><th>Producer</th><th>Field</th><th>Consumer</th><th>Field</th></tr>
+  <tr>
+    <td><code>GET /dashboard/gridviews</code> &rarr; <code>GridViewInfo</code></td>
+    <td><code>id</code> <span class='kv'>(int)</span></td>
+    <td><code>GET /dashboard</code> &rarr; <code>DashboardParams</code></td>
+    <td><code>view_id</code> <span class='kv'>(int)</span></td>
+  </tr>
+</table>
+
+<h3>Documented divergences from swagger</h3>
+<div class='note'>
+  <strong>Swagger says</strong>: <code>GET /dashboard</code> takes
+  <code>viewId</code> and <code>companyId</code> as query parameters.
+  Both are optional in the spec.<br>
+  <strong>Live API actually does</strong>: when <code>companyId</code> is
+  omitted, the API substitutes the active user's primary company &mdash; so
+  the call succeeds rather than 4xx-ing. The test
+  <code>test_no_params_does_not_fail_and_sends_empty_query</code>
+  (unit) and <code>test_get_no_params_defaults_to_user_primary_company</code>
+  (integration) lock this in.
+</div>
+
+<h3>Canonical example shape</h3>
+<pre>from ab import ABConnectAPI
+from examples.constants import TEST_COMPANY_ID, TEST_VIEW_ID
+
+api = ABConnectAPI(env="staging")
+
+# Discovery chain (only needed when TEST_VIEW_ID is unknown):
+views = api.dashboard.get_grid_views()  # -&gt; List[GridViewInfo]
+
+# Documented call (swagger contract: both params optional):
+summary = api.dashboard.get(view_id=TEST_VIEW_ID, company_id=TEST_COMPANY_ID)
+
+# Documented divergence (no-params is supported in practice):
+default_summary = api.dashboard.get()</pre>
+
+<h2>Migration status by endpoint group</h2>
+
+<p>23 discovered top-level groups, 239 public methods total. Rows marked
+<span class='badge badge-done'>done</span> are fully converted away from
+<code>ExampleRunner</code>. Rows marked
+<span class='badge badge-partial'>partial</span> have meaningful SDK/test
+progress but still need the full plain-script example conversion and
+fixture reconciliation pass.</p>
+
+<table>
+  <tr>
+    <th>Group</th>
+    <th>Methods</th>
+    <th>Example file</th>
+    <th>Status</th>
+    <th>Notes</th>
+  </tr>
+  <tr>
+    <td><strong>dashboard</strong></td>
+    <td>9</td>
+    <td><code>examples/dashboard.py</code></td>
+    <td><span class='badge badge-done'>done</span></td>
+    <td>Reference conversion. 15 unit + 3 integration tests, fixture, forward ref documented.</td>
+  </tr>
+  <tr><td>address</td><td>2</td><td><code>examples/_address.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>autoprice</td><td>2</td><td><code>examples/_autoprice.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>catalog</td><td>6</td><td><code>examples/_catalog.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>commodities</td><td>5</td><td><code>examples/_commodities.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>commodity_maps</td><td>5</td><td>(none)</td><td><span class='badge badge-todo'>todo</span></td><td>Endpoint group exists; no example file present.</td></tr>
+  <tr><td>companies</td><td>26</td><td><code>examples/_companies.py</code> + <code>_companies_extended.py</code> + <code>_companies_elabel_compare.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Largest single conversion; expect multiple forward refs (brand tree, geo settings, packaging).</td></tr>
+  <tr><td>contacts</td><td>13</td><td><code>examples/_contacts.py</code> + <code>_contacts_extended.py</code></td><td><span class='badge badge-partial'>partial</span></td><td>Example files still use ExampleRunner. New SDK helper <code>api.contacts.get_did(contact_did)</code> resolves the display ID through <code>CodeResolver</code>, then returns <code>get(resolved_id)</code>. Covered by <code>tests/unit/test_contacts.py</code> endpoint and CLI dispatch tests. Full plain-script conversion still pending.</td></tr>
+  <tr><td>documents</td><td>4</td><td><code>examples/_documents.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>forms</td><td>20</td><td><code>examples/_forms.py</code> (deprecated)</td><td><span class='badge badge-deprecated'>deprecated</span></td><td>All form methods moved to <code>api.jobs.form</code>. <code>FormsEndpoint</code> retained as a deprecation shim that forwards every call. Example file still exists but its target is now <code>api.jobs.form</code>.</td></tr>
+  <tr><td>jobs</td><td>58</td><td><code>examples/jobs/on_hold.py</code> (+ legacy <code>examples/_jobs.py</code>)</td><td><span class='badge badge-partial'>partial</span></td><td>Refactored to subpackage <code>ab/api/endpoints/jobs/</code> with <strong>13 subgroups</strong>: <code>note</code> (4), <code>on_hold</code> (10), <code>form</code> (20), <code>timeline</code> (9), <code>email</code> (4), <code>sms</code> (4), <code>freight_providers</code> (3), <code>parcel_items</code> (4), <code>tracking</code> (2), <code>status</code> (1), <code>payment</code> (10), <code>shipment</code> (11), <code>rfq</code> (2). Deprecation shims on <code>JobsEndpoint</code>, <code>FormsEndpoint</code>, <code>PaymentsEndpoint</code>, <code>ShipmentsEndpoint</code>. <strong>on_hold subgroup converted</strong>: model realigned to swagger (reasonId/responsiblePartyTypeId required; assignedToId is int); ResolveOnHoldRequest collapsed into SaveOnHoldRequest alias; <code>examples/jobs/on_hold.py</code> walks the create / assign-to-user / email / resolve chain. Remaining subgroups still need example conversions.</td></tr>
+  <tr><td>lookup</td><td>16</td><td><code>examples/_lookup.py</code> + <code>_lookup_extended.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>lots</td><td>6</td><td><code>examples/_lots.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner. Note 036-lotsdb migration prep.</td></tr>
+  <tr><td><strong>notes</strong></td><td>4</td><td><code>examples/notes.py</code></td><td><span class='badge badge-done'>done</span></td><td>Realigned to swagger Notes + NoteModel + SuggestedContactEntity. Single NoteRequest replaces split Create/Update (legacy names retained as aliases). Forward refs: LookupValue.value -> NoteRequest.category, SuggestedUser.id -> NoteRequest.assigned_users[].id. cli_format on GlobalNote + SuggestedUser. Old <code>_notes.py</code> (job-scoped) + <code>_notes_global.py</code> still present for reference.</td></tr>
+  <tr><td>partners</td><td>3</td><td><code>examples/_partners.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>payments</td><td>10</td><td><code>examples/_payments.py</code></td><td><span class='badge badge-deprecated'>deprecated</span></td><td>All 10 methods moved to <code>api.jobs.payment</code>. <code>PaymentsEndpoint</code> retained as deprecation shim.</td></tr>
+  <tr><td>reports</td><td>8</td><td><code>examples/_reports.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>rfq</td><td>7</td><td><code>examples/_rfq.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>7 lifecycle methods (<code>/rfq/{id}/*</code>) remain canonical here. The 2 job-scoped <code>/job/{id}/rfq/*</code> methods now live at <code>api.jobs.rfq</code>.</td></tr>
+  <tr><td>sellers</td><td>5</td><td><code>examples/_sellers.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>shipments</td><td>16</td><td><code>examples/_shipments.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>3 non-job-scoped methods canonical here (<code>get_shipment</code>, <code>get_global_accessorials</code>, <code>get_shipment_document</code>). 11 job-scoped methods moved to <code>api.jobs.shipment</code> with deprecation shims retained.</td></tr>
+  <tr><td>users</td><td>4</td><td><code>examples/_users.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr><td>views</td><td>8</td><td><code>examples/_views.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Note: <code>GridViewDetails</code> in <code>ab/api/models/views.py</code> diverges from swagger; revisit during conversion.</td></tr>
+  <tr><td>web2lead</td><td>2</td><td><code>examples/_web2lead.py</code></td><td><span class='badge badge-stub'>stub</span></td><td>Renamed with leading underscore. Uses ExampleRunner.</td></tr>
+  <tr class='totals-row'>
+    <td>Total</td><td>239</td><td>&mdash;</td>
+    <td>2 done / 2 partial / 16 stub / 1 todo / 2 deprecated</td><td>Top-level group count. CLI registry including subgroups: 36 entries / 323 methods.</td>
+  </tr>
+</table>
+
+<h2>Per-conversion checklist (operator drives)</h2>
+<p>For each row above, the operator must:</p>
+<ul class='checklist'>
+  <li>Confirm every method's swagger entry vs. its <code>Route(...)</code> call (path, request_model, response_model, params_model). Patch source-of-truth before continuing.</li>
+  <li>Replace the example file with a plain script: top-level <code>api = ABConnectAPI(env="staging")</code> followed by named call sections.</li>
+  <li>Add any missing constants to <code>examples/constants.py</code> (sourced from real fixtures, not invented).</li>
+  <li>Capture or refresh response fixtures under <code>tests/fixtures/</code>.</li>
+  <li>Add a <code>tests/unit/test_&lt;group&gt;.py</code> with a mocked HttpClient asserting wire-level call shape (route + params/body alias keys).</li>
+  <li>Add a <code>tests/integration/test_&lt;group&gt;.py</code> covering no-params behaviour, the discovery chain, and any documented swagger divergence.</li>
+  <li>Document forward references in the example docstring and assert at least one in tests.</li>
+  <li>Move the row in this file from <code>stub</code> to <code>done</code>.</li>
+</ul>
+
+<h2>Artefact links</h2>
+<ul>
+  <li>Reference example: <code>examples/dashboard.py</code></li>
+  <li>Reference unit tests: <code>tests/unit/test_dashboard.py</code></li>
+  <li>Reference integration tests: <code>tests/integration/test_dashboard.py</code></li>
+  <li>Reference fixture: <code>tests/fixtures/GridViewInfo.json</code></li>
+  <li>Latest contacts helper tests: <code>tests/unit/test_contacts.py</code></li>
+  <li>Public docs (forthcoming): <a href='https://ab-sdk.readthedocs.io/'>https://ab-sdk.readthedocs.io/</a> &mdash; configured by <code>.readthedocs.yaml</code></li>
+  <li>Deprecated runner: <code>examples/_runner.py</code> &mdash; emits a <code>DeprecationWarning</code> on import.</li>
+  <li>Old generated report: <a href='progress.html'>progress.html</a> &mdash; retained for historical context only; do not regenerate.</li>
+</ul>
+
+</body>
+</html>

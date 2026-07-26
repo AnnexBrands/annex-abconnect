@@ -1,0 +1,38 @@
+[
+  {
+    "id": "d5d03286-2fb2-ab79-d9b5-eecb7ccd30ac",
+    "key": null,
+    "name": "sendRequestXML",
+    "value": null
+  },
+  {
+    "id": "167cc6f2-7aeb-a3e8-f716-d4040db16c6a",
+    "key": null,
+    "name": "connectionError",
+    "value": null
+  },
+  {
+    "id": "23aba4cf-7136-a4f3-c1d5-4bf6bf5fc519",
+    "key": null,
+    "name": "receiveResponseXML",
+    "value": null
+  },
+  {
+    "id": "357c2956-2648-a920-4379-dff539723bc8",
+    "key": null,
+    "name": "getLastError",
+    "value": null
+  },
+  {
+    "id": "30c28f94-55db-a2f0-a4a5-4d16a93380f1",
+    "key": null,
+    "name": "closeConnection",
+    "value": null
+  },
+  {
+    "id": "5725a7c7-08f1-a6d8-6d8e-fd74ecf8d2d2",
+    "key": null,
+    "name": "authenticate",
+    "value": null
+  }
+]

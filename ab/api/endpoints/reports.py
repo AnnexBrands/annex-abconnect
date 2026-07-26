@@ -1,0 +1,183 @@
+"""Reports API endpoints (8 routes)."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ab.api.models.reports import (
+        InsuranceReport,
+        InsuranceReportRequest,
+        ReferredByReport,
+        ReferredByReportRequest,
+        RevenueCustomer,
+        SalesForecastReport,
+        SalesForecastReportRequest,
+        SalesForecastSummary,
+        SalesForecastSummaryRequest,
+        Web2LeadReport,
+        Web2LeadRevenueFilter,
+        Web2LeadV2RequestModel,
+    )
+
+from ab.api.base import BaseEndpoint
+from ab.api.route import Route
+
+_INSURANCE = Route(
+    "POST", "/reports/insurance",
+    request_model="InsuranceReportRequest", response_model="List[InsuranceReport]",
+)
+_SALES = Route(
+    "POST", "/reports/sales",
+    request_model="SalesForecastReportRequest", response_model="List[SalesForecastReport]",
+)
+_SALES_SUMMARY = Route(
+    "POST", "/reports/sales/summary",
+    request_model="SalesForecastSummaryRequest", response_model="SalesForecastSummary",
+)
+_SALES_DRILLDOWN = Route(
+    "POST", "/reports/salesDrilldown",
+    request_model="Web2LeadRevenueFilter", response_model="List[RevenueCustomer]",
+)
+_TOP_REVENUE_CUSTOMERS = Route(
+    "POST", "/reports/topRevenueCustomers",
+    request_model="Web2LeadRevenueFilter", response_model="List[RevenueCustomer]",
+)
+_TOP_REVENUE_SALES_REPS = Route(
+    "POST", "/reports/topRevenueSalesReps",
+    request_model="Web2LeadRevenueFilter", response_model="List[RevenueCustomer]",
+)
+_REFERRED_BY = Route(
+    "POST", "/reports/referredBy",
+    request_model="ReferredByReportRequest", response_model="List[ReferredByReport]",
+)
+_WEB2LEAD = Route(
+    "POST", "/reports/web2Lead",
+    request_model="Web2LeadV2RequestModel", response_model="List[Web2LeadReport]",
+)
+
+
+class ReportsEndpoint(BaseEndpoint):
+    """Report generation (ACPortal API)."""
+
+    def insurance(self, *, data: InsuranceReportRequest | dict) -> list[InsuranceReport]:
+        """POST /reports/insurance.
+
+        Args:
+            data: Insurance report payload with date range filters.
+                Accepts an :class:`InsuranceReportRequest` instance or a dict.
+
+        Request model: :class:`InsuranceReportRequest`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/reports/insurance.html
+        Request model: InsuranceReportRequest
+        Response model: List[InsuranceReport]
+        """
+        return self._request(_INSURANCE, json=data)
+
+    def sales(self, *, data: SalesForecastReportRequest | dict) -> list[SalesForecastReport]:
+        """POST /reports/sales.
+
+        Args:
+            data: Sales forecast payload with date range and agent code
+                filters. Accepts a :class:`SalesForecastReportRequest`
+                instance or a dict.
+
+        Request model: :class:`SalesForecastReportRequest`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/reports/sales.html
+        Request model: SalesForecastReportRequest
+        Response model: List[SalesForecastReport]
+        """
+        return self._request(_SALES, json=data)
+
+    def sales_summary(self, *, data: SalesForecastSummaryRequest | dict) -> SalesForecastSummary:
+        """POST /reports/sales/summary.
+
+        Args:
+            data: Sales forecast summary payload with date range filters.
+                Accepts a :class:`SalesForecastSummaryRequest` instance
+                or a dict.
+
+        Request model: :class:`SalesForecastSummaryRequest`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/reports/sales_summary.html
+        Request model: SalesForecastSummaryRequest
+        Response model: SalesForecastSummary
+        """
+        return self._request(_SALES_SUMMARY, json=data)
+
+    def sales_drilldown(self, *, data: Web2LeadRevenueFilter | dict) -> list[RevenueCustomer]:
+        """POST /reports/salesDrilldown.
+
+        Args:
+            data: Revenue filter payload with date range filters.
+                Accepts a :class:`Web2LeadRevenueFilter` instance or a dict.
+
+        Request model: :class:`Web2LeadRevenueFilter`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/reports/sales_drilldown.html
+        Request model: Web2LeadRevenueFilter
+        Response model: List[RevenueCustomer]
+        """
+        return self._request(_SALES_DRILLDOWN, json=data)
+
+    def top_revenue_customers(self, *, data: Web2LeadRevenueFilter | dict) -> list[RevenueCustomer]:
+        """POST /reports/topRevenueCustomers.
+
+        Args:
+            data: Revenue filter payload with date range filters.
+                Accepts a :class:`Web2LeadRevenueFilter` instance or a dict.
+
+        Request model: :class:`Web2LeadRevenueFilter`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/reports/top_revenue_customers.html
+        Request model: Web2LeadRevenueFilter
+        Response model: List[RevenueCustomer]
+        """
+        return self._request(_TOP_REVENUE_CUSTOMERS, json=data)
+
+    def top_revenue_sales_reps(self, *, data: Web2LeadRevenueFilter | dict) -> list[RevenueCustomer]:
+        """POST /reports/topRevenueSalesReps.
+
+        Args:
+            data: Revenue filter payload with date range filters.
+                Accepts a :class:`Web2LeadRevenueFilter` instance or a dict.
+
+        Request model: :class:`Web2LeadRevenueFilter`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/reports/top_revenue_sales_reps.html
+        Request model: Web2LeadRevenueFilter
+        Response model: List[RevenueCustomer]
+        """
+        return self._request(_TOP_REVENUE_SALES_REPS, json=data)
+
+    def referred_by(self, *, data: ReferredByReportRequest | dict) -> list[ReferredByReport]:
+        """POST /reports/referredBy.
+
+        Args:
+            data: Referred-by report payload with date range filters.
+                Accepts a :class:`ReferredByReportRequest` instance or a dict.
+
+        Request model: :class:`ReferredByReportRequest`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/reports/referred_by.html
+        Request model: ReferredByReportRequest
+        Response model: List[ReferredByReport]
+        """
+        return self._request(_REFERRED_BY, json=data)
+
+    def web2lead(self, *, data: Web2LeadV2RequestModel | dict) -> list[Web2LeadReport]:
+        """POST /reports/web2Lead.
+
+        Args:
+            data: Web2Lead report payload with date range filters.
+                Accepts a :class:`Web2LeadV2RequestModel` instance or a dict.
+
+        Request model: :class:`Web2LeadV2RequestModel`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/reports/web2lead.html
+        Request model: Web2LeadV2RequestModel
+        Response model: List[Web2LeadReport]
+        """
+        return self._request(_WEB2LEAD, json=data)

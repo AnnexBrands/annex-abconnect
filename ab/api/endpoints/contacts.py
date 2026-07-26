@@ -1,0 +1,237 @@
+"""Contacts API endpoints (12 routes)."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from ab.api.models.contacts import (
+        ContactDetailedInfo,
+        ContactEditRequest,
+        ContactGraphData,
+        ContactHistory,
+        ContactHistoryAggregated,
+        ContactHistoryCreateRequest,
+        ContactMergePreview,
+        ContactMergeRequest,
+        ContactPrimaryDetails,
+        ContactSearchRequest,
+        ContactSimple,
+        SearchContactEntityResult,
+    )
+
+from ab.api.base import BaseEndpoint
+from ab.api.route import Route
+from ab.cache import CodeResolver
+
+_GET = Route("GET", "/contacts/{id}", response_model="ContactSimple")
+_GET_DETAILS = Route("GET", "/contacts/{contactId}/editdetails", response_model="ContactDetailedInfo")
+_UPDATE_DETAILS = Route(
+    "PUT", "/contacts/{contactId}/editdetails",
+    request_model="ContactEditRequest", params_model="ContactEditParams",
+)
+_CREATE = Route(
+    "POST", "/contacts/editdetails",
+    request_model="ContactEditRequest", params_model="ContactEditParams",
+)
+_SEARCH = Route(
+    "POST", "/contacts/v2/search",
+    request_model="ContactSearchRequest", response_model="List[SearchContactEntityResult]",
+)
+_PRIMARY_DETAILS = Route("GET", "/contacts/{contactId}/primarydetails", response_model="ContactPrimaryDetails")
+_CURRENT_USER = Route("GET", "/contacts/user", response_model="ContactSimple")
+
+# Extended contact routes (008)
+_POST_HISTORY = Route(
+    "POST", "/contacts/{contactId}/history",
+    request_model="ContactHistoryCreateRequest", response_model="ContactHistory",
+)
+_GET_HISTORY_AGGREGATED = Route(
+    "GET", "/contacts/{contactId}/history/aggregated",
+    params_model="ContactHistoryParams", response_model="ContactHistoryAggregated",
+)
+_GET_HISTORY_GRAPH_DATA = Route(
+    "GET", "/contacts/{contactId}/history/graphdata",
+    params_model="ContactHistoryParams", response_model="ContactGraphData",
+)
+_MERGE_PREVIEW = Route(
+    "POST", "/contacts/{mergeToId}/merge/preview",
+    request_model="ContactMergeRequest", response_model="ContactMergePreview",
+)
+_MERGE = Route("PUT", "/contacts/{mergeToId}/merge", request_model="ContactMergeRequest")
+
+
+class ContactsEndpoint(BaseEndpoint):
+    """Operations on contacts (ACPortal API)."""
+
+    def __init__(self, client: Any, resolver: CodeResolver) -> None:
+        super().__init__(client)
+        self._resolver = resolver
+
+    def get(self, contact_id: str) -> ContactSimple:
+        """GET /contacts/{id}
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/get.html
+        Response model: ContactSimple
+        """
+        return self._request(_GET.bind(id=contact_id))
+
+    def get_did(self, contact_did: str | int) -> ContactSimple:
+        """Resolve a contact display ID through CodeResolver, then GET /contacts/{id}."""
+        return self.get(self._resolver.resolve(str(contact_did)))
+
+    def get_details(self, contact_id: str) -> ContactDetailedInfo:
+        """GET /contacts/{contactId}/editdetails
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/get_details.html
+        Response model: ContactDetailedInfo
+        """
+        return self._request(_GET_DETAILS.bind(contactId=contact_id))
+
+    def update_details(
+        self,
+        contact_id: str,
+        *,
+        data: ContactEditRequest | dict,
+        franchisee_id: str | None = None,
+    ) -> None:
+        """PUT /contacts/{contactId}/editdetails.
+
+        Args:
+            contact_id: Contact identifier.
+            data: Contact edit payload with name, email, phone, addresses.
+                Accepts a :class:`ContactEditRequest` instance or a dict.
+            franchisee_id: Franchisee UUID filter (query param).
+
+        Request model: :class:`ContactEditRequest`
+        Params model: :class:`ContactEditParams`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/update_details.html
+        Request model: ContactEditRequest
+        Query params: ContactEditParams
+        """
+        params = dict(franchisee_id=franchisee_id)
+        return self._request(
+            _UPDATE_DETAILS.bind(contactId=contact_id), json=data, params=params,
+        )
+
+    def create(
+        self,
+        *,
+        data: ContactEditRequest | dict,
+        franchisee_id: str | None = None,
+    ) -> None:
+        """POST /contacts/editdetails.
+
+        Args:
+            data: Contact creation payload with name, email, phone, addresses.
+                Accepts a :class:`ContactEditRequest` instance or a dict.
+            franchisee_id: Franchisee UUID filter (query param).
+
+        Request model: :class:`ContactEditRequest`
+        Params model: :class:`ContactEditParams`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/create.html
+        Request model: ContactEditRequest
+        Query params: ContactEditParams
+        """
+        params = dict(franchisee_id=franchisee_id)
+        return self._request(_CREATE, json=data, params=params)
+
+    def search(self, *, data: ContactSearchRequest | dict) -> list[SearchContactEntityResult]:
+        """POST /contacts/v2/search.
+
+        Args:
+            data: Search payload with search_text, page, and page_size.
+                Accepts a :class:`ContactSearchRequest` instance or a dict.
+
+        Request model: :class:`ContactSearchRequest`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/search.html
+        Request model: ContactSearchRequest
+        Response model: List[SearchContactEntityResult]
+        """
+        return self._request(_SEARCH, json=data)
+
+    def get_primary_details(self, contact_id: str) -> ContactPrimaryDetails:
+        """GET /contacts/{contactId}/primarydetails
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/get_primary_details.html
+        Response model: ContactPrimaryDetails
+        """
+        return self._request(_PRIMARY_DETAILS.bind(contactId=contact_id))
+
+    def get_current_user(self) -> ContactSimple:
+        """GET /contacts/user
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/get_current_user.html
+        Response model: ContactSimple
+        """
+        return self._request(_CURRENT_USER)
+
+    # ---- Extended (008) ---------------------------------------------------
+
+    def post_history(self, contact_id: str, *, data: ContactHistoryCreateRequest | dict) -> ContactHistory:
+        """POST /contacts/{contactId}/history.
+
+        Args:
+            contact_id: Contact identifier.
+            data: History creation payload.
+                Accepts a :class:`ContactHistoryCreateRequest` instance or a dict.
+
+        Request model: :class:`ContactHistoryCreateRequest`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/post_history.html
+        Request model: ContactHistoryCreateRequest
+        Response model: ContactHistory
+        """
+        return self._request(_POST_HISTORY.bind(contactId=contact_id), json=data)
+
+    def get_history_aggregated(self, contact_id: str) -> ContactHistoryAggregated:
+        """GET /contacts/{contactId}/history/aggregated
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/get_history_aggregated.html
+        Query params: ContactHistoryParams
+        Response model: ContactHistoryAggregated
+        """
+        return self._request(_GET_HISTORY_AGGREGATED.bind(contactId=contact_id))
+
+    def get_history_graph_data(self, contact_id: str) -> ContactGraphData:
+        """GET /contacts/{contactId}/history/graphdata
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/get_history_graph_data.html
+        Query params: ContactHistoryParams
+        Response model: ContactGraphData
+        """
+        return self._request(_GET_HISTORY_GRAPH_DATA.bind(contactId=contact_id))
+
+    def merge_preview(self, merge_to_id: str, *, data: ContactMergeRequest | dict) -> ContactMergePreview:
+        """POST /contacts/{mergeToId}/merge/preview.
+
+        Args:
+            merge_to_id: Target contact to merge into.
+            data: Merge preview request payload.
+                Accepts a :class:`ContactMergeRequest` instance or a dict.
+
+        Request model: :class:`ContactMergeRequest`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/merge_preview.html
+        Request model: ContactMergeRequest
+        Response model: ContactMergePreview
+        """
+        return self._request(_MERGE_PREVIEW.bind(mergeToId=merge_to_id), json=data)
+
+    def merge(self, merge_to_id: str, *, data: ContactMergeRequest | dict) -> None:
+        """PUT /contacts/{mergeToId}/merge.
+
+        Args:
+            merge_to_id: Target contact to merge into.
+            data: Merge request payload.
+                Accepts a :class:`ContactMergeRequest` instance or a dict.
+
+        Request model: :class:`ContactMergeRequest`
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/contacts/merge.html
+        Request model: ContactMergeRequest
+        """
+        return self._request(_MERGE.bind(mergeToId=merge_to_id), json=data)

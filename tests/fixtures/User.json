@@ -1,0 +1,28 @@
+{
+  "totalCount": 1,
+  "data": [
+    {
+      "id": 1,
+      "login": "emery.everly",
+      "fullName": "Bailey Holt",
+      "contactId": 1271,
+      "contactDisplayId": "1312608",
+      "contactCompanyName": "Northwind Galleries",
+      "contactCompanyId": "908de9bf-0d58-abfb-0a79-2d0ff8872dd5",
+      "contactCompanyDisplayId": "616038",
+      "email": "avery.alder@example.com",
+      "emailConfirmed": true,
+      "contactPhone": "555-664-4264",
+      "contactEmail": "avery.alder@example.com",
+      "password": null,
+      "lockoutDateUtc": "2018-08-20T12:28:23.78",
+      "lockoutEnabled": true,
+      "role": "Admin",
+      "isActive": true,
+      "legacyId": "00000000-0000-0000-0000-000000000000",
+      "additionalUserCompanies": [],
+      "additionalUserCompaniesNames": [],
+      "crmContactId": 0
+    }
+  ]
+}

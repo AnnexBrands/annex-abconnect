@@ -1,0 +1,68 @@
+[
+  {
+    "id": "f805ca13-431a-a568-6261-38acf9df8152",
+    "key": null,
+    "name": "Abandoned",
+    "value": null
+  },
+  {
+    "id": "2a81bca0-2e1a-a495-b704-d9c96d94d436",
+    "key": null,
+    "name": "Microdeposit verification required",
+    "value": null
+  },
+  {
+    "id": "79f4e265-6cf8-a4f7-e035-f2a6440f014d",
+    "key": null,
+    "name": "Canceled",
+    "value": null
+  },
+  {
+    "id": "30866e79-b646-a7d7-51f6-6c0c031395d6",
+    "key": null,
+    "name": "Paid out",
+    "value": null
+  },
+  {
+    "id": "ed98d8b6-d425-a377-81d5-c1c8f3879dd2",
+    "key": null,
+    "name": "Waiting",
+    "value": null
+  },
+  {
+    "id": "bbf2316d-e7ab-a44e-f564-7964fe0c1534",
+    "key": null,
+    "name": "CC pay to agent",
+    "value": null
+  },
+  {
+    "id": "7b352db1-a5bd-a6b2-2c6c-f13f991ecd8c",
+    "key": null,
+    "name": "Payment Rcvd",
+    "value": null
+  },
+  {
+    "id": "ac3ff0f7-d771-acf2-c8fb-f2a4949d28a5",
+    "key": null,
+    "name": "Invoiced",
+    "value": null
+  },
+  {
+    "id": "a94224fa-e7e2-a36b-d672-05b93538c161",
+    "key": null,
+    "name": "Dispute",
+    "value": null
+  },
+  {
+    "id": "66c13e41-2465-ae02-5336-4a6a187d4915",
+    "key": null,
+    "name": "Ready to invoice",
+    "value": null
+  },
+  {
+    "id": "97458d00-357b-ac72-64f8-45d159a85d1c",
+    "key": null,
+    "name": "Started",
+    "value": null
+  }
+]

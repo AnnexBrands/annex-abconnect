@@ -1,0 +1,69 @@
+# AB Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2026-02-13
+
+## Active Technologies
+- Python 3.11+ + pydantic>=2.0, pydantic-settings, requests, python-dotenv (unchanged from 001) (002-extended-endpoints)
+- N/A (SDK — no local storage) (002-extended-endpoints)
+- Python 3.11+ (same as SDK) + None beyond stdlib (`re`, `pathlib`, `html`, `json`, `datetime`) (003-progress-report)
+- N/A — reads existing files, writes a single HTML file (003-progress-report)
+- Python 3.11+ + pydantic>=2.0, requests (existing SDK deps — no new dependencies) (004-scaffold-examples-fixtures)
+- Filesystem (fixture JSON files in `tests/fixtures/`) (004-scaffold-examples-fixtures)
+- Python 3.11+ (existing SDK) + pydantic>=2.0, requests (existing SDK deps) (006-verify-artifact-integrity)
+- Python 3.11+ (existing SDK) + pydantic>=2.0, requests (existing SDK deps — no new dependencies) (007-request-model-methodology)
+- Filesystem (fixture JSON files in `tests/fixtures/` and `tests/fixtures/requests/`) (007-request-model-methodology)
+- N/A — documentation-only change (Markdown files) + N/A — no code dependencies (010-update-constitution)
+- Python 3.11+ (existing SDK) + pydantic>=2.0, requests, sphinx, sphinx-rtd-theme, myst-parser (all existing) (011-endpoint-quality-gates)
+- Filesystem (fixture JSON files in `tests/fixtures/`, generated Markdown/HTML) (011-endpoint-quality-gates)
+- Filesystem (fixture JSON files in `tests/fixtures/` and `tests/fixtures/mocks/`) (013-test-mock-framework)
+- Python 3.11+ (existing SDK) + pydantic>=2.0, requests (existing SDK deps — no new dependencies) (014-endpoint-cli)
+- Filesystem (fixture JSON files in `tests/fixtures/requests/`) (015-endpoint-request-mocks)
+- N/A — SDK, no local storage (018-job-get-response)
+- N/A (SDK — no persistence) (019-refine-request-models)
+- Python 3.11+ + pydantic>=2.0, requests (existing SDK) + pydantic>=2.0, requests (no new deps) (021-endpoint-quality-sweep)
+- Python 3.11+ (existing SDK) + pydantic>=2.0, requests, sphinx, sphinx-rtd-theme, myst-parser (all existing — no new dependencies) (025-cli-docs-discovery)
+- Filesystem (HTML reports in `html/`, fixture JSON in `tests/fixtures/`) (025-cli-docs-discovery)
+- Filesystem (JSON baseline file in `tests/`, generated test stubs in `tests/models/`) (028-quality-infra)
+- Python 3.11+ (existing SDK) + pydantic>=2.0, requests (existing SDK deps -- no new dependencies) (031-timeline-upsert-docs)
+- N/A -- SDK, no local storage (031-timeline-upsert-docs)
+- Python 3.11+ (matches existing SDK). + pydantic>=2.0, requests (existing `ab` deps — no new runtime deps). Audit tooling uses stdlib only (`ast`, `json`, `pathlib`). (036-lotsdb-migration-prep)
+- Filesystem — fixture JSON under `tests/fixtures/` and `tests/fixtures/requests/`; audit/inventory/guide as Markdown under the repo. (036-lotsdb-migration-prep)
+- Python 3.11+ (matches existing SDK) + pydantic>=2.0, requests (existing — no new runtime deps); (037-example-coverage)
+- Filesystem — response fixtures `tests/fixtures/*.json`, request fixtures (037-example-coverage)
+
+- Python 3.11+ + pydantic>=2.0, pydantic-settings, requests, python-dotenv (001-abconnect-sdk)
+
+## Project Structure
+
+```text
+src/
+tests/
+```
+
+## Commands
+
+cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] pytest [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] ruff check .
+
+## Code Style
+
+Python 3.11+: Follow standard conventions
+
+## Example coverage & progress app (feature 037)
+
+Every routed endpoint should have one canonical plain-script example (real call + real
+printed pydantic response; reference `examples/dashboard.py`; shared `examples/_capture.py`
+`save()`/`load_request()`). NOT the deprecated `examples/_runner.py` (underscore-prefixed
+files are legacy and excluded from the canonical set).
+
+- `ab/progress/example_index.py` — precise endpoint→canonical-example map; `uncovered_endpoints()`/`legacy_only_endpoints()` back the coverage gate `tests/test_example_coverage.py` (STRICT_* flags flip on completion).
+- `scripts/run_examples.py` — live harness: runs read-only (GET) examples, diffs `model_dump(by_alias=True, mode="json")` vs the fixture (`ab/progress/example_verify.py`), writes `tests/example_run_results.json`; `--capture` refreshes fixtures; mutations never auto-run. Mutating example calls are guarded by `examples._capture.mutations_enabled()` (`AB_RUN_MUTATIONS=1`).
+- `scripts/ingest_captures.py` — validate pasted `captures.json` against the model → fixtures + generated example.
+- `scripts/serve_progress.py` → interactive app (`ab/progress/app.py`, stdlib http.server + `progress.db`): left-nav `path › tag › endpoint`, per-endpoint request/response **workbench** (live snippet + ▶ Run edited code + JSON/Pydantic), Four-Way Harmony popovers, sign-off; binds `0.0.0.0`.
+- Static no-drift report stays: `scripts/generate_progress.py` → `html/progress.html` (Run column + paste-capture). Always regenerate it after changing examples/fixtures or the no-drift test fails.
+- Interactive enrichment: operator gets a call working (workbench or "make `_X.py` pass with this input") → agent promotes `_X.py` → canonical `examples/X.py` + fixture + test; reads `tests/example_edits.json` for saved improvements.
+
+## Recent Changes
+- 037-example-coverage: Added Python 3.11+ (matches existing SDK) + pydantic>=2.0, requests (existing — no new runtime deps);
+- 036-lotsdb-migration-prep: Added Python 3.11+ (matches existing SDK). + pydantic>=2.0, requests (existing `ab` deps — no new runtime deps).
+- 035-catalog-endpoint-params: Added Python 3.11+ + pydantic>=2.0, requests (existing SDK deps — no new dependencies)
+

@@ -1,0 +1,13 @@
+{
+  "JobDisplayId": "2000000",
+  "DocumentType": 6,
+  "DocumentTypeDescription": "Item Photo",
+  "Shared": 0,
+  "Tags": [
+    "before"
+  ],
+  "JobItems": [
+    "4422af19-2a28-ac6f-ba09-3d34fed9e332"
+  ],
+  "RfqId": 4567
+}

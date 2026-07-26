@@ -1,0 +1,232 @@
+"""Example: ``api.jobs.on_hold`` -- create / assign / email / resolve.
+
+Live SDK example. Run with valid staging credentials in ``.env.staging``::
+
+    python -m examples.jobs.on_hold
+
+The script performs the full on-hold lifecycle on
+``TEST_JOB_DISPLAY_ID``, escalating the hold to ``TEST_USER_ID``:
+
+1. Discovery: list any existing holds on the job, then look up
+   ``TEST_USER_ID`` as a follow-up user to confirm the contact has an
+   email.
+2. Discovery: source ``reasonId`` and ``responsiblePartyTypeId`` from
+   ``api.lookup.get_by_key(...)`` -- both are required by swagger.
+3. Create: ``api.jobs.on_hold.create(...)`` with
+   ``assignedToId=TEST_USER_ID``.
+4. Notify: build a ``SendEmailRequest`` and call
+   ``api.jobs.email.send(...)`` so the assignee learns about the hold
+   out-of-band. (Whether the on-hold POST itself triggers a
+   notification is server-side configuration; this example sends one
+   explicitly.)
+5. Resolve: ``api.jobs.on_hold.resolve(...)`` -- swagger uses the same
+   ``SaveOnHoldRequest`` schema as create, so ``reasonId`` and
+   ``responsiblePartyTypeId`` are still required (carry them forward).
+
+Forward references
+------------------
+
+* :meth:`api.lookup.get_by_key("OnHoldReason") <ab.api.endpoints.lookup.LookupEndpoint.get_by_key>`
+  -> ``LookupValue.id`` -> :attr:`SaveOnHoldRequest.reason_id`.
+* :meth:`api.lookup.get_by_key("ResponsibleParty") <ab.api.endpoints.lookup.LookupEndpoint.get_by_key>`
+  -> ``LookupValue.id`` -> :attr:`SaveOnHoldRequest.responsible_party_type_id`.
+* ``OnHoldUser.contact_id`` (output of
+  :meth:`api.jobs.on_hold.get_followup_user <ab.api.endpoints.jobs.on_hold.JobOnHoldEndpoint.get_followup_user>`)
+  -> :attr:`SaveOnHoldRequest.assigned_to_id` (**int**, not UUID).
+* ``OnHoldUser.email`` -> :attr:`SendEmailRequest.to`.
+* :attr:`SaveOnHoldResponse.on_hold_id` -> path param for
+  :meth:`api.jobs.on_hold.resolve <ab.api.endpoints.jobs.on_hold.JobOnHoldEndpoint.resolve>`.
+
+Swagger vs. live behaviour
+--------------------------
+
+* The pre-realignment SDK ``SaveOnHoldRequest`` had hand-authored fields
+  (``reason``, ``description``, ``followUpContactId: str``,
+  ``followUpDate: str``) that did not match the swagger ``SaveOnHoldRequest``
+  shape. The model was realigned to swagger -- required fields are now
+  ``reasonId`` (UUID) and ``responsiblePartyTypeId`` (UUID), and the
+  assignee field is ``assignedToId`` (int).
+* Swagger uses the **same** ``SaveOnHoldRequest`` schema for create,
+  update, and resolve. The legacy ``ResolveOnHoldRequest`` is now an
+  alias of :class:`SaveOnHoldRequest`.
+
+See also: https://ab-sdk.readthedocs.io/en/latest/api/jobs.html#api-jobs-on-hold
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import datetime, timedelta, timezone
+
+from ab import ABConnectAPI
+from ab.api.models.jobs import SaveOnHoldRequest, SendEmailRequest
+from ab.cli.formatter import format_result
+from examples._capture import load_request, mutations_enabled, save
+from examples.constants import TEST_JOB_DISPLAY_ID, TEST_ON_HOLD_ID, TEST_USER_ID
+
+
+def _pick_lookup_uuid(api, key: str) -> str:
+    """Resolve a master-constant key to its first ``LookupValue.id``.
+
+    ``api.lookup.get_by_key()`` returns ``List[LookupValue]`` whose ``.id``
+    is the UUID feeding the on-hold request. Mirrors the
+    ``examples/notes.py`` pattern -- ``.value`` is null on JobNoteCategory
+    and on most master-constant lookups; the UUID lives in ``.id``.
+    """
+    values = api.lookup.get_by_key(key)
+    if not values:
+        raise SystemExit(f"No values returned for lookup key {key!r}; cannot continue.")
+    print(f"  {key}: chose id={values[0].id!r} name={values[0].name!r}  (of {len(values)} options)")
+    return values[0].id
+
+
+def main() -> None:
+    api = ABConnectAPI(env="staging")
+
+    # --- Step 1: list existing on-holds on the job ---------------------
+    print(f"\n# api.jobs.on_hold.list({TEST_JOB_DISPLAY_ID})")
+    existing = api.jobs.on_hold.list(TEST_JOB_DISPLAY_ID)
+    print(format_result(existing))
+    save("ExtendedOnHoldInfo.json", existing)
+
+    # --- Step 2a: confirm TEST_USER_ID has an email --------------------
+    print(f"\n# api.jobs.on_hold.get_followup_user({TEST_JOB_DISPLAY_ID}, {TEST_USER_ID})")
+    follow_up = api.jobs.on_hold.get_followup_user(TEST_JOB_DISPLAY_ID, str(TEST_USER_ID))
+    print(format_result(follow_up))
+    save("OnHoldUser_single.json", [follow_up])
+    if not follow_up.email:
+        print(
+            "  WARNING: follow-up user has no email on file. The hold is created "
+            "but the notification email step will be skipped.",
+        )
+
+    # --- Step 2c: list all follow-up users available for the job -------
+    print(f"\n# api.jobs.on_hold.list_followup_users({TEST_JOB_DISPLAY_ID})")
+    followup_users = api.jobs.on_hold.list_followup_users(TEST_JOB_DISPLAY_ID)
+    print(format_result(followup_users))
+    save("OnHoldUser.json", followup_users)
+
+    # --- Step 2d: fetch one on-hold record (detail) -------------------
+    # Discover the hold id from the list above (ExtendedOnHoldInfo.id);
+    # fall back to TEST_ON_HOLD_ID when the job currently has no holds.
+    detail_hold_id = str(existing[0].id) if existing and existing[0].id is not None else str(TEST_ON_HOLD_ID)
+    print(f"\n# api.jobs.on_hold.get({TEST_JOB_DISPLAY_ID}, {detail_hold_id!r})")
+    detail = api.jobs.on_hold.get(TEST_JOB_DISPLAY_ID, detail_hold_id)
+    print(format_result(detail))
+    save("OnHoldDetails.json", detail)
+
+    # --- Steps 2b–5 mutate staging (create/email/resolve a hold) --------
+    # Guarded so a default run and the verify harness exercise only the GET
+    # calls above. Set AB_RUN_MUTATIONS=1 to run the full lifecycle.
+    if not mutations_enabled():
+        print("\n# (mutating on-hold lifecycle skipped — set AB_RUN_MUTATIONS=1 to run)")
+        return
+
+    # --- Step 2b: discover the required lookup UUIDs -------------------
+    # Swagger requires reasonId + responsiblePartyTypeId. The keys below
+    # are the master-constant keys used elsewhere in the platform; adjust
+    # the chosen value if a more specific reason is desired.
+    print("\n# api.lookup.get_by_key('OnHoldReason') / 'ResponsibleParty'")
+    reason_id = _pick_lookup_uuid(api, "OnHoldReason")
+    responsible_party_type_id = _pick_lookup_uuid(api, "ResponsibleParty")
+
+    # --- Step 3: create the hold, assigned to TEST_USER_ID -------------
+    now = datetime.now(timezone.utc).replace(microsecond=0)
+    body = SaveOnHoldRequest(
+        reasonId=reason_id,
+        responsiblePartyTypeId=responsible_party_type_id,
+        comment=f"Hold created by examples/jobs/on_hold.py at {now.isoformat()}; assigned to user {TEST_USER_ID}.",
+        assignedToId=TEST_USER_ID,
+        dueDate=now + timedelta(days=2),
+        startDate=now,
+    )
+
+    print(
+        f"\n# api.jobs.on_hold.create({TEST_JOB_DISPLAY_ID}, data=SaveOnHoldRequest(..., assignedToId={TEST_USER_ID}))",
+    )
+    print("  payload:")
+    print(json.dumps(body.model_dump(by_alias=True, exclude_none=True, mode="json"), indent=2))
+
+    created = api.jobs.on_hold.create(TEST_JOB_DISPLAY_ID, data=body)
+    print(format_result(created))
+    on_hold_id = created.on_hold_id
+    if not on_hold_id:
+        raise SystemExit("Create did not return on_hold_id; cannot continue.")
+
+    # --- Step 4: email the assignee ------------------------------------
+    if follow_up.email:
+        email_body = SendEmailRequest(
+            to=[follow_up.email],
+            subject=f"Job {TEST_JOB_DISPLAY_ID}: on-hold escalated to you",
+            body=(
+                f"Hi {follow_up.full_name or 'there'},\n\n"
+                f"On-hold record #{on_hold_id} on job {TEST_JOB_DISPLAY_ID} has been assigned to you. "
+                "Please review and resolve when ready.\n"
+            ),
+        )
+        print(f"\n# api.jobs.email.send({TEST_JOB_DISPLAY_ID}, data=SendEmailRequest(to={follow_up.email!r}, ...))")
+        api.jobs.email.send(TEST_JOB_DISPLAY_ID, data=email_body)
+        print("  (sent)")
+
+    # --- Step 5: resolve the hold --------------------------------------
+    # The resolve route shares SaveOnHoldRequest with create -- reasonId and
+    # responsiblePartyTypeId have to be carried forward.
+    resolved_at = datetime.now(timezone.utc).replace(microsecond=0)
+    resolve_body = SaveOnHoldRequest(
+        reasonId=reason_id,
+        responsiblePartyTypeId=responsible_party_type_id,
+        comment="Resolved by examples/jobs/on_hold.py walkthrough.",
+        resolvedDate=resolved_at,
+    )
+    print(
+        f"\n# api.jobs.on_hold.resolve({TEST_JOB_DISPLAY_ID}, {on_hold_id!r}, "
+        "data=SaveOnHoldRequest(..., resolvedDate=...))"
+    )
+    resolution = api.jobs.on_hold.resolve(TEST_JOB_DISPLAY_ID, on_hold_id, data=resolve_body)
+    print(format_result(resolution))
+
+    # --- Step 6: comment / update / update dates / delete --------------
+    # These exercise the remaining JobOnHold mutations against an existing
+    # hold. Prefer a discovered hold id (ExtendedOnHoldInfo.id); otherwise
+    # fall back to TEST_ON_HOLD_ID. Operator: supply a real, open hold id
+    # for a clean live run.
+    target_hold_id = str(existing[0].id) if existing and existing[0].id is not None else str(TEST_ON_HOLD_ID)
+
+    print(f"\n# api.jobs.on_hold.add_comment({TEST_JOB_DISPLAY_ID}, {target_hold_id!r}, data=...)")
+    note = api.jobs.on_hold.add_comment(
+        TEST_JOB_DISPLAY_ID,
+        target_hold_id,
+        data=load_request("OnHoldCommentRequest.json"),
+    )
+    print(format_result(note))
+    save("OnHoldNoteDetails.json", note)
+
+    # update shares SaveOnHoldRequest with create/resolve — carry the
+    # required reasonId / responsiblePartyTypeId UUIDs forward.
+    update_body = SaveOnHoldRequest(
+        reasonId=reason_id,
+        responsiblePartyTypeId=responsible_party_type_id,
+        comment="Updated by examples/jobs/on_hold.py walkthrough.",
+    )
+    print(f"\n# api.jobs.on_hold.update({TEST_JOB_DISPLAY_ID}, {target_hold_id!r}, data=SaveOnHoldRequest(...))")
+    updated = api.jobs.on_hold.update(TEST_JOB_DISPLAY_ID, target_hold_id, data=update_body)
+    print(format_result(updated))
+    save("SaveOnHoldResponse.json", updated)
+
+    print(f"\n# api.jobs.on_hold.update_dates({TEST_JOB_DISPLAY_ID}, {target_hold_id!r}, data=...)")
+    api.jobs.on_hold.update_dates(
+        TEST_JOB_DISPLAY_ID,
+        target_hold_id,
+        data=load_request("SaveOnHoldDatesModel.json"),
+    )
+    print("  (dates updated — no response body)")
+
+    # delete removes the active on-hold record for the job (takes only the
+    # job display id — no hold-id path param).
+    print(f"\n# api.jobs.on_hold.delete({TEST_JOB_DISPLAY_ID})")
+    api.jobs.on_hold.delete(TEST_JOB_DISPLAY_ID)
+    print("  (deleted — no response body)")
+
+
+if __name__ == "__main__":
+    main()

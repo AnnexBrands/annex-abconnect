@@ -1,0 +1,80 @@
+[
+  {
+    "id": "376e1199-0e54-a2ba-15a6-4f7b4f32d03c",
+    "key": null,
+    "name": "Home Office",
+    "value": null
+  },
+  {
+    "id": "f0f13fd3-b277-abda-1c6f-c714dc6e49b5",
+    "key": null,
+    "name": "Scheduling",
+    "value": null
+  },
+  {
+    "id": "be2d9d68-e035-a8b4-466a-2604677223f8",
+    "key": null,
+    "name": "Customer",
+    "value": null
+  },
+  {
+    "id": "2bd09120-781e-a845-52c6-83fee52b3e1b",
+    "key": null,
+    "name": "Carrier Transportation",
+    "value": null
+  },
+  {
+    "id": "8e12ca49-1b43-a6ec-50c1-d237c67d7fa0",
+    "key": null,
+    "name": "Delivery",
+    "value": null
+  },
+  {
+    "id": "27bde418-f6be-a5b5-aebc-6079e5d8f0a5",
+    "key": null,
+    "name": "Job History",
+    "value": null
+  },
+  {
+    "id": "4acedd9d-4233-a160-564e-37c10b929fa6",
+    "key": null,
+    "name": "Event Log",
+    "value": null
+  },
+  {
+    "id": "21b629bd-4892-ada4-5e7a-ba8e4d22e85e",
+    "key": null,
+    "name": "Accessorial Note",
+    "value": null
+  },
+  {
+    "id": "1717d574-fb5e-a572-1983-0e60c22ddbe4",
+    "key": null,
+    "name": "Invoice/Bill",
+    "value": null
+  },
+  {
+    "id": "07998c23-28a5-a3c0-b366-d8fd4270074b",
+    "key": null,
+    "name": "Packaging",
+    "value": null
+  },
+  {
+    "id": "339e8722-10fc-a5e6-9512-53bd739da216",
+    "key": null,
+    "name": "Pickup",
+    "value": null
+  },
+  {
+    "id": "163d86d2-4383-a913-b991-3a3347d06e21",
+    "key": null,
+    "name": "Job Hold",
+    "value": null
+  },
+  {
+    "id": "2d9712e2-73e4-a2dd-5c37-03ece3fc72fd",
+    "key": null,
+    "name": "Storage",
+    "value": null
+  }
+]

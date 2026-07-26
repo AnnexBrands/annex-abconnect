@@ -1,0 +1,14 @@
+[
+  {
+    "id": "60b05542-9072-ad3d-c543-5fe40614f195",
+    "key": null,
+    "name": "Wait for customer",
+    "value": null
+  },
+  {
+    "id": "9173e0ca-6c4b-aed7-da8a-afa5598fb21a",
+    "key": null,
+    "name": "Escalate",
+    "value": null
+  }
+]

@@ -1,0 +1,1448 @@
+[
+  {
+    "code": null,
+    "name": "Afghanistan",
+    "id": "d57f868d-5dcb-abd9-8980-b390cb3646f3",
+    "iataCode": "AF"
+  },
+  {
+    "code": null,
+    "name": "Albania",
+    "id": "d24dce0e-b479-a1d4-ac5d-1dae08d825b4",
+    "iataCode": "AL"
+  },
+  {
+    "code": null,
+    "name": "Algeria",
+    "id": "81cf14b7-3b28-a005-1a48-b84e2883806f",
+    "iataCode": "DZ"
+  },
+  {
+    "code": null,
+    "name": "American Samoa",
+    "id": "61428361-d9f7-a26e-83a7-222f7aa7bf5a",
+    "iataCode": "AS"
+  },
+  {
+    "code": null,
+    "name": "Andorra",
+    "id": "a6955451-00b0-a243-c56a-f450cadc0f7e",
+    "iataCode": "AD"
+  },
+  {
+    "code": null,
+    "name": "Angola",
+    "id": "d64e6bd6-cab1-a390-21e0-b60f4bba8b74",
+    "iataCode": "AO"
+  },
+  {
+    "code": null,
+    "name": "Anguilla",
+    "id": "0a53e0c6-cec2-ac2c-a4e1-ff17cdd1ddc3",
+    "iataCode": "AI"
+  },
+  {
+    "code": null,
+    "name": "Antarctica",
+    "id": "b5c92c8e-0654-a876-2309-2eb9af69343d",
+    "iataCode": "AQ"
+  },
+  {
+    "code": null,
+    "name": "Antigua and Barbuda",
+    "id": "9d3f56bb-cfe6-a254-1a6f-7f4ccdd93000",
+    "iataCode": "AG"
+  },
+  {
+    "code": null,
+    "name": "Argentina",
+    "id": "b1c880b7-d2f8-a2a1-f035-e14d786a4519",
+    "iataCode": "AR"
+  },
+  {
+    "code": null,
+    "name": "Armenia",
+    "id": "068808db-3071-a09a-bfeb-bb0c5368338f",
+    "iataCode": "AM"
+  },
+  {
+    "code": null,
+    "name": "Aruba",
+    "id": "3be0ed20-c9eb-a201-9ba3-7d4e04deab67",
+    "iataCode": "AW"
+  },
+  {
+    "code": null,
+    "name": "Australia",
+    "id": "6794d35e-4e66-ab9e-ef69-f12facca1823",
+    "iataCode": "AU"
+  },
+  {
+    "code": null,
+    "name": "Austria",
+    "id": "d74b8fd2-500c-a5ed-a2c5-7770ba39d57d",
+    "iataCode": "AT"
+  },
+  {
+    "code": null,
+    "name": "Azerbaijan",
+    "id": "daf7d64a-7206-a8ad-03f6-f81c21afbbd2",
+    "iataCode": "AZ"
+  },
+  {
+    "code": null,
+    "name": "Bahamas",
+    "id": "91300458-891f-ad8b-2495-1a4383f7f7e9",
+    "iataCode": "BS"
+  },
+  {
+    "code": null,
+    "name": "Bahrain",
+    "id": "d17fe7e0-0938-a9f2-fef4-0456f73934d0",
+    "iataCode": "BH"
+  },
+  {
+    "code": null,
+    "name": "Bangladesh",
+    "id": "583da7c5-1914-a468-eccd-ede754e5809e",
+    "iataCode": "BD"
+  },
+  {
+    "code": null,
+    "name": "Barbados",
+    "id": "fb579282-7a1a-a31d-c7ca-bf4ee8aca61a",
+    "iataCode": "BB"
+  },
+  {
+    "code": null,
+    "name": "Belarus",
+    "id": "1273459a-70d0-a945-a4d1-952ac5aa7944",
+    "iataCode": "BY"
+  },
+  {
+    "code": null,
+    "name": "Belgium",
+    "id": "79f67b3a-df91-a2c3-ed81-c5025c8779cf",
+    "iataCode": "BE"
+  },
+  {
+    "code": null,
+    "name": "Belize",
+    "id": "8a31b308-e964-ac7e-cad1-aedb51d811a2",
+    "iataCode": "BZ"
+  },
+  {
+    "code": null,
+    "name": "Benin",
+    "id": "3bf8c926-a5c9-a1ed-8277-949f1d43798b",
+    "iataCode": "BJ"
+  },
+  {
+    "code": null,
+    "name": "Bermuda",
+    "id": "1d392f92-d6c5-ac4c-f2e7-3da8c3dc3ec7",
+    "iataCode": "BM"
+  },
+  {
+    "code": null,
+    "name": "Bhutan",
+    "id": "32aa4d76-60ca-af6e-3271-b950e3616926",
+    "iataCode": "BT"
+  },
+  {
+    "code": null,
+    "name": "Bolivia",
+    "id": "8aaac365-47cc-a05f-eb70-03c240858938",
+    "iataCode": "BO"
+  },
+  {
+    "code": null,
+    "name": "Bosnia and Herzegovina",
+    "id": "c7dc7606-41ca-a125-0149-ad493e066cf9",
+    "iataCode": "BA"
+  },
+  {
+    "code": null,
+    "name": "Botswana",
+    "id": "14c54458-49b4-a02f-d5cf-80578b064e2d",
+    "iataCode": "BW"
+  },
+  {
+    "code": null,
+    "name": "Bouvet Island",
+    "id": "1a991818-92da-a68b-d319-6cd05e50622f",
+    "iataCode": "BV"
+  },
+  {
+    "code": null,
+    "name": "Brazil",
+    "id": "c84989f2-794d-a69f-f1ff-49c0daf0a131",
+    "iataCode": "BR"
+  },
+  {
+    "code": null,
+    "name": "British Indian Ocean Territory",
+    "id": "09cd2c2a-792e-a2ba-929c-4b65e300f3b6",
+    "iataCode": "IO"
+  },
+  {
+    "code": null,
+    "name": "Brunei Darussalam",
+    "id": "c04c3b3a-e20c-ad3a-c618-36dcd26f0aba",
+    "iataCode": "BN"
+  },
+  {
+    "code": null,
+    "name": "Bulgaria",
+    "id": "da91903f-8e38-a2bb-6189-ef904ee6ee8f",
+    "iataCode": "BG"
+  },
+  {
+    "code": null,
+    "name": "Burkina Faso",
+    "id": "fcd3ae0c-834e-a4e5-20f3-357de5e821f8",
+    "iataCode": "BF"
+  },
+  {
+    "code": null,
+    "name": "Burundi",
+    "id": "bbf3c56f-8cbd-adbb-bb37-d9607ae80e72",
+    "iataCode": "BI"
+  },
+  {
+    "code": null,
+    "name": "Cambodia",
+    "id": "a54634bb-5d28-abb5-6d02-00ae5d87a0bc",
+    "iataCode": "KH"
+  },
+  {
+    "code": null,
+    "name": "Cameroon",
+    "id": "b7c33555-8327-a9de-1ab6-05ba8c32e1ad",
+    "iataCode": "CM"
+  },
+  {
+    "code": null,
+    "name": "Canada",
+    "id": "fd005e4a-f7f6-a223-ef1b-20ba5cdd87e4",
+    "iataCode": "CA"
+  },
+  {
+    "code": null,
+    "name": "Cape Verde",
+    "id": "bd4210d2-de1d-a13d-2c1a-dbc06fd3b5fd",
+    "iataCode": "CV"
+  },
+  {
+    "code": null,
+    "name": "Cayman Islands",
+    "id": "d2d76c2e-f2ca-a350-a9cb-93877fba5ce8",
+    "iataCode": "KY"
+  },
+  {
+    "code": null,
+    "name": "Central African Republic",
+    "id": "ce108780-0948-a26d-b839-0c7d22e47bba",
+    "iataCode": "CF"
+  },
+  {
+    "code": null,
+    "name": "Chad",
+    "id": "72ce0cdc-8296-ac0d-14a0-0549f803db86",
+    "iataCode": "TD"
+  },
+  {
+    "code": null,
+    "name": "Chile",
+    "id": "30b0c46a-4797-a638-0519-6bdd1e5bd7f4",
+    "iataCode": "CL"
+  },
+  {
+    "code": null,
+    "name": "China",
+    "id": "d749230f-1c9c-a80b-cfae-8f1e1e40651c",
+    "iataCode": "CN"
+  },
+  {
+    "code": null,
+    "name": "Christmas Island",
+    "id": "dd2c7a26-6f41-a1e5-c3c7-cee621e7db6e",
+    "iataCode": "CX"
+  },
+  {
+    "code": null,
+    "name": "Cocos (Keeling) Islands",
+    "id": "35aca55c-705f-ae89-b869-918457985a1e",
+    "iataCode": "CC"
+  },
+  {
+    "code": null,
+    "name": "Colombia",
+    "id": "955c3310-dae8-aeab-a4bf-ae9441d58fde",
+    "iataCode": "CO"
+  },
+  {
+    "code": null,
+    "name": "Comoros",
+    "id": "b3099d29-8cf5-a877-aad3-005c4438850f",
+    "iataCode": "KM"
+  },
+  {
+    "code": null,
+    "name": "Congo",
+    "id": "c7b160b0-9640-ab11-2369-8c55a962a1ea",
+    "iataCode": "CG"
+  },
+  {
+    "code": null,
+    "name": "Congo, The Democratic Republic of The",
+    "id": "96f4a720-1ba8-a59e-238e-4781531b5a38",
+    "iataCode": "CD"
+  },
+  {
+    "code": null,
+    "name": "Cook Islands",
+    "id": "e2a551b8-5a46-a0f6-f7ed-e99df31ef047",
+    "iataCode": "CK"
+  },
+  {
+    "code": null,
+    "name": "Costa Rica",
+    "id": "4c79d377-f834-a504-f32d-e64d3fa28f34",
+    "iataCode": "CR"
+  },
+  {
+    "code": null,
+    "name": "Croatia",
+    "id": "932a3165-ba53-a136-49cf-07e6bcd948f9",
+    "iataCode": "HR"
+  },
+  {
+    "code": null,
+    "name": "Cuba",
+    "id": "f4f8b79c-cbcb-af6a-2d63-62b65f14b1b6",
+    "iataCode": "CU"
+  },
+  {
+    "code": null,
+    "name": "Cyprus",
+    "id": "485e4414-c933-a113-d4e7-960809a9effa",
+    "iataCode": "CY"
+  },
+  {
+    "code": null,
+    "name": "Czechia",
+    "id": "c5b02fd8-7618-ab7c-a175-79fa00f202f1",
+    "iataCode": "CZ"
+  },
+  {
+    "code": null,
+    "name": "Denmark",
+    "id": "796e83bf-71de-ae26-7ff7-87b486e4c0f7",
+    "iataCode": "DK"
+  },
+  {
+    "code": null,
+    "name": "Djibouti",
+    "id": "e30c3b86-69d9-a4e9-2ab2-2611ccd3e153",
+    "iataCode": "DJ"
+  },
+  {
+    "code": null,
+    "name": "Dominica",
+    "id": "77e31700-0149-ae58-3bbb-70a402a5d43a",
+    "iataCode": "DM"
+  },
+  {
+    "code": null,
+    "name": "Dominican Republic",
+    "id": "11f529f2-7b76-ab21-5073-d7fe1c196497",
+    "iataCode": "DO"
+  },
+  {
+    "code": null,
+    "name": "Ecuador",
+    "id": "60eff1e1-7967-a0e3-4b1f-4eb818a81647",
+    "iataCode": "EC"
+  },
+  {
+    "code": null,
+    "name": "Egypt",
+    "id": "867f1296-5d26-a2d9-e09d-608410eb7eed",
+    "iataCode": "EG"
+  },
+  {
+    "code": null,
+    "name": "El Salvador",
+    "id": "8cec5fba-6ac3-a12d-6d8d-f2a798ad3f51",
+    "iataCode": "SV"
+  },
+  {
+    "code": null,
+    "name": "Equatorial Guinea",
+    "id": "8ed3a231-a94d-ab0c-3d18-6edec37f8e05",
+    "iataCode": "GQ"
+  },
+  {
+    "code": null,
+    "name": "Eritrea",
+    "id": "57db908a-741b-abf0-2191-44153d1edaca",
+    "iataCode": "ER"
+  },
+  {
+    "code": null,
+    "name": "Estonia",
+    "id": "755a2e44-c68a-a05b-7944-f0ee404fd87d",
+    "iataCode": "EE"
+  },
+  {
+    "code": null,
+    "name": "Ethiopia",
+    "id": "9d2dfc7a-bd66-a88b-d575-dfb2bf6d2477",
+    "iataCode": "ET"
+  },
+  {
+    "code": null,
+    "name": "Falkland Islands (Malvinas)",
+    "id": "5b86aa07-b806-a0b5-7a57-6f48261b69d0",
+    "iataCode": "FK"
+  },
+  {
+    "code": null,
+    "name": "Faroe Islands",
+    "id": "0ca1cc50-5384-a282-cbcc-92ac4b8e925d",
+    "iataCode": "FO"
+  },
+  {
+    "code": null,
+    "name": "Fiji",
+    "id": "1b77f112-4fc7-a2d8-4f9a-2adcf909c8be",
+    "iataCode": "FJ"
+  },
+  {
+    "code": null,
+    "name": "Finland",
+    "id": "1565ed3b-da2d-a66b-9088-6707d4dc7450",
+    "iataCode": "FI"
+  },
+  {
+    "code": null,
+    "name": "France",
+    "id": "bbf0a8a7-7d47-a34a-2eb7-34a4818639d2",
+    "iataCode": "FR"
+  },
+  {
+    "code": null,
+    "name": "French Guiana",
+    "id": "06b2b8df-6286-a12b-007b-add27f41317c",
+    "iataCode": "GF"
+  },
+  {
+    "code": null,
+    "name": "French Polynesia",
+    "id": "e51772d2-aa31-a3a4-8176-e1d0e7e568d2",
+    "iataCode": "PF"
+  },
+  {
+    "code": null,
+    "name": "French Southern Territories",
+    "id": "5f09997e-c116-ac36-3de6-3dc188145efb",
+    "iataCode": "TF"
+  },
+  {
+    "code": null,
+    "name": "Gabon",
+    "id": "3dffeb72-0131-acc5-3fb5-5531d228a89a",
+    "iataCode": "GA"
+  },
+  {
+    "code": null,
+    "name": "Gambia",
+    "id": "9690936b-73df-ab2c-e561-46d5fe9c520b",
+    "iataCode": "GM"
+  },
+  {
+    "code": null,
+    "name": "Georgia",
+    "id": "20cfb2c0-b776-a426-d39d-b051b0b8b2f7",
+    "iataCode": "GE"
+  },
+  {
+    "code": null,
+    "name": "Germany",
+    "id": "a4caedbc-d36c-abab-92f5-3297807ae34f",
+    "iataCode": "DE"
+  },
+  {
+    "code": null,
+    "name": "Ghana",
+    "id": "7ad652b5-62f7-ad5a-f814-9814f604f207",
+    "iataCode": "GH"
+  },
+  {
+    "code": null,
+    "name": "Gibraltar",
+    "id": "2091b54e-f544-a636-8ce3-8ff0f7d59bcc",
+    "iataCode": "GI"
+  },
+  {
+    "code": null,
+    "name": "Greece",
+    "id": "bfeb9b50-326b-a09a-b43c-2530f532cd30",
+    "iataCode": "GR"
+  },
+  {
+    "code": null,
+    "name": "Greenland",
+    "id": "df92ede1-832d-a31b-f5a4-9427cc3c1ef2",
+    "iataCode": "GL"
+  },
+  {
+    "code": null,
+    "name": "Grenada",
+    "id": "49a2d994-5e85-a49b-ec30-86a58adb5633",
+    "iataCode": "GD"
+  },
+  {
+    "code": null,
+    "name": "Guadeloupe",
+    "id": "8eab0241-72e0-aafa-82a1-e2a1cda6b704",
+    "iataCode": "GP"
+  },
+  {
+    "code": null,
+    "name": "Guam",
+    "id": "e82ba67e-8e1e-a7c3-1244-0a7393f8d8a1",
+    "iataCode": "GU"
+  },
+  {
+    "code": null,
+    "name": "Guatemala",
+    "id": "bb51da7b-cf26-a061-8291-bdaa8ffbb5ac",
+    "iataCode": "GT"
+  },
+  {
+    "code": null,
+    "name": "Guinea",
+    "id": "662b1ec5-d603-a6de-c5b5-fcacf7e0d434",
+    "iataCode": "GN"
+  },
+  {
+    "code": null,
+    "name": "Guinea-bissau",
+    "id": "e62764d9-019b-a155-8f03-c5721db4965a",
+    "iataCode": "GW"
+  },
+  {
+    "code": null,
+    "name": "Guyana",
+    "id": "114ff91b-7dd0-a3aa-e8aa-df65f79bb667",
+    "iataCode": "GY"
+  },
+  {
+    "code": null,
+    "name": "Haiti",
+    "id": "38d2db18-5728-a53e-fd07-77136f25b022",
+    "iataCode": "HT"
+  },
+  {
+    "code": null,
+    "name": "Heard Island and Mcdonald Islands",
+    "id": "d6bee6e6-fe49-a3d4-10fe-f019667c897e",
+    "iataCode": "HM"
+  },
+  {
+    "code": null,
+    "name": "Honduras",
+    "id": "2707e18d-2990-ac58-410c-c1a3d4a84729",
+    "iataCode": "HN"
+  },
+  {
+    "code": null,
+    "name": "Hong Kong",
+    "id": "e482a28b-7241-ae9b-120d-dfdf07f75bcd",
+    "iataCode": "HK"
+  },
+  {
+    "code": null,
+    "name": "Hungary",
+    "id": "7359ded8-bbc2-a470-6281-a1762beb49a4",
+    "iataCode": "HU"
+  },
+  {
+    "code": null,
+    "name": "Iceland",
+    "id": "d2209700-9c14-aff7-db2f-ad3256e2c8f6",
+    "iataCode": "IS"
+  },
+  {
+    "code": null,
+    "name": "India",
+    "id": "737e65d7-3325-a8a0-7219-e9f49f4273a5",
+    "iataCode": "IN"
+  },
+  {
+    "code": null,
+    "name": "Indonesia",
+    "id": "ecd14622-75ed-ab65-d396-36a64759e145",
+    "iataCode": "ID"
+  },
+  {
+    "code": null,
+    "name": "Iran",
+    "id": "52d53303-9ef7-a249-e84e-d013c4510330",
+    "iataCode": "IR"
+  },
+  {
+    "code": null,
+    "name": "Iraq",
+    "id": "746a4109-204c-ab5f-9394-e74b9cd74024",
+    "iataCode": "IQ"
+  },
+  {
+    "code": null,
+    "name": "Ireland",
+    "id": "e37d6e4e-7ba3-af48-efe7-76f9822f53a0",
+    "iataCode": "IE"
+  },
+  {
+    "code": null,
+    "name": "Israel",
+    "id": "dea9b311-0614-addf-0fb5-a3c7e44203cb",
+    "iataCode": "IL"
+  },
+  {
+    "code": null,
+    "name": "Italy",
+    "id": "d49335f9-2001-a868-eac7-0f83cd211a8c",
+    "iataCode": "IT"
+  },
+  {
+    "code": null,
+    "name": "Ivory Coast",
+    "id": "ba1337c3-c047-af03-bd0a-e225a227a716",
+    "iataCode": "CI"
+  },
+  {
+    "code": null,
+    "name": "Jamaica",
+    "id": "20caee7a-84e6-ac59-f8ef-455237850e13",
+    "iataCode": "JM"
+  },
+  {
+    "code": null,
+    "name": "Japan",
+    "id": "ceb47d4f-d29b-a869-d641-176370384be2",
+    "iataCode": "JP"
+  },
+  {
+    "code": null,
+    "name": "Jordan",
+    "id": "20fd7e48-fdd7-ab42-8681-3b50422fe247",
+    "iataCode": "JO"
+  },
+  {
+    "code": null,
+    "name": "Kazakhstan",
+    "id": "4969c3ff-db2e-a993-e166-ef2f34865555",
+    "iataCode": "KZ"
+  },
+  {
+    "code": null,
+    "name": "Kenya",
+    "id": "73696094-ec1c-a28f-0a4f-83d01d761ad2",
+    "iataCode": "KE"
+  },
+  {
+    "code": null,
+    "name": "Kiribati",
+    "id": "3e79505e-a6aa-a361-2b7d-c3ee49b0f6c8",
+    "iataCode": "KI"
+  },
+  {
+    "code": null,
+    "name": "Korea, North",
+    "id": "2f9e25c7-1330-a8ce-3e86-aee533529190",
+    "iataCode": "KP"
+  },
+  {
+    "code": null,
+    "name": "Korea, South",
+    "id": "a748c04c-95b7-aa59-55f8-6671f50561cb",
+    "iataCode": "KR"
+  },
+  {
+    "code": null,
+    "name": "Kosovo",
+    "id": "2af0a102-465f-a3d8-dab9-c3f40b476092",
+    "iataCode": "XK"
+  },
+  {
+    "code": null,
+    "name": "Kuwait",
+    "id": "f5188d06-4051-af9f-ad06-af2b200ba0e9",
+    "iataCode": "KW"
+  },
+  {
+    "code": null,
+    "name": "Kyrgyz Republic",
+    "id": "b3071e53-530f-aab5-5209-95742762ceb9",
+    "iataCode": "KG"
+  },
+  {
+    "code": null,
+    "name": "Laos",
+    "id": "f7c9bb40-7330-ac1d-b172-994a067f71f1",
+    "iataCode": "LA"
+  },
+  {
+    "code": null,
+    "name": "Latvia",
+    "id": "2903735a-2055-a954-1950-969080e3e37d",
+    "iataCode": "LV"
+  },
+  {
+    "code": null,
+    "name": "Lebanon",
+    "id": "787df034-1767-aea8-d2ec-06bde31eacce",
+    "iataCode": "LB"
+  },
+  {
+    "code": null,
+    "name": "Lesotho",
+    "id": "446295d6-e117-a653-c86c-1b197a64fd75",
+    "iataCode": "LS"
+  },
+  {
+    "code": null,
+    "name": "Liberia",
+    "id": "6ea51f25-e249-a3f2-a995-9c9f3143d45c",
+    "iataCode": "LR"
+  },
+  {
+    "code": null,
+    "name": "Libya",
+    "id": "01b10e58-c48e-a87b-5432-6891c1366c39",
+    "iataCode": "LY"
+  },
+  {
+    "code": null,
+    "name": "Liechtenstein",
+    "id": "5d8f770c-5e18-a57e-02e5-04c4e81dd4b7",
+    "iataCode": "LI"
+  },
+  {
+    "code": null,
+    "name": "Lithuania",
+    "id": "06bb7c2f-af2e-a886-37f5-cbd81e1401fd",
+    "iataCode": "LT"
+  },
+  {
+    "code": null,
+    "name": "Luxembourg",
+    "id": "5bcbf7e8-e89b-a74f-f1c4-13894c9bf5a9",
+    "iataCode": "LU"
+  },
+  {
+    "code": null,
+    "name": "Macau",
+    "id": "c9587073-e11d-a8fd-d9e6-0bb962aaea8f",
+    "iataCode": "MO"
+  },
+  {
+    "code": null,
+    "name": "Macedonia",
+    "id": "7d903706-fb5c-a6d2-7cc7-76641b911f19",
+    "iataCode": "MK"
+  },
+  {
+    "code": null,
+    "name": "Madagascar",
+    "id": "eadc936a-a8e3-a6b0-43e9-050f397ec8be",
+    "iataCode": "MG"
+  },
+  {
+    "code": null,
+    "name": "Malawi",
+    "id": "b55c86a4-b76e-adb9-54c5-e608c1129cf9",
+    "iataCode": "MW"
+  },
+  {
+    "code": null,
+    "name": "Malaysia",
+    "id": "72e2198f-660e-a519-5f98-c16fe30d5080",
+    "iataCode": "MY"
+  },
+  {
+    "code": null,
+    "name": "Maldives",
+    "id": "c67a30e8-b3ca-af7f-1287-2180cf98bf96",
+    "iataCode": "MV"
+  },
+  {
+    "code": null,
+    "name": "Mali",
+    "id": "bd45537c-b134-a325-3aca-11a90a05d7ba",
+    "iataCode": "ML"
+  },
+  {
+    "code": null,
+    "name": "Malta",
+    "id": "75ca6bb4-4dc2-a144-b44f-a24bba0b1d22",
+    "iataCode": "MT"
+  },
+  {
+    "code": null,
+    "name": "Marshall Islands",
+    "id": "7ff3c6df-0359-a27e-56e4-8a69b930c440",
+    "iataCode": "MH"
+  },
+  {
+    "code": null,
+    "name": "Martinique",
+    "id": "4bfb1c93-40d3-acf4-e677-8911e85986dd",
+    "iataCode": "MQ"
+  },
+  {
+    "code": null,
+    "name": "Mauritania",
+    "id": "4607e4c7-bdc3-a4f6-aaf3-6accf72e758b",
+    "iataCode": "MR"
+  },
+  {
+    "code": null,
+    "name": "Mauritius",
+    "id": "5eb0e50e-f397-ab84-c9b4-9657cf3ae7b5",
+    "iataCode": "MU"
+  },
+  {
+    "code": null,
+    "name": "Mayotte",
+    "id": "2c00f345-f994-af84-5bb2-98ae5ed80f4d",
+    "iataCode": "YT"
+  },
+  {
+    "code": null,
+    "name": "Mexico",
+    "id": "7987034f-9c16-a568-5743-95d7051484eb",
+    "iataCode": "MX"
+  },
+  {
+    "code": null,
+    "name": "Micronesia, Federated States of",
+    "id": "b2899a93-a52d-aa6a-ded2-381e9223ed3f",
+    "iataCode": "FM"
+  },
+  {
+    "code": null,
+    "name": "Moldova, Republic of",
+    "id": "c9cbc1c2-de7b-abde-9a46-f5ddd3d0a7c0",
+    "iataCode": "MD"
+  },
+  {
+    "code": null,
+    "name": "Monaco",
+    "id": "9ff1e387-1eda-a67b-5e0d-1baf1b577608",
+    "iataCode": "MC"
+  },
+  {
+    "code": null,
+    "name": "Mongolia",
+    "id": "e1043820-c03d-a875-9b19-ac9e83893a3d",
+    "iataCode": "MN"
+  },
+  {
+    "code": null,
+    "name": "Montenegro",
+    "id": "a81d892f-b178-a3b8-6f7a-c07becf51323",
+    "iataCode": "ME"
+  },
+  {
+    "code": null,
+    "name": "Montserrat",
+    "id": "4a37d8d4-554c-ad23-e9ea-ea24d0d2597e",
+    "iataCode": "MS"
+  },
+  {
+    "code": null,
+    "name": "Morocco",
+    "id": "8376517d-dac9-a875-57b4-5ae1fd9e03e9",
+    "iataCode": "MA"
+  },
+  {
+    "code": null,
+    "name": "Mozambique",
+    "id": "f3be0e7a-a02b-a761-bfa8-1d38db565eed",
+    "iataCode": "MZ"
+  },
+  {
+    "code": null,
+    "name": "Myanmar (Burma)",
+    "id": "6e2e538a-0ee9-aaaa-ae77-65d5192e64f0",
+    "iataCode": "MM"
+  },
+  {
+    "code": null,
+    "name": "Namibia",
+    "id": "d787dab7-051c-a356-4e2b-719775de774a",
+    "iataCode": "NA"
+  },
+  {
+    "code": null,
+    "name": "Nauru",
+    "id": "452add4d-c8db-aec3-41d6-60593d4dc722",
+    "iataCode": "NR"
+  },
+  {
+    "code": null,
+    "name": "Nepal",
+    "id": "a25be968-35cd-a1ae-06c3-93f01b52a41a",
+    "iataCode": "NP"
+  },
+  {
+    "code": null,
+    "name": "Netherlands",
+    "id": "cadd162e-997e-a5dc-c6f2-493530aff89a",
+    "iataCode": "NL"
+  },
+  {
+    "code": null,
+    "name": "Netherlands Antilles",
+    "id": "c977f113-3bca-a63c-caea-57c844101fa1",
+    "iataCode": "AN"
+  },
+  {
+    "code": null,
+    "name": "New Caledonia",
+    "id": "562b0611-1b80-a1e2-a734-02e16ee8ed75",
+    "iataCode": "NC"
+  },
+  {
+    "code": null,
+    "name": "New Zealand",
+    "id": "938817de-3fdd-a08c-5269-0dfd94e7ab84",
+    "iataCode": "NZ"
+  },
+  {
+    "code": null,
+    "name": "Nicaragua",
+    "id": "fa959d0d-e27d-af23-5477-1037aa274868",
+    "iataCode": "NI"
+  },
+  {
+    "code": null,
+    "name": "Niger",
+    "id": "17673395-b374-a28e-fe80-47f25cb243fe",
+    "iataCode": "NE"
+  },
+  {
+    "code": null,
+    "name": "Nigeria",
+    "id": "0334671d-f7af-a92a-9948-c7a30607a755",
+    "iataCode": "NG"
+  },
+  {
+    "code": null,
+    "name": "Niue",
+    "id": "11d83b93-c203-abe6-804d-da7d47c20c16",
+    "iataCode": "NU"
+  },
+  {
+    "code": null,
+    "name": "Norfolk Island",
+    "id": "7f1d9d2f-0885-af97-a323-05b6a896a6ff",
+    "iataCode": "NF"
+  },
+  {
+    "code": null,
+    "name": "Northern Mariana Islands",
+    "id": "61f91b6d-e412-a896-5190-8fa9a1bfb425",
+    "iataCode": "MP"
+  },
+  {
+    "code": null,
+    "name": "Norway",
+    "id": "582527a7-d2fe-a365-7a9a-91e18f49b18f",
+    "iataCode": "NO"
+  },
+  {
+    "code": null,
+    "name": "Oman",
+    "id": "3c8d4e34-e8bc-a83b-fdc8-d714e93c9eae",
+    "iataCode": "OM"
+  },
+  {
+    "code": null,
+    "name": "Pakistan",
+    "id": "57a3465c-6491-ab44-b9d5-ed706ecb56bc",
+    "iataCode": "PK"
+  },
+  {
+    "code": null,
+    "name": "Palau",
+    "id": "bf9f9ca4-6feb-ae66-7d67-dbf6873ab45a",
+    "iataCode": "PW"
+  },
+  {
+    "code": null,
+    "name": "Palestinian Territory",
+    "id": "1d226d59-62f0-a795-de72-91b46f577d6a",
+    "iataCode": "PS"
+  },
+  {
+    "code": null,
+    "name": "Panama",
+    "id": "1b1f82c9-0e29-a1ca-af7e-9679f882f813",
+    "iataCode": "PA"
+  },
+  {
+    "code": null,
+    "name": "Papua New Guinea",
+    "id": "512b0f0e-2a15-ab2e-2061-9a3e03f0dc50",
+    "iataCode": "PG"
+  },
+  {
+    "code": null,
+    "name": "Paraguay",
+    "id": "2f166eba-57aa-a7cb-acd3-6f21001be020",
+    "iataCode": "PY"
+  },
+  {
+    "code": null,
+    "name": "Peru",
+    "id": "fa6329be-52e7-a30b-b224-3be500693a4e",
+    "iataCode": "PE"
+  },
+  {
+    "code": null,
+    "name": "Philippines",
+    "id": "a2a17020-d09f-a6e6-a566-7b6e94f92da2",
+    "iataCode": "PH"
+  },
+  {
+    "code": null,
+    "name": "Pitcairn",
+    "id": "70cbf414-4e3a-afe5-6c09-1d976a580a64",
+    "iataCode": "PN"
+  },
+  {
+    "code": null,
+    "name": "Poland",
+    "id": "e231b639-d748-ae08-d686-f93b1be3ea90",
+    "iataCode": "PL"
+  },
+  {
+    "code": null,
+    "name": "Portugal",
+    "id": "18dafc4c-a8a0-a859-a27e-f3755acad277",
+    "iataCode": "PT"
+  },
+  {
+    "code": null,
+    "name": "Puerto Rico",
+    "id": "8a7812a2-872a-ae20-27cf-730e9d856411",
+    "iataCode": "PR"
+  },
+  {
+    "code": null,
+    "name": "Qatar",
+    "id": "15ce4081-9c64-a167-a8a7-f54075273ad0",
+    "iataCode": "QA"
+  },
+  {
+    "code": null,
+    "name": "Reunion",
+    "id": "a25ecd89-d1ed-af9b-0095-84868f907e89",
+    "iataCode": "RE"
+  },
+  {
+    "code": null,
+    "name": "Romania",
+    "id": "b12b636c-0b64-a4de-1bce-17ad4aed5fd2",
+    "iataCode": "RO"
+  },
+  {
+    "code": null,
+    "name": "Russia",
+    "id": "ebb8ba42-0e3a-a416-e01a-e2724d2a0540",
+    "iataCode": "RU"
+  },
+  {
+    "code": null,
+    "name": "Rwanda",
+    "id": "8c8eb198-f3fd-a7f8-24c3-012dd1f64c20",
+    "iataCode": "RW"
+  },
+  {
+    "code": null,
+    "name": "Saint Helena",
+    "id": "2a819869-d832-a63f-9f43-b46a847ba733",
+    "iataCode": "SH"
+  },
+  {
+    "code": null,
+    "name": "Saint Kitts and Nevis",
+    "id": "0957abe3-aba3-a232-cbd1-166004609003",
+    "iataCode": "KN"
+  },
+  {
+    "code": null,
+    "name": "Saint Lucia",
+    "id": "66ff78c4-6f0e-a974-459b-15db0a64c679",
+    "iataCode": "LC"
+  },
+  {
+    "code": null,
+    "name": "Saint Pierre and Miquelon",
+    "id": "cbfdeefc-47f0-a848-1e88-5d4654115445",
+    "iataCode": "PM"
+  },
+  {
+    "code": null,
+    "name": "Saint Vincent and The Grenadines",
+    "id": "bbf0b04e-9a91-a3a1-c65a-d31d7ffdffa8",
+    "iataCode": "VC"
+  },
+  {
+    "code": null,
+    "name": "Samoa",
+    "id": "21675ad7-1030-a8d2-d6e2-05e913a6121c",
+    "iataCode": "WS"
+  },
+  {
+    "code": null,
+    "name": "San Marino",
+    "id": "7a45bdbe-a1bc-a73e-2edd-9fc650ffde4a",
+    "iataCode": "SM"
+  },
+  {
+    "code": null,
+    "name": "Sao Tome and Principe",
+    "id": "06f15a00-fe08-af6f-eb75-86a9c8361986",
+    "iataCode": "ST"
+  },
+  {
+    "code": null,
+    "name": "Saudi Arabia",
+    "id": "bb3fd92f-ae79-ada8-2f2b-5144d7828ed8",
+    "iataCode": "SA"
+  },
+  {
+    "code": null,
+    "name": "Senegal",
+    "id": "f4a95372-8c12-a480-af81-8851f0751cea",
+    "iataCode": "SN"
+  },
+  {
+    "code": null,
+    "name": "Serbia",
+    "id": "85cfbc9b-fda8-a273-2a88-a15265d8dc2d",
+    "iataCode": "RS"
+  },
+  {
+    "code": null,
+    "name": "Seychelles",
+    "id": "af5bf543-9206-af10-5285-3f45b5315ad0",
+    "iataCode": "SC"
+  },
+  {
+    "code": null,
+    "name": "Sierra Leone",
+    "id": "ec276c66-7055-a5c0-92e3-1a3e470363e9",
+    "iataCode": "SL"
+  },
+  {
+    "code": null,
+    "name": "Singapore",
+    "id": "fd434114-cb9b-aef2-7b17-6e42cfc90f33",
+    "iataCode": "SG"
+  },
+  {
+    "code": null,
+    "name": "Slovakia",
+    "id": "55c72b0f-8da3-a8c7-4363-098837060599",
+    "iataCode": "SK"
+  },
+  {
+    "code": null,
+    "name": "Slovenia",
+    "id": "23e1fe2f-f44e-aa66-b42c-12290d73e905",
+    "iataCode": "SI"
+  },
+  {
+    "code": null,
+    "name": "Solomon Islands",
+    "id": "55de90be-23c3-ad12-dc65-827babe9fd82",
+    "iataCode": "SB"
+  },
+  {
+    "code": null,
+    "name": "Somalia",
+    "id": "dd67911b-5780-a423-b96e-a1044162fbec",
+    "iataCode": "SO"
+  },
+  {
+    "code": null,
+    "name": "South Africa",
+    "id": "801fc2f6-73c3-a363-b8ff-cb79ad520204",
+    "iataCode": "ZA"
+  },
+  {
+    "code": null,
+    "name": "South Georgia and The South Sandwich Islands",
+    "id": "2369123b-9347-aeab-653c-8a199798cff9",
+    "iataCode": "GS"
+  },
+  {
+    "code": null,
+    "name": "Spain",
+    "id": "65be7856-f169-a526-c879-5100a1f14427",
+    "iataCode": "ES"
+  },
+  {
+    "code": null,
+    "name": "Sri Lanka",
+    "id": "d33d11a4-c4c1-a000-353c-e438284827e3",
+    "iataCode": "LK"
+  },
+  {
+    "code": null,
+    "name": "Sudan",
+    "id": "1816c43e-c661-a5f1-e41b-955801fbc597",
+    "iataCode": "SD"
+  },
+  {
+    "code": null,
+    "name": "Suriname",
+    "id": "ac819f1b-c2be-abe8-a999-69b748466fa6",
+    "iataCode": "SR"
+  },
+  {
+    "code": null,
+    "name": "Svalbard and Jan Mayen",
+    "id": "779b2811-3278-aac7-c023-7069832f8bc6",
+    "iataCode": "SJ"
+  },
+  {
+    "code": null,
+    "name": "Swaziland",
+    "id": "da80c489-908e-a44d-845c-8e22bc943cf4",
+    "iataCode": "SZ"
+  },
+  {
+    "code": null,
+    "name": "Sweden",
+    "id": "87abf883-5cf6-ae65-d972-9dce79740b79",
+    "iataCode": "SE"
+  },
+  {
+    "code": null,
+    "name": "Switzerland",
+    "id": "03dedbc6-d499-a8b9-e0b2-b74f299d87bd",
+    "iataCode": "CH"
+  },
+  {
+    "code": null,
+    "name": "Syria",
+    "id": "353a8bd3-8fa1-ab51-9518-0a01f0874324",
+    "iataCode": "SY"
+  },
+  {
+    "code": null,
+    "name": "Taiwan",
+    "id": "fe3d54b3-d2f9-a33b-7ddf-86f3c99c3f43",
+    "iataCode": "TW"
+  },
+  {
+    "code": null,
+    "name": "Tajikistan",
+    "id": "f0eb07be-34e4-ad40-c3e9-27a129221364",
+    "iataCode": "TJ"
+  },
+  {
+    "code": null,
+    "name": "Tanzania, United Republic of",
+    "id": "9be5af7d-9169-a125-0bd6-abf37e8ff8ee",
+    "iataCode": "TZ"
+  },
+  {
+    "code": null,
+    "name": "Thailand",
+    "id": "a1aa803f-1037-a7e6-b86d-3945e8f6fef8",
+    "iataCode": "TH"
+  },
+  {
+    "code": null,
+    "name": "Timor-leste",
+    "id": "98a58e54-8214-a0dc-84e8-260b187b2620",
+    "iataCode": "TL"
+  },
+  {
+    "code": null,
+    "name": "Togo",
+    "id": "dc8104da-feeb-a548-4105-12a8b88d9177",
+    "iataCode": "TG"
+  },
+  {
+    "code": null,
+    "name": "Tokelau",
+    "id": "332f3782-3c00-af30-a8f6-f717d56fa490",
+    "iataCode": "TK"
+  },
+  {
+    "code": null,
+    "name": "Tonga",
+    "id": "3985b59c-b3f7-a3ac-8cfb-02e0bd9454ae",
+    "iataCode": "TO"
+  },
+  {
+    "code": null,
+    "name": "Trinidad and Tobago",
+    "id": "ae64c81f-86f1-a878-e094-58c2afabef12",
+    "iataCode": "TT"
+  },
+  {
+    "code": null,
+    "name": "Tunisia",
+    "id": "80086f66-3993-ace0-e226-0dffdd5e6ae4",
+    "iataCode": "TN"
+  },
+  {
+    "code": null,
+    "name": "Turkey",
+    "id": "ec6c2465-46f4-a02d-c493-0fbc16623465",
+    "iataCode": "TR"
+  },
+  {
+    "code": null,
+    "name": "Turkmenistan",
+    "id": "9c6778c8-bf18-afdd-0f82-ecf866d703e7",
+    "iataCode": "TM"
+  },
+  {
+    "code": null,
+    "name": "Turks and Caicos Islands",
+    "id": "20d13bae-5415-ac62-90e3-1b33f96b1941",
+    "iataCode": "TC"
+  },
+  {
+    "code": null,
+    "name": "Tuvalu",
+    "id": "85bb5aae-c59f-a2f3-d776-229da8127790",
+    "iataCode": "TV"
+  },
+  {
+    "code": null,
+    "name": "Uganda",
+    "id": "306845c9-4c34-ac89-5028-b84a092ea596",
+    "iataCode": "UG"
+  },
+  {
+    "code": null,
+    "name": "Ukraine",
+    "id": "6fc49337-37d2-a37d-5551-a2c1f155f629",
+    "iataCode": "UA"
+  },
+  {
+    "code": null,
+    "name": "United Arab Emirates",
+    "id": "6fac5c49-5b2a-af51-af46-496a0e3f3305",
+    "iataCode": "AE"
+  },
+  {
+    "code": null,
+    "name": "United Kingdom",
+    "id": "967ab334-51ce-ae6f-d1b5-6b2dfa92bfdf",
+    "iataCode": "GB"
+  },
+  {
+    "code": null,
+    "name": "United States",
+    "id": "d9581e14-28e6-a9bf-df33-e69fa2d7ff1e",
+    "iataCode": "US"
+  },
+  {
+    "code": null,
+    "name": "United States Minor Outlying Islands",
+    "id": "3ac3f1fc-dd00-acaf-a239-c00e36b1e07c",
+    "iataCode": "UM"
+  },
+  {
+    "code": null,
+    "name": "Uruguay",
+    "id": "369f8706-9297-a7b3-3d3b-d06a1292b51d",
+    "iataCode": "UY"
+  },
+  {
+    "code": null,
+    "name": "Uzbekistan",
+    "id": "af903c5d-ea64-a335-2651-700a1846fbe3",
+    "iataCode": "UZ"
+  },
+  {
+    "code": null,
+    "name": "Vanuatu",
+    "id": "15571981-8f68-a71e-7df0-5fc68b7743ad",
+    "iataCode": "VU"
+  },
+  {
+    "code": null,
+    "name": "Vatican City",
+    "id": "0251e599-b63a-a9eb-b4b3-628fa60cdfa6",
+    "iataCode": "VA"
+  },
+  {
+    "code": null,
+    "name": "Venezuela",
+    "id": "2a52f808-a064-a59f-2813-dbacfb358886",
+    "iataCode": "VE"
+  },
+  {
+    "code": null,
+    "name": "Vietnam",
+    "id": "01ec1629-e0d5-adb3-5784-ac87a14a0ea7",
+    "iataCode": "VN"
+  },
+  {
+    "code": null,
+    "name": "Virgin Islands, British",
+    "id": "c7772034-3b41-a51d-02a5-846d528e738c",
+    "iataCode": "VG"
+  },
+  {
+    "code": null,
+    "name": "Virgin Islands, U.S.",
+    "id": "3859e5e8-9a64-af14-939b-1a46959c2f5a",
+    "iataCode": "VI"
+  },
+  {
+    "code": null,
+    "name": "Wallis and Futuna",
+    "id": "22a3c83f-29e7-a13d-cb98-6395704940b0",
+    "iataCode": "WF"
+  },
+  {
+    "code": null,
+    "name": "Western Sahara",
+    "id": "5c66e5f9-89c1-a0d0-a43d-6872e490aa8f",
+    "iataCode": "EH"
+  },
+  {
+    "code": null,
+    "name": "Yemen",
+    "id": "4d73acf3-8cb9-abc6-fd47-6971d6f10650",
+    "iataCode": "YE"
+  },
+  {
+    "code": null,
+    "name": "Zambia",
+    "id": "ce619b93-9dcf-ae80-588e-2c0a3dadaafb",
+    "iataCode": "ZM"
+  },
+  {
+    "code": null,
+    "name": "Zimbabwe",
+    "id": "a2e31063-0578-a0cb-0b85-1598f544f212",
+    "iataCode": "ZW"
+  }
+]

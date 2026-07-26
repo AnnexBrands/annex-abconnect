@@ -1,0 +1,38 @@
+[
+  {
+    "id": "be1a7c84-30be-a0a1-7156-ac9e090b198e",
+    "key": null,
+    "name": "FIP",
+    "value": null
+  },
+  {
+    "id": "f53fb21b-5345-ad3c-7b2e-a3dc3f96404d",
+    "key": null,
+    "name": "HON",
+    "value": null
+  },
+  {
+    "id": "a1861b52-5b28-a3b6-eff8-bb87a7d24303",
+    "key": null,
+    "name": "ESP",
+    "value": null
+  },
+  {
+    "id": "ff9fa6e6-06f0-a294-605d-98e5d4567fca",
+    "key": null,
+    "name": "RAN",
+    "value": null
+  },
+  {
+    "id": "7e20a107-c1d4-aac8-bcf0-8f6b94c43458",
+    "key": null,
+    "name": "SPF",
+    "value": null
+  },
+  {
+    "id": "0c9a3105-613b-a004-ea0a-a9e35b5a50a1",
+    "key": null,
+    "name": "LOO",
+    "value": null
+  }
+]

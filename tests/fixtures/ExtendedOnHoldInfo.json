@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2945,
+    "reason": "Storage",
+    "description": null,
+    "followUpUser": null,
+    "followUpDate": null,
+    "status": null,
+    "createdDate": null,
+    "createdByContactId": 8008,
+    "createdByJobRelation": null,
+    "resolvedDate": null,
+    "responsiblePartyTypeId": "f71fda31-eed8-a189-b4e1-ef2baf77bb5c",
+    "reasonId": "03a8e2ea-33e2-aab9-5f59-bf039a824c2a",
+    "responsibleParty": "Dealer",
+    "comment": "",
+    "startDate": "2024-08-13T00:00:00",
+    "createdBy": "harper.grayson"
+  }
+]

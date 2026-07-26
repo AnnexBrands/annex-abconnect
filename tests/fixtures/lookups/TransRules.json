@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1aeb688d-6f14-a5f6-e849-91b529ad2763",
+    "key": null,
+    "name": "VAN",
+    "value": null
+  },
+  {
+    "id": "1f69e84c-d8b9-ade4-3e43-526a01d4aa6e",
+    "key": null,
+    "name": "OCEAN",
+    "value": null
+  },
+  {
+    "id": "66b5cfa4-0a09-a051-fcef-7787e9fb6b36",
+    "key": null,
+    "name": "PARCEL",
+    "value": null
+  },
+  {
+    "id": "c247de74-99e3-a78e-f8da-33d647b475c3",
+    "key": null,
+    "name": "AIR2",
+    "value": null
+  },
+  {
+    "id": "20041ca7-3701-a878-6a72-f7055459acfd",
+    "key": null,
+    "name": "AIR1",
+    "value": null
+  },
+  {
+    "id": "83455812-7fd4-a97b-713a-d74265246e30",
+    "key": null,
+    "name": "AIR3",
+    "value": null
+  },
+  {
+    "id": "6ed62e60-41c9-a1f9-c477-703f75225191",
+    "key": null,
+    "name": "LTL",
+    "value": null
+  }
+]

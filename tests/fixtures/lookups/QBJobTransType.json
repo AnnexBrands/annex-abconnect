@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1a01fd07-9149-aaba-cbfb-f4a64d3edf1a",
+    "key": null,
+    "name": "CustomerQuery",
+    "value": null
+  },
+  {
+    "id": "bf5cc3c5-49a2-a537-dff1-e4bba3d34bce",
+    "key": null,
+    "name": "InvoiceAdd",
+    "value": null
+  },
+  {
+    "id": "1728e9ab-8434-ae34-4b94-d1c5a485cf71",
+    "key": null,
+    "name": "BillAdd",
+    "value": null
+  },
+  {
+    "id": "8630a5fe-66ef-a821-f3ce-dd8618c235e1",
+    "key": null,
+    "name": "CustomerAddMod",
+    "value": null
+  },
+  {
+    "id": "69e58c18-3381-a663-9ab6-227f76952064",
+    "key": null,
+    "name": "None",
+    "value": null
+  }
+]

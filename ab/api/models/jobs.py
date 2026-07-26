@@ -1,0 +1,1671 @@
+"""Job models for ACPortal and ABC APIs."""
+
+from __future__ import annotations
+
+from datetime import datetime
+from typing import List, Optional
+
+from pydantic import Field
+
+from ab.api.models.base import RequestModel, ResponseModel
+from ab.api.models.common import CompanyAddress
+from ab.api.models.mixins import (
+    FullAuditModel,
+    IdentifiedModel,
+    PaginatedRequestMixin,
+    SearchableRequestMixin,
+    TimestampedModel,
+)
+
+# ---- Job GET response sub-models (018) ------------------------------------
+
+
+class JobContactEmail(ResponseModel):
+    """Email entry nested in JobContactDetails."""
+
+    id: Optional[int] = Field(None, description="Email mapping ID")
+    email: Optional[str] = Field(None, description="Email address")
+    invalid: Optional[bool] = Field(None, description="Email invalid flag")
+    dont_spam: Optional[bool] = Field(None, alias="dontSpam", description="Do-not-spam flag")
+
+
+class JobContactPhone(ResponseModel):
+    """Phone entry nested in JobContactDetails."""
+
+    id: Optional[int] = Field(None, description="Phone mapping ID")
+    phone: Optional[str] = Field(None, description="Phone number")
+
+
+class ContactDetails(ResponseModel):
+    """Full contact person — nested in JobContactDetails.contact.
+
+    Maps to C# ContactDetails entity.
+    """
+
+    id: Optional[int] = Field(None, description="Contact integer ID")
+    contact_display_id: Optional[str] = Field(None, alias="contactDisplayId", description="Display ID")
+    full_name: Optional[str] = Field(None, alias="fullName", description="Full name")
+    contact_type_id: Optional[int] = Field(None, alias="contactTypeId", description="Contact type")
+    editable: Optional[bool] = Field(None, description="Whether contact is editable")
+    is_empty: Optional[bool] = Field(None, alias="isEmpty", description="Empty contact flag")
+    full_name_update_required: Optional[bool] = Field(
+        None, alias="fullNameUpdateRequired", description="Full name update required"
+    )
+    emails_list: Optional[List[dict]] = Field(None, alias="emailsList", description="Email entries")
+    phones_list: Optional[List[dict]] = Field(None, alias="phonesList", description="Phone entries")
+    addresses_list: Optional[List[dict]] = Field(None, alias="addressesList", description="Address entries")
+    fax: Optional[str] = Field(None, description="Fax number")
+    primary_phone: Optional[str] = Field(None, alias="primaryPhone", description="Primary phone")
+    primary_email: Optional[str] = Field(None, alias="primaryEmail", description="Primary email")
+    care_of: Optional[str] = Field(None, alias="careOf", description="Care of")
+    bol_notes: Optional[str] = Field(None, alias="bolNotes", description="BOL notes")
+    tax_id: Optional[str] = Field(None, alias="taxId", description="Tax ID")
+    is_business: Optional[bool] = Field(None, alias="isBusiness", description="Business contact flag")
+    is_payer: Optional[bool] = Field(None, alias="isPayer", description="Payer flag")
+    is_prefered: Optional[bool] = Field(None, alias="isPrefered", description="Preferred flag (API typo preserved)")
+    is_private: Optional[bool] = Field(None, alias="isPrivate", description="Private contact flag")
+    is_active: Optional[bool] = Field(None, alias="isActive", description="Active flag")
+    company_id: Optional[str] = Field(None, alias="companyId", description="Company UUID")
+    root_contact_id: Optional[int] = Field(None, alias="rootContactId", description="Root contact ID")
+    owner_franchisee_id: Optional[str] = Field(None, alias="ownerFranchiseeId", description="Owner franchisee UUID")
+    company: Optional[dict] = Field(None, description="Lightweight company summary")
+    legacy_guid: Optional[str] = Field(None, alias="legacyGuid", description="Legacy GUID")
+    is_primary: Optional[bool] = Field(None, alias="isPrimary", description="Primary contact flag")
+    assistant: Optional[str] = Field(None, description="Assistant name")
+    department: Optional[str] = Field(None, description="Department")
+    web_site: Optional[str] = Field(None, alias="webSite", description="Website URL")
+    birth_date: Optional[str] = Field(None, alias="birthDate", description="Birth date")
+    job_title_id: Optional[int] = Field(None, alias="jobTitleId", description="Job title ID")
+    job_title: Optional[str] = Field(None, alias="jobTitle", description="Job title")
+
+
+class JobContactDetails(ResponseModel):
+    """Contact wrapper — nested in Job as customerContact, pickupContact, deliveryContact.
+
+    Maps to C# JobContactDetails entity. Reuses CompanyAddress from common.py.
+    """
+
+    id: Optional[int] = Field(None, description="Contact ID")
+    contact: Optional[ContactDetails] = Field(None, description="Full contact person details")
+    email: Optional[JobContactEmail] = Field(None, description="Primary email")
+    phone: Optional[JobContactPhone] = Field(None, description="Primary phone")
+    address: Optional[CompanyAddress] = Field(None, description="Physical address")
+    care_of: Optional[str] = Field(None, alias="careOf", description="Care of")
+    legacy_guid: Optional[str] = Field(None, alias="legacyGuid", description="Legacy GUID")
+    contact_email_mapping_id: Optional[int] = Field(
+        None, alias="contactEmailMappingId", description="Email mapping ID"
+    )
+    contact_phone_mapping_id: Optional[int] = Field(
+        None, alias="contactPhoneMappingId", description="Phone mapping ID"
+    )
+    contact_address_mapping_id: Optional[int] = Field(
+        None, alias="contactAddressMappingId", description="Address mapping ID"
+    )
+    dragged_from: Optional[str] = Field(None, alias="draggedFrom", description="Dragged from contact type")
+    job_contact_type: Optional[str] = Field(None, alias="jobContactType", description="Job contact type")
+    property_type: Optional[int] = Field(None, alias="propertyType", description="Property type classification")
+
+
+class JobItemMaterial(ResponseModel):
+    """Material used in a job item — nested in JobItem.materials.
+
+    Maps to C# MasterMaterials entity.
+    """
+
+    job_id: Optional[str] = Field(None, alias="jobID", description="Job UUID")
+    job_pack_material_id: Optional[str] = Field(None, alias="jobPackMaterialID", description="Pack material UUID")
+    material_id: Optional[int] = Field(None, alias="materialID", description="Material integer ID")
+    mateial_master_id: Optional[str] = Field(
+        None, alias="mateialMasterID", description="Material master UUID (API typo preserved)"
+    )
+    material_quantity: Optional[float] = Field(None, alias="materialQuantity", description="Quantity")
+    material_name: Optional[str] = Field(None, alias="materialName", description="Material name")
+    material_description: Optional[str] = Field(None, alias="materialDescription", description="Material description")
+    material_code: Optional[str] = Field(None, alias="materialCode", description="Material code")
+    material_type: Optional[str] = Field(None, alias="materialType", description="Material type")
+    material_unit: Optional[str] = Field(None, alias="materialUnit", description="Unit of measure")
+    material_weight: Optional[float] = Field(None, alias="materialWeight", description="Weight per unit")
+    material_length: Optional[float] = Field(None, alias="materialLength", description="Length")
+    material_width: Optional[float] = Field(None, alias="materialWidth", description="Width")
+    material_height: Optional[float] = Field(None, alias="materialHeight", description="Height")
+    material_cost: Optional[float] = Field(None, alias="materialCost", description="Cost per unit")
+    material_price: Optional[float] = Field(None, alias="materialPrice", description="Price per unit")
+    material_waste_factor: Optional[float] = Field(None, alias="materialWasteFactor", description="Waste factor")
+    material_total_cost: Optional[float] = Field(None, alias="materialTotalCost", description="Total cost")
+    material_total_weight: Optional[float] = Field(None, alias="materialTotalWeight", description="Total weight")
+    created_by: Optional[str] = Field(None, alias="createdBy", description="Created by UUID")
+    modified_by: Optional[str] = Field(None, alias="modifiedBy", description="Modified by UUID")
+    created_date: Optional[str] = Field(None, alias="createdDate", description="Created date")
+    modified_date: Optional[str] = Field(None, alias="modifiedDate", description="Modified date")
+    item_id: Optional[str] = Field(None, alias="itemID", description="Item UUID")
+    quantity_actual: Optional[float] = Field(None, alias="quantityActual", description="Actual quantity used")
+    is_automatic: Optional[bool] = Field(None, alias="isAutomatic", description="Auto-generated material")
+    waste: Optional[float] = Field(None, description="Waste amount")
+    price: Optional[float] = Field(None, description="Price")
+    is_edited: Optional[bool] = Field(None, alias="isEdited", description="Manually edited flag")
+    item_name: Optional[str] = Field(None, alias="itemName", description="Parent item name")
+    item_description: Optional[str] = Field(None, alias="itemDescription", description="Parent item description")
+    item_notes: Optional[str] = Field(None, alias="itemNotes", description="Parent item notes")
+    job_item_id: Optional[str] = Field(None, alias="jobItemId", description="Job item UUID")
+    company_id: Optional[str] = Field(None, alias="companyId", description="Company UUID")
+    is_active: Optional[bool] = Field(None, alias="isActive", description="Active flag")
+
+
+class JobItem(ResponseModel):
+    """Job line item — nested in Job.items.
+
+    Maps to C# Items entity (inherits MasterItems, ItemFeature).
+    """
+
+    job_display_id: Optional[int] = Field(None, alias="jobDisplayId", description="Job display ID")
+    job_item_id: Optional[str] = Field(None, alias="jobItemID", description="Job item UUID")
+    original_job_item_id: Optional[str] = Field(None, alias="originalJobItemId", description="Original job item UUID")
+    job_id: Optional[str] = Field(None, alias="jobID", description="Job UUID")
+    quantity: Optional[int] = Field(None, description="Quantity")
+    original_qty: Optional[int] = Field(None, alias="originalQty", description="Original quantity")
+    job_freight_id: Optional[str] = Field(None, alias="jobFreightID", description="Freight UUID")
+    nmfc_item: Optional[str] = Field(None, alias="nmfcItem", description="NMFC item code")
+    nmfc_sub: Optional[str] = Field(None, alias="nmfcSub", description="NMFC sub code")
+    nmfc_sub_class: Optional[str] = Field(None, alias="nmfcSubClass", description="NMFC sub class")
+    job_item_pkd_length: Optional[float] = Field(None, alias="jobItemPkdLength", description="Packed length")
+    job_item_pkd_width: Optional[float] = Field(None, alias="jobItemPkdWidth", description="Packed width")
+    job_item_pkd_height: Optional[float] = Field(None, alias="jobItemPkdHeight", description="Packed height")
+    job_item_pkd_weight: Optional[float] = Field(None, alias="jobItemPkdWeight", description="Packed weight")
+    is_fill_percent_changed: Optional[bool] = Field(
+        None, alias="isFillPercentChanged", description="Fill percent changed flag"
+    )
+    c_fill_id: Optional[int] = Field(None, alias="cFillId", description="Fill type ID")
+    container_id: Optional[int] = Field(None, alias="containerId", description="Container type ID")
+    labor_hrs: Optional[float] = Field(None, alias="laborHrs", description="Labor hours")
+    labor_charge: Optional[float] = Field(None, alias="laborCharge", description="Labor charge")
+    user_id: Optional[str] = Field(None, alias="userId", description="User UUID")
+    is_fill_changed: Optional[bool] = Field(None, alias="isFillChanged", description="Fill changed flag")
+    is_container_changed: Optional[bool] = Field(
+        None, alias="isContainerChanged", description="Container changed flag"
+    )
+    is_valid_container: Optional[bool] = Field(None, alias="isValidContainer", description="Valid container flag")
+    is_valid_fill: Optional[bool] = Field(None, alias="isValidFill", description="Valid fill flag")
+    inches_to_add: Optional[float] = Field(None, alias="inchesToAdd", description="Inches to add for packing")
+    container_thickness: Optional[float] = Field(None, alias="containerThickness", description="Container thickness")
+    is_inch_to_add_changed: Optional[bool] = Field(
+        None, alias="isInchToAddChanged", description="Inches-to-add changed flag"
+    )
+    total_pcs: Optional[int] = Field(None, alias="totalPcs", description="Total pieces")
+    description_of_products: Optional[str] = Field(
+        None, alias="descriptionOfProducts", description="Product description"
+    )
+    total_items: Optional[int] = Field(None, alias="totalItems", description="Total items")
+    auto_pack_off: Optional[bool] = Field(None, alias="autoPackOff", description="Auto-pack disabled flag")
+    c_pack_value: Optional[str] = Field(None, alias="cPackValue", description="Pack type value")
+    c_fill_value: Optional[str] = Field(None, alias="cFillValue", description="Fill type value")
+    container_type: Optional[str] = Field(None, alias="containerType", description="Container type code")
+    job_item_fill_percent: Optional[float] = Field(
+        None, alias="jobItemFillPercent", description="Fill percentage"
+    )
+    container_weight: Optional[float] = Field(None, alias="containerWeight", description="Container weight")
+    fill_weight: Optional[float] = Field(None, alias="fillWeight", description="Fill weight")
+    material_weight: Optional[float] = Field(None, alias="materialWeight", description="Material weight")
+    job_item_pkd_value: Optional[float] = Field(None, alias="jobItemPkdValue", description="Packed value")
+    total_packed_value: Optional[float] = Field(None, alias="totalPackedValue", description="Total packed value")
+    total_weight: Optional[float] = Field(None, alias="totalWeight", description="Total weight")
+    stc: Optional[str] = Field(None, description="Said to contain")
+    materials: Optional[List[JobItemMaterial]] = Field(None, description="Packing materials")
+    material_total_cost: Optional[float] = Field(None, alias="materialTotalCost", description="Total material cost")
+    is_access: Optional[bool] = Field(None, alias="isAccess", description="Access flag")
+    job_item_parcel_value: Optional[float] = Field(
+        None, alias="jobItemParcelValue", description="Parcel declared value"
+    )
+    total_labor_charge: Optional[float] = Field(None, alias="totalLaborCharge", description="Total labor charge")
+    gross_cubic_feet: Optional[float] = Field(None, alias="grossCubicFeet", description="Gross cubic feet")
+    row_number: Optional[int] = Field(None, alias="rowNumber", description="Row number")
+    noted_conditions: Optional[str] = Field(None, alias="notedConditions", description="Noted conditions")
+    job_item_notes: Optional[str] = Field(None, alias="jobItemNotes", description="Item notes")
+    customer_item_id: Optional[str] = Field(None, alias="customerItemId", description="Customer item reference")
+    document_exists: Optional[bool] = Field(None, alias="documentExists", description="Has attached documents")
+    force_crate: Optional[bool] = Field(None, alias="forceCrate", description="Force crate flag")
+    auto_pack_failed: Optional[bool] = Field(None, alias="autoPackFailed", description="Auto-pack failed flag")
+    do_not_tip: Optional[bool] = Field(None, alias="doNotTip", description="Do not tip flag")
+    commodity_id: Optional[int] = Field(None, alias="commodityId", description="Commodity ID")
+    longest_dimension: Optional[float] = Field(None, alias="longestDimension", description="Longest dimension")
+    second_dimension: Optional[float] = Field(None, alias="secondDimension", description="Second longest dimension")
+    pkd_length_plus_girth: Optional[float] = Field(
+        None, alias="pkdLengthPlusGirth", description="Packed length + girth"
+    )
+    requested_parcel_packagings: Optional[str] = Field(
+        None, alias="requestedParcelPackagings", description="Requested parcel packagings"
+    )
+    parcel_package_type_id: Optional[int] = Field(
+        None, alias="parcelPackageTypeId", description="Parcel package type ID"
+    )
+    transportation_length: Optional[int] = Field(
+        None, alias="transportationLength", description="Transportation length"
+    )
+    transportation_width: Optional[int] = Field(None, alias="transportationWidth", description="Transportation width")
+    transportation_height: Optional[int] = Field(
+        None, alias="transportationHeight", description="Transportation height"
+    )
+    transportation_weight: Optional[float] = Field(
+        None, alias="transportationWeight", description="Transportation weight"
+    )
+    ceiling_transportation_weight: Optional[int] = Field(
+        None, alias="ceilingTransportationWeight", description="Ceiling transportation weight"
+    )
+    company_id: Optional[str] = Field(None, alias="companyID", description="Company UUID")
+    company_name: Optional[str] = Field(None, alias="companyName", description="Company name")
+    item_sequence_no: Optional[int] = Field(None, alias="itemSequenceNo", description="Item sequence number")
+    item_name: Optional[str] = Field(None, alias="itemName", description="Item name")
+    item_description: Optional[str] = Field(None, alias="itemDescription", description="Item description")
+    schedule_b: Optional[str] = Field(None, alias="scheduleB", description="Schedule B export code")
+    eccn: Optional[str] = Field(None, description="Export control classification number")
+    item_notes: Optional[str] = Field(None, alias="itemNotes", description="Item notes")
+    is_prepacked: Optional[bool] = Field(None, alias="isPrepacked", description="Pre-packed flag")
+    item_active: Optional[bool] = Field(None, alias="itemActive", description="Item active flag")
+    item_public: Optional[bool] = Field(None, alias="itemPublic", description="Item public flag")
+    c_pack_id: Optional[str] = Field(None, alias="cPackId", description="Pack type UUID")
+    item_id: Optional[str] = Field(None, alias="itemID", description="Item UUID")
+    item_value: Optional[float] = Field(None, alias="itemValue", description="Declared value")
+    modified_by: Optional[str] = Field(None, alias="modifiedBy", description="Modified by UUID")
+    created_by: Optional[str] = Field(None, alias="createdBy", description="Created by UUID")
+    created_date: Optional[str] = Field(None, alias="createdDate", description="Created date")
+    modified_date: Optional[str] = Field(None, alias="modifiedDate", description="Modified date")
+    item_length: Optional[float] = Field(None, alias="itemLength", description="Item length")
+    item_width: Optional[float] = Field(None, alias="itemWidth", description="Item width")
+    item_height: Optional[float] = Field(None, alias="itemHeight", description="Item height")
+    item_weight: Optional[float] = Field(None, alias="itemWeight", description="Item weight")
+    net_cubic_feet: Optional[float] = Field(None, alias="netCubicFeet", description="Net cubic feet")
+
+
+class JobSummarySnapshot(ResponseModel):
+    """Financial/weight rollup — nested in Job.job_summary_snapshot.
+
+    Maps to C# JobSummary entity.
+    """
+
+    job_snapshot_id: Optional[int] = Field(None, alias="jobSnapshotID", description="Snapshot ID")
+    job_id: Optional[str] = Field(None, alias="jobID", description="Job UUID")
+    job_status_id: Optional[str] = Field(None, alias="jobStatusID", description="Status UUID")
+    job_total_amount: Optional[float] = Field(None, alias="jobTotalAmount", description="Total amount")
+    job_total_weight: Optional[float] = Field(None, alias="jobTotalWeight", description="Total weight")
+    job_total_qty: Optional[int] = Field(None, alias="jobTotalQty", description="Total quantity")
+    job_total_value: Optional[float] = Field(None, alias="jobTotalValue", description="Total value")
+    is_current: Optional[bool] = Field(None, alias="isCurrent", description="Current snapshot flag")
+    total_unpacked_weight: Optional[float] = Field(
+        None, alias="totalUnpackedWeight", description="Total unpacked weight"
+    )
+    job_items_total_container_lbs: Optional[float] = Field(
+        None, alias="jobItemsTotalContainerLbs", description="Total container weight (lbs)"
+    )
+    job_items_total_fill_lbs: Optional[float] = Field(
+        None, alias="jobItemsTotalFillLbs", description="Total fill weight (lbs)"
+    )
+    job_items_total_materials: Optional[float] = Field(
+        None, alias="jobItemsTotalMaterials", description="Total materials cost"
+    )
+    job_items_total_labor_hrs: Optional[float] = Field(
+        None, alias="jobItemsTotalLaborHrs", description="Total labor hours"
+    )
+    job_items_total_gross_cubes: Optional[float] = Field(
+        None, alias="jobItemsTotalGrossCubes", description="Total gross cubic feet"
+    )
+    job_items_total_net_cubes: Optional[float] = Field(
+        None, alias="jobItemsTotalNetCubes", description="Total net cubic feet"
+    )
+    job_items_total_materials_lbs: Optional[float] = Field(
+        None, alias="jobItemsTotalMaterialsLbs", description="Total materials weight (lbs)"
+    )
+    job_items_total_labor_cost: Optional[float] = Field(
+        None, alias="jobItemsTotalLaborCost", description="Total labor cost"
+    )
+    job_tax_total_amount: Optional[float] = Field(
+        None, alias="jobTaxTotalAmount", description="Total tax amount"
+    )
+    job_total_cost: Optional[float] = Field(None, alias="jobTotalCost", description="Total cost")
+    job_net_profit: Optional[float] = Field(None, alias="jobNetProfit", description="Net profit")
+    created_date: Optional[str] = Field(None, alias="createdDate", description="Created date")
+    created_by: Optional[str] = Field(None, alias="createdBy", description="Created by UUID")
+    sub_total: Optional[float] = Field(None, alias="subTotal", description="Sub total")
+    sum_total: Optional[float] = Field(None, alias="sumTotal", description="Sum total")
+
+
+class ActiveOnHoldInfo(ResponseModel):
+    """Active on-hold info — nested in Job.active_on_hold_info.
+
+    Maps to C# OnHoldInfo entity.
+    """
+
+    id: Optional[int] = Field(None, description="On-hold record ID")
+    responsible_party_type_id: Optional[str] = Field(
+        None, alias="responsiblePartyTypeId", description="Responsible party type UUID"
+    )
+    reason_id: Optional[str] = Field(None, alias="reasonId", description="Reason UUID")
+    responsible_party: Optional[str] = Field(None, alias="responsibleParty", description="Responsible party name")
+    reason: Optional[str] = Field(None, description="Hold reason")
+    comment: Optional[str] = Field(None, description="Hold comment")
+    start_date: Optional[str] = Field(None, alias="startDate", description="Hold start date")
+    created_by: Optional[str] = Field(None, alias="createdBy", description="Creator name")
+
+
+class JobDocument(ResponseModel):
+    """Document attachment — nested in Job.documents.
+
+    Maps to C# DocumentDetails entity.
+    """
+
+    id: Optional[int] = Field(None, description="Document ID")
+    path: Optional[str] = Field(None, description="Document URL path")
+    thumbnail_path: Optional[str] = Field(None, alias="thumbnailPath", description="Thumbnail URL path")
+    description: Optional[str] = Field(None, description="Document description")
+    type_name: Optional[str] = Field(None, alias="typeName", description="Document type name")
+    type_id: Optional[int] = Field(None, alias="typeId", description="Document type ID")
+    file_name: Optional[str] = Field(None, alias="fileName", description="File name")
+    shared: Optional[int] = Field(None, description="Shared flag")
+    tags: Optional[List[dict]] = Field(None, description="Document tags")
+    job_items: Optional[List[str]] = Field(None, alias="jobItems", description="Associated job item UUIDs")
+
+
+class JobSlaInfo(ResponseModel):
+    """SLA tracking — nested in Job.sla_info.
+
+    Maps to C# SlaInfo entity.
+    """
+
+    days: Optional[int] = Field(None, description="SLA days")
+    expedited: Optional[bool] = Field(None, description="Expedited flag")
+    start_date: Optional[str] = Field(None, alias="startDate", description="SLA start date")
+    finish_date: Optional[str] = Field(None, alias="finishDate", description="SLA finish date")
+    total_on_hold_days: Optional[int] = Field(None, alias="totalOnHoldDays", description="Total on-hold days")
+
+
+class JobFreightInfo(ResponseModel):
+    """Freight tracking summary — nested in Job.freight_info.
+
+    Maps to C# FreightTrackingLastDetails entity.
+    """
+
+    provider_company_code: Optional[str] = Field(
+        None, alias="providerCompanyCode", description="Provider company code"
+    )
+    provider_company_name: Optional[str] = Field(
+        None, alias="providerCompanyName", description="Provider company name"
+    )
+    pro_num: Optional[str] = Field(None, alias="proNum", description="PRO number")
+    transportation_state: Optional[int] = Field(
+        None, alias="transportationState", description="State enum: 0=Unknown, 1=Ok, 2=Warning, 3=Error"
+    )
+    transportation_state_description: Optional[str] = Field(
+        None, alias="transportationStateDescription", description="State description"
+    )
+
+
+class JobPaymentInfo(ResponseModel):
+    """Payment status — nested in Job.payment_info.
+
+    Maps to C# PaymentInfo entity.
+    """
+
+    status_id: Optional[str] = Field(None, alias="statusId", description="Payment status UUID")
+    status: Optional[str] = Field(None, description="Payment status text")
+    ready_to_invoice_date: Optional[str] = Field(
+        None, alias="readyToInvoiceDate", description="Ready to invoice date"
+    )
+    invoice_date: Optional[str] = Field(None, alias="invoiceDate", description="Invoice date")
+    paid_date: Optional[str] = Field(None, alias="paidDate", description="Paid date")
+
+
+class JobAgentPaymentInfo(ResponseModel):
+    """Agent payment info — nested in Job.agent_payment_info.
+
+    Maps to C# AgentPaymentInfo entity.
+    """
+
+    amount: Optional[float] = Field(None, description="Payment amount")
+    paid_date: Optional[str] = Field(None, alias="paidDate", description="Paid date")
+
+
+class JobFreightItem(ResponseModel):
+    """Freight shipment item — nested in Job.freight_items.
+
+    Maps to the C# ``FreightShimpment`` entity (inherits ItemFeature). The
+    field set mirrors the swagger ``FreightShimpment`` schema in full so that a
+    populated freight item validates without emitting drift warnings (the
+    ResponseModel "consider adding it to the model" log) and so a
+    get-modify-replace round-trip through :class:`FreightShipment` is lossless.
+    """
+
+    # Identity
+    item_id: Optional[str] = Field(None, alias="itemID", description="Item UUID")
+    job_id: Optional[str] = Field(None, alias="jobID", description="Job UUID")
+    job_display_id: Optional[str] = Field(None, alias="jobDisplayId", description="Job display ID")
+    freight_item_id: Optional[str] = Field(None, alias="freightItemId", description="Freight item UUID")
+    freight_item_class_id: Optional[str] = Field(
+        None, alias="freightItemClassId", description="Freight item class UUID"
+    )
+    job_freight_id: Optional[str] = Field(None, alias="jobFreightID", description="Job freight UUID")
+    quantity: Optional[int] = Field(None, description="Quantity")
+    # Dimensions / weight / value
+    item_length: Optional[float] = Field(None, alias="itemLength", description="Item length")
+    item_width: Optional[float] = Field(None, alias="itemWidth", description="Item width")
+    item_height: Optional[float] = Field(None, alias="itemHeight", description="Item height")
+    item_weight: Optional[float] = Field(None, alias="itemWeight", description="Item weight")
+    item_value: Optional[float] = Field(None, alias="itemValue", description="Item value")
+    total_weight: Optional[float] = Field(None, alias="totalWeight", description="Total weight")
+    cube: Optional[float] = Field(None, description="Cube measurement")
+    net_cubic_feet: Optional[float] = Field(None, alias="netCubicFeet", description="Net cubic feet")
+    net_cubic_inches: Optional[int] = Field(None, alias="netCubicInches", description="Net cubic inches")
+    longest_dimension: Optional[float] = Field(None, alias="longestDimension", description="Longest dimension")
+    transportation_length: Optional[int] = Field(
+        None, alias="transportationLength", description="Transportation length"
+    )
+    transportation_width: Optional[int] = Field(
+        None, alias="transportationWidth", description="Transportation width"
+    )
+    transportation_height: Optional[int] = Field(
+        None, alias="transportationHeight", description="Transportation height"
+    )
+    ceiling_transportation_weight: Optional[int] = Field(
+        None, alias="ceilingTransportationWeight", description="Ceiling transportation weight"
+    )
+    # Freight classification / description
+    freight_description: Optional[str] = Field(None, alias="freightDescription", description="Freight description")
+    freight_item_value: Optional[str] = Field(None, alias="freightItemValue", description="Freight item value")
+    freight_item_class: Optional[str] = Field(None, alias="freightItemClass", description="Freight item class")
+    nmfc_item: Optional[str] = Field(None, alias="nmfcItem", description="NMFC item code")
+    bol_description: Optional[str] = Field(None, alias="bolDescription", description="BOL description")
+    job_freight_report: Optional[str] = Field(None, alias="jobFreightReport", description="Job freight report")
+    # Audit
+    created_by: Optional[str] = Field(None, alias="createdBy", description="Created by user UUID")
+    created_date: Optional[str] = Field(None, alias="createdDate", description="Created timestamp")
+    modified_by: Optional[str] = Field(None, alias="modifiedBy", description="Modified by user UUID")
+    modified_date: Optional[str] = Field(None, alias="modifiedDate", description="Modified timestamp")
+
+
+# ---- Job primary response model -------------------------------------------
+
+
+class TransferModel(RequestModel):
+    """Body for POST /job/transfer/{jobDisplayId}."""
+
+    franchisee_id: str = Field(..., alias="franchiseeId", description="Target franchisee company UUID")
+
+
+class FeedbackSaveModel(RequestModel):
+    """Body for POST /job/feedback/{jobDisplayId}; also returned by GET."""
+
+    feedback_id: Optional[str] = Field(None, alias="feedbackId", description="Feedback UUID")
+    cancel_job: Optional[bool] = Field(None, alias="cancelJob", description="Whether to cancel the job")
+
+
+class JobSearchParams(RequestModel):
+    """Query parameters for GET /job/search."""
+
+    job_display_id: Optional[int] = Field(None, alias="jobDisplayId", description="Job display ID to search for")
+
+
+class FreightProvidersParams(RequestModel):
+    """Query parameters for GET /job/{jobDisplayId}/freightproviders."""
+
+    provider_indexes: Optional[List[int]] = Field(
+        None, alias="ProviderIndexes", description="Filter by provider option indexes"
+    )
+    shipment_types: Optional[List[str]] = Field(
+        None, alias="ShipmentTypes", description="Filter by shipment type UUIDs"
+    )
+    only_active: Optional[bool] = Field(None, alias="OnlyActive", description="Show only active providers")
+
+
+class TimelineCreateParams(RequestModel):
+    """Query parameters for POST /job/{jobDisplayId}/timeline."""
+
+    create_email: Optional[bool] = Field(None, alias="createEmail", description="Send status notification email")
+
+
+class TrackingV3Params(RequestModel):
+    """Query parameters for GET /v3/job/{jobDisplayId}/tracking."""
+
+    history_amount: Optional[int] = Field(
+        None, alias="historyAmount", description="Number of tracking history entries to return"
+    )
+
+
+class JobNoteListParams(RequestModel):
+    """Query parameters for GET /job/{jobDisplayId}/note."""
+
+    category: Optional[str] = Field(None, alias="category", description="Note category filter")
+    task_code: Optional[str] = Field(None, alias="taskCode", description="Task code filter")
+
+
+class JobRfqListParams(RequestModel):
+    """Query parameters for GET /job/{jobDisplayId}/rfq."""
+
+    rfq_service_type: Optional[str] = Field(None, alias="rfqServiceType", description="RFQ service type filter")
+
+
+class Job(ResponseModel, FullAuditModel):
+    """Full job record — GET /job/{jobDisplayId}.
+
+    Maps to C# JobPortalInfo entity. Response shape varies by
+    JobAccessLevel (Owner/Customer gets full data, Agent gets filtered).
+    """
+
+    job_display_id: Optional[int] = Field(None, alias="jobDisplayId", description="Human-readable job ID")
+    status: Optional[str] = Field(None, description="Job status")
+    customer: Optional[dict] = Field(None, description="Customer details")
+    pickup: Optional[dict] = Field(None, description="Pickup info")
+    delivery: Optional[dict] = Field(None, description="Delivery info")
+    items: Optional[List[JobItem]] = Field(None, description="Line items")
+
+    # ---- Fields added in 018-job-get-response ----
+    booked_date: Optional[str] = Field(None, alias="bookedDate", description="Booking date")
+    owner_company_id: Optional[str] = Field(None, alias="ownerCompanyId", description="Owner company UUID")
+    customer_contact: Optional[JobContactDetails] = Field(
+        None, alias="customerContact", description="Customer contact details"
+    )
+    pickup_contact: Optional[JobContactDetails] = Field(
+        None, alias="pickupContact", description="Pickup contact details"
+    )
+    delivery_contact: Optional[JobContactDetails] = Field(
+        None, alias="deliveryContact", description="Delivery contact details"
+    )
+    total_sell_price: Optional[float] = Field(None, alias="totalSellPrice", description="Total sell price")
+    freight_items: Optional[List[JobFreightItem]] = Field(
+        None, alias="freightItems", description="Freight shipment items"
+    )
+    job_summary_snapshot: Optional[JobSummarySnapshot] = Field(
+        None, alias="jobSummarySnapshot", description="Financial/weight summary snapshot"
+    )
+    notes: Optional[List[dict]] = Field(None, description="Job notes")
+    active_on_hold_info: Optional[ActiveOnHoldInfo] = Field(
+        None, alias="activeOnHoldInfo", description="Active on-hold details"
+    )
+    write_access: Optional[bool] = Field(None, alias="writeAccess", description="User write access flag")
+    access_level: Optional[int] = Field(None, alias="accessLevel", description="User access level bitmask")
+    status_id: Optional[str] = Field(None, alias="statusId", description="Job status UUID")
+    job_mgmt_sub_id: Optional[str] = Field(None, alias="jobMgmtSubId", description="Job management sub UUID")
+    is_cancelled: Optional[bool] = Field(None, alias="isCancelled", description="Cancelled flag")
+    freight_info: Optional[JobFreightInfo] = Field(
+        None, alias="freightInfo", description="Freight tracking summary"
+    )
+    freight_providers: Optional[List[dict]] = Field(
+        None, alias="freightProviders", description="Freight provider options"
+    )
+    expected_pickup_date: Optional[str] = Field(
+        None, alias="expectedPickupDate", description="Expected pickup date"
+    )
+    expected_delivery_date: Optional[str] = Field(
+        None, alias="expectedDeliveryDate", description="Expected delivery date"
+    )
+    timeline_tasks: Optional[List[dict]] = Field(
+        None, alias="timelineTasks", description="Timeline task entries"
+    )
+    documents: Optional[List[JobDocument]] = Field(None, description="Attached documents")
+    label_request_sent_date: Optional[str] = Field(
+        None, alias="labelRequestSentDate", description="Label request sent date"
+    )
+    payment_info: Optional[JobPaymentInfo] = Field(
+        None, alias="paymentInfo", description="Payment status"
+    )
+    agent_payment_info: Optional[JobAgentPaymentInfo] = Field(
+        None, alias="agentPaymentInfo", description="Agent payment info"
+    )
+    sla_info: Optional[JobSlaInfo] = Field(None, alias="slaInfo", description="SLA tracking info")
+    job_type: Optional[str] = Field(None, alias="jobType", description="Job type")
+    prices: Optional[List[dict]] = Field(None, description="Price entries")
+
+
+class JobSearchAddress(ResponseModel):
+    """Address nested in job search pickup/delivery details."""
+
+    id: Optional[int] = Field(None, description="Address integer ID")
+    master_address_id: Optional[int] = Field(None, alias="masterAddressId", description="Master address ID")
+    property_type: Optional[int] = Field(None, alias="propertyType", description="Property type classification")
+    address1: Optional[str] = Field(None, description="Primary address line")
+    address2: Optional[str] = Field(None, description="Secondary address line")
+    city: Optional[str] = Field(None, description="City")
+    state: Optional[str] = Field(None, description="State")
+    country_name: Optional[str] = Field(None, alias="countryName", description="Country name")
+    country_code: Optional[str] = Field(None, alias="countryCode", description="ISO country code")
+    zip_code: Optional[str] = Field(None, alias="zipCode", description="ZIP/postal code")
+
+
+class JobSearchContact(ResponseModel):
+    """Contact nested in job search pickup/delivery details."""
+
+    id: Optional[int] = Field(None, description="Contact integer ID")
+    contact_display_id: Optional[str] = Field(None, alias="contactDisplayId", description="Contact display ID")
+    company_id: Optional[str] = Field(None, alias="companyId", description="Company UUID")
+    company_name: Optional[str] = Field(None, alias="companyName", description="Company name")
+    bol_notes: Optional[str] = Field(None, alias="bolNotes", description="BOL notes")
+    full_name: Optional[str] = Field(None, alias="fullName", description="Contact full name")
+
+
+class JobSearchTask(ResponseModel):
+    """Timeline task nested in job search pickup/delivery details."""
+
+    id: Optional[int] = Field(None, description="Task integer ID")
+    job_id: Optional[str] = Field(None, alias="jobId", description="Job UUID")
+    truck_id: Optional[str] = Field(None, alias="truckId", description="Truck UUID")
+    task_code: Optional[str] = Field(None, alias="taskCode", description="Task code (PU, DEL)")
+    planned_start_date: Optional[str] = Field(None, alias="plannedStartDate", description="Planned start datetime")
+    planned_end_date: Optional[str] = Field(None, alias="plannedEndDate", description="Planned end datetime")
+    modified_date: Optional[str] = Field(None, alias="modifiedDate", description="Last modified datetime")
+    on_site_time_log: Optional[dict] = Field(None, alias="onSiteTimeLog", description="On-site time log")
+    trip_time_log: Optional[dict] = Field(None, alias="tripTimeLog", description="Trip time log")
+    completed_date: Optional[str] = Field(None, alias="completedDate", description="Completed datetime")
+
+
+class JobSearchTransportDetails(ResponseModel):
+    """Pickup or delivery details in job search result."""
+
+    important_notes_count: Optional[int] = Field(
+        None, alias="importantNotesCount", description="Count of important notes"
+    )
+    contact: Optional[JobSearchContact] = Field(None, description="Contact details")
+    address: Optional[JobSearchAddress] = Field(None, description="Address details")
+    contact_email: Optional[str] = Field(None, alias="contactEmail", description="Contact email")
+    contact_phone: Optional[str] = Field(None, alias="contactPhone", description="Contact phone")
+    company_id: Optional[str] = Field(None, alias="companyId", description="Company UUID")
+    task: Optional[JobSearchTask] = Field(None, description="Timeline task")
+
+
+class JobSearchResult(ResponseModel):
+    """Single search hit — GET /job/search.
+
+    The live API returns a structured object with nested pickup/delivery
+    details rather than the flat fields shown in older documentation.
+    """
+
+    job_id: Optional[str] = Field(None, alias="jobId", description="Job UUID")
+    job_display_id: Optional[int] = Field(None, alias="jobDisplayId", description="Job display ID")
+    items_count: Optional[int] = Field(None, alias="itemsCount", description="Number of items in job")
+    pickup_details: Optional[JobSearchTransportDetails] = Field(
+        None, alias="pickupDetails", description="Pickup details"
+    )
+    delivery_details: Optional[JobSearchTransportDetails] = Field(
+        None, alias="deliveryDetails", description="Delivery details"
+    )
+    access_level: Optional[int] = Field(None, alias="accessLevel", description="Access level bitmask")
+
+
+class JobPrice(ResponseModel):
+    """Price info — GET /job/{jobDisplayId}/price."""
+
+    job_display_id: Optional[int] = Field(None, alias="jobDisplayId")
+    prices: Optional[List[dict]] = Field(None, description="Price breakdowns")
+    total: Optional[float] = Field(None, description="Total price")
+    total_sell_price: Optional[float] = Field(None, alias="totalSellPrice", description="Total sell price")
+
+
+class CalendarItem(ResponseModel):
+    """Calendar/line item — GET /job/{jobDisplayId}/calendaritems.
+
+    Despite the name, the live API returns job line-item details
+    (name, quantity, dimensions, value) rather than calendar events.
+    """
+
+    id: Optional[str] = Field(None, description="Item UUID")
+    title: Optional[str] = Field(None, description="Item title")
+    start: Optional[str] = Field(None, description="Start datetime")
+    end: Optional[str] = Field(None, description="End datetime")
+    name: Optional[str] = Field(None, description="Item name/description")
+    quantity: Optional[int] = Field(None, description="Quantity")
+    length: Optional[float] = Field(None, description="Length dimension")
+    width: Optional[float] = Field(None, description="Width dimension")
+    height: Optional[float] = Field(None, description="Height dimension")
+    weight: Optional[float] = Field(None, description="Weight")
+    value: Optional[float] = Field(None, description="Declared value")
+    notes: Optional[str] = Field(None, description="Item notes")
+    customer_item_id: Optional[str] = Field(None, alias="customerItemId", description="Customer item reference")
+    noted_conditions: Optional[str] = Field(None, alias="notedConditions", description="Noted conditions for item")
+
+
+class JobUpdatePageConfig(ResponseModel):
+    """Update page config — GET /job/{id}/updatePageConfig."""
+
+    config: Optional[dict] = Field(None, description="Page configuration data")
+    page_controls: Optional[int] = Field(None, alias="pageControls", description="Page control bitmask")
+    workflow_controls: Optional[int] = Field(None, alias="workflowControls", description="Workflow control bitmask")
+
+
+class JobCreateRequest(RequestModel):
+    """Body for POST /job."""
+
+    customer: Optional[dict] = Field(None, description="Customer details")
+    pickup: Optional[dict] = Field(None, description="Pickup info")
+    delivery: Optional[dict] = Field(None, description="Delivery info")
+    items: Optional[List[dict]] = Field(None, description="Line items")
+    services: Optional[List[dict]] = Field(None, description="Requested services")
+
+
+class JobSaveRequest(RequestModel):
+    """Body for PUT /job/save."""
+
+    job_display_id: Optional[int] = Field(None, alias="jobDisplayId", description="Job display ID")
+    customer: Optional[dict] = Field(None, description="Customer details object")
+    pickup: Optional[dict] = Field(None, description="Pickup location and schedule")
+    delivery: Optional[dict] = Field(None, description="Delivery location and schedule")
+    items: Optional[List[dict]] = Field(None, description="Job line items")
+
+
+class SortByModel(RequestModel):
+    """Sort configuration for POST /job/searchByDetails."""
+
+    sort_by_field: int = Field(1, alias="sortByField", description="Sort field enum value")
+    sort_dir: bool = Field(True, alias="sortDir", description="Sort direction (true=asc)")
+
+
+class JobSearchRequest(PaginatedRequestMixin, SearchableRequestMixin):
+    """Body for POST /job/searchByDetails."""
+
+    # Override PaginatedRequestMixin.page → pageNo (API-specific alias)
+    page: Optional[int] = Field(None, alias="pageNo", description="Page number (1-based)")
+    sort_by: Optional[SortByModel] = Field(
+        None,
+        alias="sortBy",
+        description="Sort configuration (field index + direction)",
+    )
+
+
+class JobUpdateRequest(RequestModel):
+    """Body for POST /job/update (ABC API surface)."""
+
+    job_id: Optional[str] = Field(None, alias="jobId", description="Job UUID")
+    # Fields defined by ABC API — details from fixture
+    updates: Optional[dict] = Field(None, description="Update payload")
+
+
+# ---- Timeline / Status models -----------------------------------------
+
+
+class TimelineTask(ResponseModel, TimestampedModel):
+    """Timeline task — unified model for all task codes (PU, PK, ST, CP).
+
+    Common fields from C# BaseTask + TimestampedModel, plus task-code-specific
+    fields that are null when not applicable to the task's code.
+    """
+
+    # Common fields (BaseTask)
+    id: Optional[int] = Field(None, description="Timeline task integer ID")
+    job_id: Optional[str] = Field(None, alias="jobId", description="Job UUID")
+    task_code: Optional[str] = Field(None, alias="taskCode", description="Task code (PU/PK/ST/CP)")
+    planned_start_date: Optional[str] = Field(None, alias="plannedStartDate", description="Planned start date")
+    target_start_date: Optional[str] = Field(None, alias="targetStartDate", description="Target start date")
+    actual_end_date: Optional[str] = Field(None, alias="actualEndDate", description="Actual end date")
+    notes: Optional[List[dict]] = Field(None, description="JobTaskNote objects")
+    work_time_logs: Optional[List[dict]] = Field(None, alias="workTimeLogs", description="WorkTimeLog objects")
+    initial_note: Optional[dict] = Field(None, alias="initialNote", description="InitialNoteModel")
+    time_log: Optional[dict] = Field(None, alias="timeLog", description="TimeLog (PK/ST tasks)")
+
+    # PU-specific fields (InTheFieldTaskModel)
+    planned_end_date: Optional[str] = Field(None, alias="plannedEndDate", description="Planned end date")
+    preferred_start_date: Optional[str] = Field(None, alias="preferredStartDate", description="Preferred start date")
+    preferred_end_date: Optional[str] = Field(None, alias="preferredEndDate", description="Preferred end date")
+    truck: Optional[dict] = Field(None, description="Truck assignment")
+    on_site_time_log: Optional[dict] = Field(None, alias="onSiteTimeLog", description="On-site time log (PU)")
+    trip_time_log: Optional[dict | str] = Field(None, alias="tripTimeLog", description="Trip time log (PU)")
+    completed_date: Optional[str] = Field(None, alias="completedDate", description="Completed date (PU)")
+
+    # CP-specific fields (CarrierTaskModel)
+    scheduled_date: Optional[str] = Field(None, alias="scheduledDate", description="Carrier scheduled date")
+    pickup_completed_date: Optional[str] = Field(
+        None, alias="pickupCompletedDate", description="Carrier pickup completed"
+    )
+    delivery_completed_date: Optional[str] = Field(
+        None, alias="deliveryCompletedDate", description="Carrier delivery completed"
+    )
+    expected_delivery_date: Optional[str] = Field(
+        None, alias="expectedDeliveryDate", description="Expected delivery date"
+    )
+
+
+class TimelineAgent(ResponseModel):
+    """Timeline agent — GET /job/{jobDisplayId}/timeline/{taskCode}/agent.
+
+    Maps to C# CompanyListItem entity.
+    """
+
+    id: Optional[int | str] = Field(None, description="Agent/company ID")
+    code: Optional[str] = Field(None, description="Company code")
+    name: Optional[str] = Field(None, description="Company/agent name")
+    type_id: Optional[str] = Field(None, alias="typeId", description="Company type ID")
+
+
+class TimelineResponse(ResponseModel):
+    """GET /job/{jobDisplayId}/timeline wrapper response.
+
+    The API returns this wrapper object (not a bare list of tasks).
+    """
+
+    success: Optional[bool] = Field(None, description="Operation success flag")
+    error_message: Optional[str] = Field(None, alias="errorMessage", description="Error message if failed")
+    tasks: Optional[List[TimelineTask]] = Field(None, description="Timeline task list")
+    on_holds: Optional[List[dict]] = Field(None, alias="onHolds", description="Active on-hold entries")
+    days_per_sla: Optional[int] = Field(None, alias="daysPerSla", description="SLA days")
+    delivery_service_done_by: Optional[str] = Field(
+        None, alias="deliveryServiceDoneBy", description="Delivery service provider"
+    )
+    job_sub_management_status: Optional[dict] = Field(
+        None, alias="jobSubManagementStatus", description="Current job sub-management status"
+    )
+    job_booked_date: Optional[str] = Field(None, alias="jobBookedDate", description="Job booked date")
+
+
+class TimelineSaveResponse(ResponseModel):
+    """POST /job/{jobDisplayId}/timeline wrapper response.
+
+    The API returns this wrapper (not a bare TimelineTask).
+    """
+
+    success: Optional[bool] = Field(None, description="Operation success flag")
+    error_message: Optional[str] = Field(None, alias="errorMessage", description="Error message if failed")
+    task_exists: Optional[bool] = Field(None, alias="taskExists", description="Whether task already existed")
+    task: Optional[TimelineTask] = Field(None, description="Created or updated task")
+    email_log_id: Optional[int] = Field(None, alias="emailLogId", description="Email log ID if email sent")
+    job_sub_management_status: Optional[dict] = Field(
+        None, alias="jobSubManagementStatus", description="Updated job sub-management status"
+    )
+
+
+# ---- Timeline task nested request models (030) ----------------------------
+
+
+class TimeLogPauseRequest(RequestModel):
+    """Pause period within a time log. Maps to C# ``TimeLogPauseModel``."""
+
+    start: Optional[str] = Field(None, description="Pause start datetime")
+    end: Optional[str] = Field(None, description="Pause end datetime")
+
+
+class TimeLogRequest(RequestModel):
+    """Time log with start/end and optional pauses. Maps to C# ``TimeLogModel``."""
+
+    start: Optional[str] = Field(None, description="Start datetime (ISO 8601)")
+    end: Optional[str] = Field(None, description="End datetime (ISO 8601)")
+    pauses: Optional[List[TimeLogPauseRequest]] = Field(None, description="Pause periods within the time log")
+
+
+class WorkTimeLogRequest(RequestModel):
+    """Work time entry. Maps to C# ``WorkTimeLogModel``."""
+
+    date: Optional[str] = Field(None, description="Work date")
+    start_time: Optional[str] = Field(None, alias="startTime", description="Start time of day (TimeSpan as string)")
+    end_time: Optional[str] = Field(None, alias="endTime", description="End time of day (TimeSpan as string)")
+
+
+class InitialNoteRequest(RequestModel):
+    """Task note on creation. Maps to C# ``InitialNoteModel``."""
+
+    comments: str = Field(..., description="Note text (1-8000 chars)")
+    due_date: Optional[str] = Field(None, alias="dueDate", description="Due date")
+    is_important: Optional[bool] = Field(None, alias="isImportant", description="Importance flag")
+    is_completed: Optional[bool] = Field(None, alias="isCompleted", description="Completion flag")
+    send_notification: Optional[bool] = Field(None, alias="sendNotification", description="Email notification flag")
+
+
+class TaskTruckInfoRequest(RequestModel):
+    """Truck assignment info. Maps to C# ``TaskTruckInfo``."""
+
+    id: int = Field(..., description="Truck lookup ID")
+    name: Optional[str] = Field(None, description="Display name")
+    is_active: Optional[bool] = Field(None, alias="isActive", description="Active flag")
+
+
+# ---- Timeline task per-type request models (030) --------------------------
+
+
+class BaseTimelineTaskRequest(RequestModel):
+    """Shared base for all timeline task creation requests.
+
+    Maps to C# ``BaseTaskModel``. Three concrete subclasses correspond to
+    the server's ``TaskModelDataBinder`` polymorphic deserialization.
+    """
+
+    id: Optional[int] = Field(None, description="Server-assigned task ID (for upsert)")
+    modified_date: Optional[str] = Field(None, alias="modifiedDate", description="Optimistic concurrency token")
+    task_code: str = Field(..., alias="taskCode", description="Task type code (PU, PK, ST, CP, DE)")
+    planned_start_date: Optional[str] = Field(None, alias="plannedStartDate", description="Planned start (ISO 8601)")
+    work_time_logs: Optional[List[WorkTimeLogRequest]] = Field(
+        None, alias="workTimeLogs", description="Work time entries"
+    )
+    initial_note: Optional[InitialNoteRequest] = Field(
+        None, alias="initialNote", description="Task note on creation"
+    )
+
+
+class InTheFieldTaskRequest(BaseTimelineTaskRequest):
+    """Request model for PU/DE (pickup/delivery) tasks.
+
+    Maps to C# ``InTheFieldTaskModel``. Used by helpers: ``schedule()``, ``received()``.
+    """
+
+    planned_end_date: Optional[str] = Field(None, alias="plannedEndDate", description="Planned end (ISO 8601)")
+    preferred_start_date: Optional[str] = Field(
+        None, alias="preferredStartDate", description="Preferred start (ISO 8601)"
+    )
+    preferred_end_date: Optional[str] = Field(
+        None, alias="preferredEndDate", description="Preferred end (ISO 8601)"
+    )
+    truck: Optional[TaskTruckInfoRequest] = Field(None, description="Truck assignment")
+    on_site_time_log: Optional[TimeLogRequest] = Field(
+        None, alias="onSiteTimeLog", description="On-site time period"
+    )
+    trip_time_log: Optional[TimeLogRequest] = Field(
+        None, alias="tripTimeLog", description="Trip time period"
+    )
+    completed_date: Optional[str] = Field(None, alias="completedDate", description="Pickup completed date")
+
+
+class SimpleTaskRequest(BaseTimelineTaskRequest):
+    """Request model for PK/ST (packing/storage) tasks.
+
+    Maps to C# ``SimpleTaskModel``. Used by helpers: ``pack_start()``,
+    ``pack_finish()``, ``storage_begin()``, ``storage_end()``.
+    """
+
+    time_log: Optional[TimeLogRequest] = Field(None, alias="timeLog", description="Single time period")
+
+
+class CarrierTaskRequest(BaseTimelineTaskRequest):
+    """Request model for CP (carrier) tasks.
+
+    Maps to C# ``CarrierTaskModel``. Used by helpers: ``carrier_schedule()``,
+    ``carrier_pickup()``, ``carrier_delivery()``.
+    """
+
+    scheduled_date: Optional[str] = Field(None, alias="scheduledDate", description="Carrier schedule date")
+    pickup_completed_date: Optional[str] = Field(
+        None, alias="pickupCompletedDate", description="Carrier pickup date"
+    )
+    delivery_completed_date: Optional[str] = Field(
+        None, alias="deliveryCompletedDate", description="Carrier delivery date"
+    )
+    expected_delivery_date: Optional[str] = Field(
+        None, alias="expectedDeliveryDate", description="Expected delivery date"
+    )
+
+
+class TimelineTaskUpdateRequest(RequestModel):
+    """Body for PATCH /job/{jobDisplayId}/timeline/{timelineTaskId}."""
+
+    status: Optional[int] = Field(None, description="New status code")
+    scheduled_date: Optional[str] = Field(None, alias="scheduledDate", description="Updated schedule")
+    completed_date: Optional[str] = Field(None, alias="completedDate", description="Completion date")
+    comments: Optional[str] = Field(None, description="Updated notes")
+
+
+class IncrementStatusRequest(RequestModel):
+    """Body for POST /job/{jobDisplayId}/timeline/incrementjobstatus."""
+
+    create_email: Optional[bool] = Field(None, alias="createEmail", description="Send status notification email")
+
+
+# ---- Tracking models --------------------------------------------------
+
+
+class TrackingInfo(ResponseModel):
+    """Tracking info — GET /job/{jobDisplayId}/tracking."""
+
+    status: Optional[str] = Field(None, description="Current tracking status")
+    location: Optional[str] = Field(None, description="Current location")
+    estimated_delivery: Optional[str] = Field(None, alias="estimatedDelivery", description="ETA")
+    events: Optional[List[dict]] = Field(None, description="Tracking event history")
+    carrier_name: Optional[str] = Field(None, alias="carrierName", description="Carrier")
+    pro_number: Optional[str] = Field(None, alias="proNumber", description="PRO number")
+    statuses: Optional[List[dict]] = Field(None, description="Tracking status entries with date, message, code")
+    success: Optional[bool] = Field(None, description="Whether the tracking lookup succeeded")
+    error_message: Optional[str] = Field(None, alias="errorMessage", description="Error message if lookup failed")
+
+
+class ShipmentTrackingDocument(ResponseModel):
+    """Document attached to a tracked shipment (POD, labels, ...)."""
+
+    document_id: Optional[str] = Field(None, alias="documentId", description="Document ID")
+    document_path: Optional[str] = Field(
+        None, alias="documentPath", description="Document path (usable with documents.get)",
+    )
+    document_description: Optional[str] = Field(
+        None, alias="documentDescription", description="Human-readable description",
+    )
+    error_message: Optional[str] = Field(
+        None, alias="errorMessage", description="Error message if retrieval failed",
+    )
+
+
+class ShipmentDetails(ResponseModel):
+    """Carrier-level detail for one shipment — nested in ShipmentTrackingDetails."""
+
+    pro_number: Optional[str] = Field(None, alias="proNumber", description="Carrier PRO number")
+    used_api: Optional[int] = Field(
+        None, alias="usedAPI", description="Carrier API used (CarrierAPI enum value)",
+    )
+    history_provider_name: Optional[str] = Field(
+        None, alias="historyProviderName", description="Tracking history provider",
+    )
+    history_statuses: Optional[List[dict]] = Field(
+        None, alias="historyStatuses", description="Tracking history status entries",
+    )
+    weight: Optional[dict] = Field(None, description="Shipment weight info")
+    job_weight: Optional[dict] = Field(None, alias="jobWeight", description="Job-level weight info")
+    successfully: Optional[bool] = Field(None, description="Whether the tracking lookup succeeded")
+    error_message: Optional[str] = Field(
+        None, alias="errorMessage", description="Error message if lookup failed",
+    )
+    multiple_shipments: Optional[bool] = Field(
+        None, alias="multipleShipments", description="True when the job has multiple shipments",
+    )
+    packages: Optional[List[dict]] = Field(None, description="Per-package shipping info")
+    estimated_delivery: Optional[datetime] = Field(
+        None, alias="estimatedDelivery", description="Estimated delivery date-time",
+    )
+
+
+class ShipmentTrackingDetails(ResponseModel):
+    """Per-shipment tracking — GET /job/{jobDisplayId}/tracking/shipment/{proNumber}."""
+
+    shipment_details: Optional[ShipmentDetails] = Field(
+        None, alias="shipmentDetails", description="Carrier tracking detail for the shipment",
+    )
+    documents: Optional[List[ShipmentTrackingDocument]] = Field(
+        None, description="Documents attached to the shipment",
+    )
+
+
+class TrackingInfoV3(ResponseModel):
+    """Tracking info v3 — GET /v3/job/{jobDisplayId}/tracking/{historyAmount}."""
+
+    tracking_details: Optional[List[dict]] = Field(
+        None, alias="trackingDetails", description="Detailed tracking entries",
+    )
+    carrier_info: Optional[List[dict]] = Field(None, alias="carrierInfo", description="Carrier metadata")
+    shipment_status: Optional[str] = Field(None, alias="shipmentStatus", description="Overall status")
+    statuses: Optional[List[dict]] = Field(None, description="Status entries with date, code, message, carrierProps")
+    carriers: Optional[List[dict]] = Field(None, description="Carrier information list")
+
+
+# ---- Notes models -----------------------------------------------------
+
+
+class JobNote(ResponseModel, IdentifiedModel, TimestampedModel):
+    """Job note — GET /job/{jobDisplayId}/note."""
+
+    id: Optional[int] = Field(None, description="Note ID")
+    comment: Optional[str] = Field(None, description="Note content")
+    is_important: Optional[bool] = Field(None, alias="isImportant", description="Flagged as important")
+    is_completed: Optional[bool] = Field(None, alias="isCompleted", description="Completion status")
+    author: Optional[str] = Field(None, description="Author name")
+    modify_date: Optional[str] = Field(None, alias="modifiyDate", description="Last modified (API typo preserved)")
+    task_code: Optional[str] = Field(None, alias="taskCode", description="Associated timeline task")
+
+
+class JobNoteCreateRequest(RequestModel):
+    """Body for POST /job/{jobDisplayId}/note."""
+
+    comments: str = Field(..., description="Note content (max 8000 chars)")
+    task_code: str = Field(..., alias="taskCode", description="Associated timeline task code")
+    is_important: Optional[bool] = Field(None, alias="isImportant", description="Flag as important")
+    send_notification: Optional[bool] = Field(None, alias="sendNotification", description="Notify assigned users")
+    due_date: Optional[str] = Field(None, alias="dueDate", description="Due date")
+
+
+class JobNoteUpdateRequest(RequestModel):
+    """Body for PUT /job/{jobDisplayId}/note/{id}."""
+
+    comments: Optional[str] = Field(None, description="Updated content")
+    is_important: Optional[bool] = Field(None, alias="isImportant", description="Updated flag")
+    is_completed: Optional[bool] = Field(None, alias="isCompleted", description="Mark complete")
+
+
+# ---- Parcels & Items models -------------------------------------------
+
+
+class ParcelItem(ResponseModel):
+    """Parcel item — GET /job/{jobDisplayId}/parcelitems.
+
+    Maps to C# ParcelItemWithPackage entity.
+    """
+
+    id: Optional[int] = Field(None, description="Parcel item ID")
+    job_item_id: Optional[str] = Field(None, alias="jobItemId", description="Job item UUID")
+    description: Optional[str] = Field(None, description="Item description")
+    quantity: Optional[int] = Field(None, description="Number of pieces")
+    job_item_pkd_length: Optional[float] = Field(None, alias="jobItemPkdLength", description="Packed length")
+    job_item_pkd_width: Optional[float] = Field(None, alias="jobItemPkdWidth", description="Packed width")
+    job_item_pkd_height: Optional[float] = Field(None, alias="jobItemPkdHeight", description="Packed height")
+    job_item_pkd_weight: Optional[float] = Field(None, alias="jobItemPkdWeight", description="Packed weight")
+    job_item_parcel_value: Optional[float] = Field(None, alias="jobItemParcelValue", description="Declared value")
+    parcel_package_type_id: Optional[int] = Field(None, alias="parcelPackageTypeId", description="Package type ID")
+    insure_key: Optional[str] = Field(None, alias="insureKey", description="Insurance key")
+    package_type_code: Optional[str] = Field(None, alias="packageTypeCode", description="Package type code")
+    job_modified_date: Optional[str] = Field(None, alias="jobModifiedDate", description="Job modified datetime")
+    parcel_items: Optional[List[dict]] = Field(None, alias="parcelItems", description="Nested parcel items")
+
+
+class JobParcelItemMaterial(ResponseModel):
+    """Material used in a parcel item — nested in ParcelItemWithMaterials."""
+
+    name: Optional[str] = Field(None, description="Material name")
+    description: Optional[str] = Field(None, description="Material description")
+    code: Optional[str] = Field(None, description="Material code")
+    type: Optional[str] = Field(None, description="Material type")
+    weight: Optional[float] = Field(None, description="Weight")
+    length: Optional[float] = Field(None, description="Length")
+    width: Optional[float] = Field(None, description="Width")
+    height: Optional[float] = Field(None, description="Height")
+    cost: Optional[float] = Field(None, description="Cost")
+    price: Optional[float] = Field(None, description="Price")
+    quantity: Optional[float] = Field(None, description="Quantity")
+
+
+class ParcelItemWithMaterials(ParcelItem):
+    """Parcel item with materials — GET /job/{jobDisplayId}/parcel-items-with-materials."""
+
+    materials: Optional[List[JobParcelItemMaterial]] = Field(None, description="Associated materials")
+
+
+class PackagingContainer(ResponseModel):
+    """Packaging container — GET /job/{jobDisplayId}/packagingcontainers.
+
+    Maps to C# Packaging entity.
+    """
+
+    name: Optional[str] = Field(None, description="Container name")
+    description: Optional[str] = Field(None, description="Container description")
+    length: Optional[float] = Field(None, description="Length")
+    width: Optional[float] = Field(None, description="Width")
+    height: Optional[float] = Field(None, description="Height")
+    weight: Optional[float] = Field(None, description="Weight")
+    total_cost: Optional[float] = Field(None, alias="totalCost", description="Total cost")
+
+
+class ParcelItemCreateRequest(RequestModel):
+    """Ergonomic single-item body for ``api.jobs.parcel_items.create``.
+
+    The endpoint itself is replace-all (:class:`ParcelItemsRequest`); ``create``
+    reads the current parcel set and merges this item onto it, so existing
+    parcel items are preserved rather than wiped.
+    """
+
+    description: str = Field(..., description="Item description")
+    length: Optional[float] = Field(None, description="Length")
+    width: Optional[float] = Field(None, description="Width")
+    height: Optional[float] = Field(None, description="Height")
+    weight: Optional[float] = Field(None, description="Weight")
+    quantity: Optional[int] = Field(None, description="Quantity")
+
+
+class ParcelItemSave(RequestModel):
+    """One parcel item inside a :class:`ParcelItemsRequest` replace set.
+
+    Mirrors the swagger ``ParcelItem`` request schema. An existing item keeps
+    its ``id``/``jobItemId``; a new item omits ``id``.
+    """
+
+    id: Optional[int] = Field(None, description="Existing parcel item ID (omit for a new item)")
+    job_item_id: Optional[str] = Field(None, alias="jobItemId", description="Job item UUID this parcel packs")
+    description: Optional[str] = Field(None, description="Item description")
+    quantity: Optional[int] = Field(None, description="Number of pieces")
+    job_item_pkd_length: Optional[float] = Field(None, alias="jobItemPkdLength", description="Packed length")
+    job_item_pkd_width: Optional[float] = Field(None, alias="jobItemPkdWidth", description="Packed width")
+    job_item_pkd_height: Optional[float] = Field(None, alias="jobItemPkdHeight", description="Packed height")
+    job_item_pkd_weight: Optional[float] = Field(None, alias="jobItemPkdWeight", description="Packed weight")
+    job_item_parcel_value: Optional[float] = Field(None, alias="jobItemParcelValue", description="Declared value")
+    parcel_package_type_id: Optional[int] = Field(None, alias="parcelPackageTypeId", description="Package type ID")
+    insure_key: Optional[str] = Field(None, alias="insureKey", description="Insurance key")
+
+
+class ParcelItemsRequest(RequestModel):
+    """Body for POST /job/{jobDisplayId}/parcelitems (``SaveAllParcelItemsRequest``).
+
+    Replace-all: the job's parcel-item set becomes exactly ``parcelItems``. The
+    SDK's save/create helpers read the current set first and merge, so existing
+    items are never lost.
+    """
+
+    job_modified_date: Optional[str] = Field(
+        None, alias="jobModifiedDate", description="Job modified timestamp (optimistic concurrency)"
+    )
+    force_update: Optional[bool] = Field(
+        None, alias="forceUpdate", description="Bypass the optimistic-concurrency check"
+    )
+    parcel_items: Optional[List[ParcelItemSave]] = Field(
+        None, alias="parcelItems", description="Full parcel-item set to save"
+    )
+
+
+class ParcelItemsResponse(ResponseModel):
+    """Response wrapper for the parcel-items save/list (``{jobModifiedDate, parcelItems}``)."""
+
+    job_modified_date: Optional[str] = Field(None, alias="jobModifiedDate", description="Job modified timestamp")
+    parcel_items: Optional[List[ParcelItem]] = Field(
+        None, alias="parcelItems", description="Parcel items after the save"
+    )
+
+
+class ItemNotesRequest(RequestModel):
+    """Body for POST /job/{jobDisplayId}/item/notes."""
+
+    notes: str = Field(..., description="Item notes content")
+
+
+class ItemUpdateRequest(RequestModel):
+    """Body for PUT /job/{jobDisplayId}/item/{itemId}."""
+
+    description: Optional[str] = Field(None, description="Updated description")
+    quantity: Optional[int] = Field(None, description="Updated quantity")
+    weight: Optional[float] = Field(None, description="Updated weight")
+
+
+# ---- On-Hold models (008) ------------------------------------------------
+
+
+class ExtendedOnHoldInfo(ResponseModel):
+    """On-hold listing entry — GET /job/{jobDisplayId}/onhold."""
+
+    id: Optional[int] = Field(None, description="On-hold record ID")
+    reason: Optional[str] = Field(None, description="Hold reason")
+    description: Optional[str] = Field(None, description="Hold description")
+    follow_up_user: Optional[str] = Field(None, alias="followUpUser", description="Follow-up user name")
+    follow_up_date: Optional[str] = Field(None, alias="followUpDate", description="Follow-up date")
+    status: Optional[str] = Field(None, description="Hold status")
+    created_date: Optional[str] = Field(None, alias="createdDate", description="Created date")
+    created_by_contact_id: Optional[int] = Field(None, alias="createdByContactId", description="Contact ID of creator")
+    created_by_job_relation: Optional[str] = Field(
+        None, alias="createdByJobRelation", description="Creator's job relation"
+    )
+    resolved_date: Optional[str] = Field(None, alias="resolvedDate", description="Resolution date")
+    responsible_party_type_id: Optional[str] = Field(
+        None, alias="responsiblePartyTypeId", description="Responsible party type UUID"
+    )
+    reason_id: Optional[str] = Field(None, alias="reasonId", description="Hold reason UUID")
+    responsible_party: Optional[str] = Field(None, alias="responsibleParty", description="Responsible party label")
+    comment: Optional[str] = Field(None, description="Hold comment")
+    start_date: Optional[str] = Field(None, alias="startDate", description="Hold start date")
+    created_by: Optional[str] = Field(None, alias="createdBy", description="Creator name")
+
+    def cli_format(self) -> str:
+        """One-line pretty row used by the CLI and examples (vs. JSON)."""
+        hid = "—" if self.id is None else str(self.id)
+        flag = "✓" if (self.resolved_date or (self.status or "").lower() == "resolved") else "!"
+        reason = (self.reason or "—")[:18]
+        follow_up = (self.follow_up_user or "—")[:18]
+        comment = (self.comment or self.description or "").replace("\n", " ")[:50]
+        return (
+            f"id={hid:<5} "
+            f"{flag} "
+            f"reason={reason:<18} "
+            f"followup={follow_up:<18} "
+            f"due={(self.follow_up_date or '—'):<19} "
+            f"comment={comment!r}"
+        )
+
+
+class OnHoldDetails(ResponseModel):
+    """Full on-hold detail — GET /job/{jobDisplayId}/onhold/{id}."""
+
+    id: Optional[int] = Field(None, description="On-hold record ID")
+    responsible_party_type_id: Optional[str] = Field(
+        None, alias="responsiblePartyTypeId", description="Responsible party type UUID"
+    )
+    reason_id: Optional[str] = Field(None, alias="reasonId", description="Hold reason UUID")
+    start_date: Optional[str] = Field(None, alias="startDate", description="Hold start date")
+    next_step_id: Optional[str] = Field(None, alias="nextStepId", description="Next-step lookup UUID")
+    due_date: Optional[str] = Field(None, alias="dueDate", description="Due date")
+    assigned_to_id: Optional[int] = Field(None, alias="assignedToId", description="Assigned follow-up contact ID")
+    resolved_date: Optional[str] = Field(None, alias="resolvedDate", description="Resolution date")
+    resolved_code_id: Optional[str] = Field(None, alias="resolvedCodeId", description="Resolution code UUID")
+    is_active: Optional[bool] = Field(None, alias="isActive", description="Whether the hold is active")
+    created_by_contact_id: Optional[int] = Field(
+        None, alias="createdByContactId", description="Contact ID of creator"
+    )
+    created_by_contact_name: Optional[str] = Field(
+        None, alias="createdByContactName", description="Creator name"
+    )
+    notes: Optional[List[dict]] = Field(None, description="Associated notes")
+    responsible_party: Optional[str] = Field(None, alias="responsibleParty", description="Responsible party label")
+    reason: Optional[str] = Field(None, description="Hold reason")
+    comment: Optional[str] = Field(None, description="Hold comment")
+
+    # Older captured payloads used these shapes; keep them typed so fixture
+    # validation stays noise-free while live schema-aligned payloads work.
+    description: Optional[str] = Field(None, description="Hold description")
+    comments: Optional[List[dict]] = Field(None, description="Associated comments")
+    dates: Optional[dict] = Field(None, description="Date information")
+    follow_up_user: Optional[dict] = Field(None, alias="followUpUser", description="Follow-up user details")
+    status: Optional[str] = Field(None, description="Hold status")
+
+
+class SaveOnHoldRequest(RequestModel):
+    """Body for ``POST /job/{jobDisplayId}/onhold`` **and**
+    ``PUT /job/{jobDisplayId}/onhold/{onHoldId}`` **and**
+    ``PUT /job/{jobDisplayId}/onhold/{onHoldId}/resolve``.
+
+    Matches swagger ``SaveOnHoldRequest`` -- a single schema covers
+    create / update / resolve. The legacy
+    :class:`ResolveOnHoldRequest` is an alias of this class.
+
+    Required: ``reason_id`` (UUID) + ``responsible_party_type_id`` (UUID).
+
+    Sourcing UUIDs:
+
+    * ``reason_id``  -> ``api.lookup.get_by_key("OnHoldReason")``
+    * ``responsible_party_type_id`` -> ``api.lookup.get_by_key("ResponsibleParty")``
+    * ``next_step_id`` (optional) -> ``api.lookup.get_by_key("OnHoldNextStep")``
+    * ``resolved_code_id`` (optional) -> ``api.lookup.get_by_key("OnHoldResolvedCode")``
+    * ``assigned_to_id`` -> a ``contactId`` from
+      :meth:`~ab.api.endpoints.jobs.on_hold.JobOnHoldEndpoint.list_followup_users`.
+    """
+
+    reason_id: str = Field(..., alias="reasonId", description="Hold reason UUID (required)")
+    responsible_party_type_id: str = Field(
+        ..., alias="responsiblePartyTypeId", description="Responsible-party-type UUID (required)",
+    )
+    comment: Optional[str] = Field(
+        None, description="Free-text comment (<=1024 chars)", max_length=1024,
+    )
+    next_step_id: Optional[str] = Field(None, alias="nextStepId", description="Next-step lookup UUID")
+    due_date: Optional[datetime] = Field(None, alias="dueDate", description="Follow-up due date")
+    assigned_to_id: Optional[int] = Field(
+        None, alias="assignedToId", description="Contact ID assigned to follow up (int)",
+    )
+    resolved_date: Optional[datetime] = Field(None, alias="resolvedDate", description="Resolution timestamp")
+    resolved_code_id: Optional[str] = Field(
+        None, alias="resolvedCodeId", description="Resolution code lookup UUID",
+    )
+    start_date: Optional[datetime] = Field(None, alias="startDate", description="Hold start timestamp")
+
+
+class SaveOnHoldResponse(ResponseModel):
+    """On-hold create/update response."""
+
+    on_hold_id: Optional[str] = Field(None, alias="onHoldId", description="On-hold record ID")
+    status: Optional[str] = Field(None, description="Operation status")
+
+    def cli_format(self) -> str:
+        return f"onHoldId={self.on_hold_id!r} status={self.status!r}"
+
+
+class ResolveJobOnHoldResponse(ResponseModel):
+    """On-hold resolution response."""
+
+    resolved: Optional[bool] = Field(None, description="Whether resolved successfully")
+    status: Optional[str] = Field(None, description="Resolution status")
+
+    def cli_format(self) -> str:
+        return f"resolved={self.resolved} status={self.status!r}"
+
+
+class SaveOnHoldDatesModel(RequestModel):
+    """Body for PUT /job/{jobDisplayId}/onhold/{onHoldId}/dates."""
+
+    follow_up_date: Optional[str] = Field(None, alias="followUpDate", description="Follow-up date")
+    due_date: Optional[str] = Field(None, alias="dueDate", description="Due date")
+
+
+class OnHoldUser(ResponseModel):
+    """Follow-up user info — GET /job/{jobDisplayId}/onhold/followupuser/{contactId}."""
+
+    contact_id: Optional[int] = Field(None, alias="contactId", description="Contact ID")
+    name: Optional[str] = Field(None, description="User name")
+    email: Optional[str] = Field(None, description="User email")
+    full_name: Optional[str] = Field(None, alias="fullName", description="Full display name")
+    job_relation: Optional[str] = Field(
+        None, alias="jobRelation", description="Relation to the job (e.g. Pickup Agent, Owner)"
+    )
+
+    def cli_format(self) -> str:
+        """One-line pretty row used by the CLI and examples (vs. JSON)."""
+        cid = "—" if self.contact_id is None else str(self.contact_id)
+        return (
+            f"contactId={cid:<8} "
+            f"fullName={(self.full_name or '—')!r:<28} "
+            f"email={(self.email or '—')!r:<30} "
+            f"relation={self.job_relation!r}"
+        )
+
+
+class OnHoldNoteDetails(ResponseModel):
+    """On-hold comment — POST /job/{jobDisplayId}/onhold/{onHoldId}/comment."""
+
+    id: Optional[str] = Field(None, description="Comment ID")
+    comment: Optional[str] = Field(None, description="Comment text")
+    author: Optional[str] = Field(None, description="Author name")
+    date: Optional[str] = Field(None, description="Comment date")
+
+
+# ---- Email/SMS models (008) -----------------------------------------------
+
+
+class SendDocumentEmailModel(RequestModel):
+    """Body for POST /job/{jobDisplayId}/email/senddocument."""
+
+    to: Optional[List[str]] = Field(None, description="Recipient emails")
+    cc: Optional[List[str]] = Field(None, description="CC emails")
+    bcc: Optional[List[str]] = Field(None, description="BCC emails")
+    subject: Optional[str] = Field(None, description="Email subject")
+    body: Optional[str] = Field(None, description="Email body")
+    document_type: Optional[str] = Field(None, alias="documentType", description="Document type")
+
+
+class SendSMSModel(RequestModel):
+    """Body for POST /job/{jobDisplayId}/sms."""
+
+    phone_number: Optional[str] = Field(None, alias="phoneNumber", description="Phone number")
+    message: Optional[str] = Field(None, description="SMS message body")
+    template_id: Optional[str] = Field(None, alias="templateId", description="SMS template ID")
+
+
+class MarkSmsAsReadModel(RequestModel):
+    """Body for POST /job/{jobDisplayId}/sms/read."""
+
+    sms_ids: Optional[List[str]] = Field(None, alias="smsIds", description="SMS IDs to mark read")
+
+
+# ---- Freight provider models (008, expanded 033) ----------------------------
+
+
+class CarrierAccountInfo(ResponseModel):
+    """Carrier account details — nested in PricedFreightProvider and ShipmentPlanProvider.
+
+    Maps to C# ``CarrierAccountInfo`` DTO.
+    """
+
+    id: Optional[int] = Field(None, description="Carrier account identifier")
+    key: Optional[str] = Field(None, description="Account key")
+    friendly_name: Optional[str] = Field(None, alias="friendlyName", description="Human-readable account name")
+
+
+class PricedFreightProvider(ResponseModel):
+    """Freight provider with pricing — GET /job/{jobDisplayId}/freightproviders.
+
+    Expanded in feature 033 to match full swagger PricedFreightProvider schema
+    (15 fields + nested CarrierAccountInfo).
+    """
+
+    option_index: Optional[int] = Field(None, alias="optionIndex", description="Provider option index")
+    shipment_type: Optional[str] = Field(None, alias="shipmentType", description="Shipment type UUID")
+    provider_api: Optional[int] = Field(None, alias="providerAPI", description="Carrier API type (CarrierAPI enum int)")
+    provider_id: Optional[str] = Field(None, alias="providerId", description="Provider company UUID")
+    provider_code: Optional[str] = Field(None, alias="providerCode", description="Provider code")
+    provider_company_name: Optional[str] = Field(None, alias="providerCompanyName", description="Provider company name")
+    total_sell: Optional[float] = Field(None, alias="totalSell", description="Total sell price")
+    transit: Optional[int] = Field(None, description="Transit days")
+    quote_no: Optional[str] = Field(None, alias="quoteNo", description="Quote number")
+    pro_num: Optional[str] = Field(None, alias="proNum", description="PRO number")
+    option_active: Optional[bool] = Field(
+        None, alias="optionActive", description="Whether option is active"
+    )
+    shipment_accepted: Optional[bool] = Field(
+        None, alias="shipmentAccepted", description="Whether shipment is accepted"
+    )
+    shipment_accepted_date: Optional[str] = Field(
+        None, alias="shipmentAcceptedDate", description="Shipment accepted timestamp"
+    )
+    obtain_nfm_job_state: Optional[str] = Field(
+        None, alias="obtainNFMJobState", description="NFM job state"
+    )
+    used_carrier_account_info: Optional[CarrierAccountInfo] = Field(
+        None, alias="usedCarrierAccountInfo", description="Carrier account info"
+    )
+
+
+class ShipmentPlanProvider(RequestModel):
+    """Save freight provider selection — POST /job/{jobDisplayId}/freightproviders.
+
+    Expanded in feature 033 to match full swagger ShipmentPlanProvider schema (22+ fields).
+    """
+
+    job_id: Optional[str] = Field(None, alias="jobID", description="Job UUID")
+    freight_quote_options_id: Optional[str] = Field(
+        None, alias="freightQuoteOptionsId", description="Freight quote options UUID"
+    )
+    provider_id: Optional[str] = Field(None, alias="providerID", description="Provider company UUID")
+    is_primary: Optional[bool] = Field(None, alias="isPrimary", description="Whether this is the primary provider")
+    provider_company_code: Optional[str] = Field(None, alias="providerCompanyCode", description="Provider company code")
+    provider_company_name: Optional[str] = Field(None, alias="providerCompanyName", description="Provider company name")
+    original_company_name: Optional[str] = Field(None, alias="originalCompanyName", description="Original company name")
+    freight_amount: Optional[float] = Field(None, alias="freightAmount", description="Freight amount")
+    accessorial_amount: Optional[float] = Field(
+        None, alias="accessorialAmount", description="Accessorial charges amount"
+    )
+    caf_note: Optional[str] = Field(None, alias="cafNote", description="CAF note")
+    quote_no: Optional[str] = Field(None, alias="quoteNo", description="Quote number")
+    pro_num: Optional[str] = Field(None, alias="proNum", description="PRO number")
+    transit: Optional[int] = Field(None, description="Transit days")
+    shipment_type: Optional[str] = Field(None, alias="shipmentType", description="Shipment type UUID")
+    miles: Optional[float] = Field(None, description="Distance in miles")
+    logo: Optional[str] = Field(None, description="Provider logo URL")
+    option_index: Optional[int] = Field(None, alias="optionIndex", description="Provider option index")
+    option_active: Optional[bool] = Field(None, alias="optionActive", description="Whether option is active")
+    shipment_accepted: Optional[bool] = Field(
+        None, alias="shipmentAccepted", description="Whether shipment is accepted"
+    )
+    shipment_accepted_date: Optional[str] = Field(
+        None, alias="shipmentAcceptedDate", description="Shipment accepted timestamp"
+    )
+    used_api: Optional[int] = Field(
+        None, alias="usedAPI", description="Carrier API type (CarrierAPI enum int)"
+    )
+    bill_to_franchisee_id: Optional[str] = Field(
+        None, alias="billToFranchiseeId", description="Bill-to franchisee UUID"
+    )
+    bill_to_company_code: Optional[str] = Field(None, alias="billToCompanyCode", description="Bill-to company code")
+    obtain_nfm_job_state: Optional[str] = Field(None, alias="obtainNFMJobState", description="NFM job state")
+    used_carrier_account_info: Optional[CarrierAccountInfo] = Field(
+        None, alias="usedCarrierAccountInfo", description="Carrier account info"
+    )
+
+
+# ---- Pattern C → B placeholder models (020) ---------------------------------
+
+
+class OnHoldCommentRequest(RequestModel):
+    """Body for POST /job/{jobDisplayId}/onhold/{onHoldId}/comment."""
+
+    comment: Optional[str] = Field(None, description="Comment text")
+
+
+# Resolve uses the same swagger schema as create / update. Legacy alias
+# kept for backwards-compatible imports; the canonical class is
+# :class:`SaveOnHoldRequest` declared above.
+ResolveOnHoldRequest = SaveOnHoldRequest
+
+
+class SendEmailRequest(RequestModel):
+    """Body for POST /job/{jobDisplayId}/email."""
+
+    to: Optional[List[str]] = Field(None, description="Recipient emails")
+    cc: Optional[List[str]] = Field(None, description="CC emails")
+    bcc: Optional[List[str]] = Field(None, description="BCC emails")
+    subject: Optional[str] = Field(None, description="Email subject")
+    body: Optional[str] = Field(None, description="Email body")
+
+
+class RateQuoteRequest(RequestModel):
+    """Body for POST /job/{jobDisplayId}/freightproviders/{optionIndex}/ratequote.
+
+    Maps to C# ``SetRateModel`` DTO per swagger. Expanded in feature 033.
+    """
+
+    rates_key: Optional[str] = Field(None, alias="ratesKey", description="Rates key identifier")
+    carrier_code: Optional[str] = Field(None, alias="carrierCode", description="Carrier code")
+    carrier_account_id: Optional[int] = Field(None, alias="carrierAccountId", description="Carrier account ID")
+    active: Optional[bool] = Field(None, description="Whether rate is active")
+
+
+class FreightShipment(RequestModel):
+    """Individual freight item — nested in FreightItemsRequest.freightItems.
+
+    Maps to C# ``FreightShimpment`` DTO per swagger (note: swagger has typo
+    'Shimpment'; our model uses corrected spelling). Expanded in feature 033.
+    """
+
+    item_id: Optional[str] = Field(None, alias="itemID", description="Item UUID")
+    freight_item_id: Optional[str] = Field(None, alias="freightItemId", description="Freight item UUID")
+    freight_item_class_id: Optional[str] = Field(
+        None, alias="freightItemClassId", description="Freight item class UUID"
+    )
+    job_id: Optional[str] = Field(None, alias="jobID", description="Job UUID")
+    job_display_id: Optional[str] = Field(None, alias="jobDisplayId", description="Job display ID")
+    job_freight_id: Optional[str] = Field(None, alias="jobFreightID", description="Job freight UUID")
+    quantity: Optional[int] = Field(None, description="Item quantity")
+    item_length: Optional[float] = Field(None, alias="itemLength", description="Item length")
+    item_width: Optional[float] = Field(None, alias="itemWidth", description="Item width")
+    item_height: Optional[float] = Field(None, alias="itemHeight", description="Item height")
+    item_weight: Optional[float] = Field(None, alias="itemWeight", description="Item weight")
+    item_value: Optional[float] = Field(None, alias="itemValue", description="Item value")
+    cube: Optional[float] = Field(None, description="Cube measurement")
+    total_weight: Optional[float] = Field(None, alias="totalWeight", description="Total weight")
+    net_cubic_feet: Optional[float] = Field(None, alias="netCubicFeet", description="Net cubic feet")
+    net_cubic_inches: Optional[int] = Field(None, alias="netCubicInches", description="Net cubic inches")
+    longest_dimension: Optional[float] = Field(None, alias="longestDimension", description="Longest dimension")
+    transportation_length: Optional[int] = Field(
+        None, alias="transportationLength", description="Transportation length"
+    )
+    transportation_width: Optional[int] = Field(
+        None, alias="transportationWidth", description="Transportation width"
+    )
+    transportation_height: Optional[int] = Field(
+        None, alias="transportationHeight", description="Transportation height"
+    )
+    ceiling_transportation_weight: Optional[int] = Field(
+        None, alias="ceilingTransportationWeight", description="Ceiling transportation weight"
+    )
+    freight_description: Optional[str] = Field(None, alias="freightDescription", description="Freight description")
+    freight_item_value: Optional[str] = Field(None, alias="freightItemValue", description="Freight item value label")
+    freight_item_class: Optional[str] = Field(None, alias="freightItemClass", description="Freight item class label")
+    nmfc_item: Optional[str] = Field(None, alias="nmfcItem", description="NMFC item number")
+    bol_description: Optional[str] = Field(None, alias="bolDescription", description="BOL description")
+    job_freight_report: Optional[str] = Field(None, alias="jobFreightReport", description="Job freight report")
+    modified_by: Optional[str] = Field(None, alias="modifiedBy", description="Modified by user UUID")
+    created_by: Optional[str] = Field(None, alias="createdBy", description="Created by user UUID")
+    created_date: Optional[str] = Field(None, alias="createdDate", description="Created timestamp")
+    modified_date: Optional[str] = Field(None, alias="modifiedDate", description="Modified timestamp")
+
+
+class FreightItemsRequest(RequestModel):
+    """Body for POST /job/{jobDisplayId}/freightitems.
+
+    Maps to C# ``SaveAllFreightItemsRequest`` DTO per swagger. Expanded in feature 033.
+    """
+
+    job_modified_date: Optional[str] = Field(None, alias="jobModifiedDate", description="Job modified timestamp")
+    force_update: Optional[bool] = Field(None, alias="forceUpdate", description="Force update flag")
+    freight_items: Optional[List[FreightShipment]] = Field(
+        None, alias="freightItems", description="Freight items to save"
+    )
+
+
+# ---- Agent change models (029) -------------------------------------------
+
+
+class ChangeJobAgentRequest(RequestModel):
+    """Body for POST /job/{jobDisplayId}/changeAgent.
+
+    Maps to C# ``ChangeJobAgentRequest`` DTO (ABConnectTools).
+    """
+
+    service_type: Optional[int] = Field(None, alias="serviceType", description="Agent service type (0-4)")
+    agent_id: Optional[str] = Field(None, alias="agentId", description="Agent company UUID")
+    recalculate_price: Optional[bool] = Field(
+        None, alias="recalculatePrice", description="Recalculate job price after change"
+    )
+    apply_rebate: Optional[bool] = Field(None, alias="applyRebate", description="Apply rebate after change")

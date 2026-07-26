@@ -1,0 +1,68 @@
+[
+  {
+    "id": "8cd2fbb2-c3d7-a1a5-e064-1cd03c05c3f8",
+    "key": null,
+    "name": "Force Majeure",
+    "value": null
+  },
+  {
+    "id": "5745d3bd-b935-a77a-7174-67f3369c18da",
+    "key": null,
+    "name": "Bad Info",
+    "value": null
+  },
+  {
+    "id": "a19fb379-2ed8-abf8-9c6d-f339b764eaed",
+    "key": null,
+    "name": "Contact Issue",
+    "value": null
+  },
+  {
+    "id": "277f412e-d628-a192-1e36-21447cbe49b7",
+    "key": null,
+    "name": "Item Change",
+    "value": null
+  },
+  {
+    "id": "9ba9da79-1ee1-ae88-b253-677bbf00021a",
+    "key": null,
+    "name": "No Items",
+    "value": null
+  },
+  {
+    "id": "b4d98b4a-edf8-aff0-51f1-d9d35eb89ce4",
+    "key": null,
+    "name": "No Response",
+    "value": null
+  },
+  {
+    "id": "dcd4a5b7-f269-a739-fcac-0c3f8484860e",
+    "key": null,
+    "name": "No Show",
+    "value": null
+  },
+  {
+    "id": "ff029aab-4b69-a167-5ff2-7c399411112c",
+    "key": null,
+    "name": "Not Ready",
+    "value": null
+  },
+  {
+    "id": "5a02c87b-e656-a5b6-1a16-bc144b128882",
+    "key": null,
+    "name": "Refused",
+    "value": null
+  },
+  {
+    "id": "baa3b164-0fb0-aa4a-40ad-3b8c671e07be",
+    "key": null,
+    "name": "Sched Delay",
+    "value": null
+  },
+  {
+    "id": "03a8e2ea-33e2-aab9-5f59-bf039a824c2a",
+    "key": null,
+    "name": "Storage",
+    "value": null
+  }
+]

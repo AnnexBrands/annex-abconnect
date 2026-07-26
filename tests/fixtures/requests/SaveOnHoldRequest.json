@@ -1,0 +1,11 @@
+{
+  "reasonId": "c6a87674-8a2f-a179-441a-733b02fd3280",
+  "responsiblePartyTypeId": "0612c1e7-6414-a259-8b35-46906028f60d",
+  "comment": "Awaiting customs paperwork from origin agent.",
+  "assignedToId": 206,
+  "dueDate": "2026-05-20T17:00:00",
+  "startDate": "2026-05-13T09:00:00",
+  "nextStepId": null,
+  "resolvedDate": null,
+  "resolvedCodeId": null
+}

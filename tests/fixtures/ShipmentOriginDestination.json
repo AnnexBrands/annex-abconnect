@@ -1,0 +1,66 @@
+{
+  "origin": {
+    "contactName": "Brightwater Logistics",
+    "companyName": "Fairmont Galleries",
+    "phoneNumber": "555-309-9309",
+    "emailAddress": "harper.grayson@example.com",
+    "address": {
+      "id": 771539,
+      "isValid": true,
+      "dontValidate": false,
+      "propertyType": null,
+      "address1Value": "1481 Cedar Way",
+      "address2Value": "882 Quarry Rd",
+      "countryName": null,
+      "countryCode": null,
+      "countryId": "daf9b34b-ce6a-4f2f-9207-15278c06b7d2",
+      "countrySkipZipCodeVerification": null,
+      "zipCodeResolvingFailed": false,
+      "latitude": 33.75,
+      "longitude": -84.39,
+      "fullCityLine": "Lakemont",
+      "coordinates": {
+        "latitude": 33.75,
+        "longitude": -84.39
+      },
+      "address1": "1481 Cedar Way",
+      "address2": "882 Quarry Rd",
+      "city": "Riverton",
+      "state": "SD",
+      "zipCode": "73301"
+    },
+    "taxIds": []
+  },
+  "destination": {
+    "contactName": "Northwind Freight",
+    "companyName": "Northwind Interiors",
+    "phoneNumber": "555-685-8785",
+    "emailAddress": "bailey.brook@example.com",
+    "address": {
+      "id": 518760,
+      "isValid": false,
+      "dontValidate": false,
+      "propertyType": null,
+      "address1Value": "6295 Juniper Ln",
+      "address2Value": "805 Cedar Way",
+      "countryName": null,
+      "countryCode": null,
+      "countryId": "daf9b34b-ce6a-4f2f-9207-15278c06b7d2",
+      "countrySkipZipCodeVerification": null,
+      "zipCodeResolvingFailed": false,
+      "latitude": 33.75,
+      "longitude": 39.74,
+      "fullCityLine": "Fairview",
+      "coordinates": {
+        "latitude": 33.75,
+        "longitude": 39.74
+      },
+      "address1": "6295 Juniper Ln",
+      "address2": "805 Cedar Way",
+      "city": "Lakemont",
+      "state": "GA",
+      "zipCode": "80202"
+    },
+    "taxIds": []
+  }
+}

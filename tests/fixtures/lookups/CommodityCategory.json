@@ -1,0 +1,80 @@
+[
+  {
+    "id": "575e8642-235e-a05e-f5a8-990ef9d78d11",
+    "key": null,
+    "name": "Automotive",
+    "value": null
+  },
+  {
+    "id": "459f8a4a-f6ad-ae63-c13b-41ed3cd66469",
+    "key": null,
+    "name": "Industrial/Manufacturing",
+    "value": null
+  },
+  {
+    "id": "942def0d-29b9-a674-156e-5c8d95613ddd",
+    "key": null,
+    "name": "Medical",
+    "value": null
+  },
+  {
+    "id": "8d972f2b-0a72-a9ff-a224-f5f598416172",
+    "key": null,
+    "name": "Technology",
+    "value": null
+  },
+  {
+    "id": "b2d254dd-4e58-a09c-03fc-30a67137446e",
+    "key": null,
+    "name": "Staging/Display/Events",
+    "value": null
+  },
+  {
+    "id": "b350e5b5-434e-af91-7fb0-68998762ac8c",
+    "key": null,
+    "name": "Retail/Merchandise",
+    "value": null
+  },
+  {
+    "id": "c81b694f-4a36-a18e-748b-ab4d55d6928b",
+    "key": null,
+    "name": "Art & Sculptures",
+    "value": null
+  },
+  {
+    "id": "5e5b2c6f-effd-ae87-d0c2-6d3e4f0741bc",
+    "key": null,
+    "name": "Antiques & Collectibles",
+    "value": null
+  },
+  {
+    "id": "18fc4328-279a-a3a7-2a30-87e01894b7e0",
+    "key": null,
+    "name": "Furniture & Design",
+    "value": null
+  },
+  {
+    "id": "a958b8dd-7de0-ae4f-de16-2d71c1185761",
+    "key": null,
+    "name": "Residential Move",
+    "value": null
+  },
+  {
+    "id": "9c4de27b-a54b-ac13-25b2-f6435e44b08a",
+    "key": null,
+    "name": "Office Move",
+    "value": null
+  },
+  {
+    "id": "27f0ec6e-afef-a137-f70a-5e590b2fda90",
+    "key": null,
+    "name": "Estate Distribution",
+    "value": null
+  },
+  {
+    "id": "27031e1e-705b-afff-4070-353f5fdbafa6",
+    "key": null,
+    "name": "Other",
+    "value": null
+  }
+]

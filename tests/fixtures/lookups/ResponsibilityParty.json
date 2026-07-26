@@ -1,0 +1,32 @@
+[
+  {
+    "id": "3d2b1a53-fc55-a2c9-9ae8-5a7551ca9206",
+    "key": null,
+    "name": "Hub",
+    "value": null
+  },
+  {
+    "id": "cd7370f0-8bb3-a5a7-88fc-b7f84e24642f",
+    "key": null,
+    "name": "Carrier",
+    "value": null
+  },
+  {
+    "id": "633fbff3-262d-aa92-7599-8a9d9523b97f",
+    "key": null,
+    "name": "Customer",
+    "value": null
+  },
+  {
+    "id": "f71fda31-eed8-a189-b4e1-ef2baf77bb5c",
+    "key": null,
+    "name": "Dealer",
+    "value": null
+  },
+  {
+    "id": "90a5902c-d78c-ac40-3580-1dcb408d13ee",
+    "key": null,
+    "name": "Buyer",
+    "value": null
+  }
+]

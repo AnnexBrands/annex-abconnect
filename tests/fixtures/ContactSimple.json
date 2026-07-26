@@ -1,0 +1,440 @@
+{
+  "id": 30760,
+  "firstName": null,
+  "lastName": null,
+  "fullName": "Emery Brook",
+  "email": null,
+  "phone": null,
+  "companyId": "5de36dda-9c15-a370-88a4-a0ad1a3c86d3",
+  "companyName": null,
+  "addressesList": [
+    {
+      "address": {
+        "id": 140026,
+        "isValid": true,
+        "dontValidate": false,
+        "propertyType": 3,
+        "address1Value": "4346 Meridian Ave",
+        "address2Value": "",
+        "countryName": null,
+        "countryCode": "US",
+        "countryId": "daf9b34b-ce6a-4f2f-9207-15278c06b7d2",
+        "countrySkipZipCodeVerification": null,
+        "zipCodeResolvingFailed": false,
+        "latitude": 34.05,
+        "longitude": 34.05,
+        "fullCityLine": "Riverton",
+        "coordinates": {
+          "latitude": 34.05,
+          "longitude": 34.05
+        },
+        "address1": "4346 Meridian Ave",
+        "address2": null,
+        "city": "Westfield",
+        "state": "OH",
+        "zipCode": "90210"
+      },
+      "id": 27546,
+      "isActive": true,
+      "deactivatedReason": null,
+      "metaData": null
+    },
+    {
+      "address": {
+        "id": 722336,
+        "isValid": false,
+        "dontValidate": true,
+        "propertyType": null,
+        "address1Value": "7744 Cedar Way",
+        "address2Value": "",
+        "countryName": null,
+        "countryCode": "US",
+        "countryId": "daf9b34b-ce6a-4f2f-9207-15278c06b7d2",
+        "countrySkipZipCodeVerification": null,
+        "zipCodeResolvingFailed": false,
+        "latitude": 34.05,
+        "longitude": 39.74,
+        "fullCityLine": "Lakemont",
+        "coordinates": {
+          "latitude": 34.05,
+          "longitude": 39.74
+        },
+        "address1": "7744 Cedar Way",
+        "address2": null,
+        "city": "Lakemont",
+        "state": "OH",
+        "zipCode": "02108"
+      },
+      "id": 18019244,
+      "isActive": true,
+      "deactivatedReason": null,
+      "metaData": null
+    }
+  ],
+  "assistant": null,
+  "birthDate": null,
+  "bolNotes": null,
+  "careOf": null,
+  "company": {
+    "userId": "00000000-0000-0000-0000-000000000000",
+    "companyName": "Brightwater Interiors",
+    "contactName": null,
+    "contactPhone": null,
+    "companyType": null,
+    "parcelOnly": null,
+    "isThirdParty": false,
+    "companyCode": "14004OH",
+    "parentCompanyName": "Fairmont Galleries",
+    "companyTypeID": "cd701fe3-9f60-a0b8-076a-95ffee1ee344",
+    "parentCompanyID": "58fbb08c-c2ad-a921-7ab7-3b5524ad7583",
+    "companyPhone": "555-859-6259",
+    "companyEmail": "casey.cedar@example.com",
+    "companyFax": "6147065965",
+    "companyWebSite": "https://gonavis.com/about/oh14004",
+    "industryType": "b3e4e2d4-8d23-ac59-4b9c-b929c8c56000",
+    "industryTypeName": null,
+    "taxId": "",
+    "customerCell": null,
+    "companyCell": null,
+    "pzCode": "PZ820",
+    "referralCode": null,
+    "companyLogo": "0dfd1405-0546-eb11-822b-fcb1a6dfbbb6#Navis_Horz[2].jpg",
+    "letterHeadLogo": "02cd0516-0546-eb11-822b-fcb1a6dfbbb6#Navis_Horz[1].jpg",
+    "thumbnailLogo": "5edb2859-aa6f-41ba-8db1-dd6ebbd327b5#nav.png",
+    "mapsMarkerImage": "5edb2859-aa6f-41ba-8db1-dd6ebbd327b5#nav.png",
+    "colorTheme": "Theme1",
+    "franchiseeMaturityType": null,
+    "pricingToUse": "94922a38-e305-a138-ceed-1a586ef46762",
+    "totalRows": null,
+    "address": null,
+    "companyInsurancePricing": null,
+    "companyServicePricing": null,
+    "companyTaxPricing": null,
+    "wholeSaleMarkup": null,
+    "baseMarkup": null,
+    "mediumMarkup": null,
+    "highMarkup": null,
+    "miles": null,
+    "insuranceType": "0240ae40-db55-a0a9-21e1-aef4b67939c1",
+    "isGlobal": true,
+    "isQbUser": true,
+    "skipIntacct": false,
+    "isAccess": null,
+    "companyDisplayID": "852949",
+    "depth": null,
+    "franchiseeName": null,
+    "isPrefered": true,
+    "createdUser": null,
+    "mappingLocations": null,
+    "locationCount": null,
+    "baseParent": null,
+    "copyMaterialFrom": null,
+    "isHide": false,
+    "isDontUse": false,
+    "mainAddress": {
+      "id": 140026,
+      "isValid": true,
+      "dontValidate": false,
+      "propertyType": 3,
+      "address1Value": "4346 Meridian Ave",
+      "address2Value": "",
+      "countryName": null,
+      "countryCode": null,
+      "countryId": "daf9b34b-ce6a-4f2f-9207-15278c06b7d2",
+      "countrySkipZipCodeVerification": null,
+      "zipCodeResolvingFailed": false,
+      "latitude": 34.05,
+      "longitude": 34.05,
+      "fullCityLine": "Riverton",
+      "coordinates": {
+        "latitude": 34.05,
+        "longitude": 34.05
+      },
+      "address1": "4346 Meridian Ave",
+      "address2": null,
+      "city": "Westfield",
+      "state": "OH",
+      "zipCode": "90210"
+    },
+    "accountManagerFranchiseeId": null,
+    "accountManagerFranchiseeName": null,
+    "carrierAccountsSourceCompanyId": null,
+    "carrierAccountsSourceCompanyName": null,
+    "autoPriceAPIEnableEmails": false,
+    "autoPriceAPIEnableSMSs": false,
+    "commercialCapabilities": 63,
+    "primaryContactId": 30760,
+    "payerContactId": 30760,
+    "payerContactName": "Emery Brook",
+    "totalJobs": 37,
+    "totalJobsRevenue": 18835.52,
+    "totalSales": 67,
+    "totalSalesRevenue": 51661.48,
+    "isReadonly": null,
+    "addressData": {
+      "company": "Brightwater Interiors",
+      "firstLastName": "Emery Brook",
+      "addressLine1": "4346 Meridian Ave",
+      "addressLine2": null,
+      "contactBOLNote": null,
+      "city": "Westfield",
+      "state": "OH",
+      "stateCode": null,
+      "zipCode": "90210",
+      "countryName": null,
+      "propertyType": null,
+      "fullCityLine": "Riverton",
+      "phone": "(614) 706-5958",
+      "cellPhone": null,
+      "fax": "(614) 706-5965",
+      "email": "casey.cedar@example.com",
+      "addressLine2Visible": false,
+      "companyVisible": true,
+      "countryNameVisible": false,
+      "phoneVisible": true,
+      "emailVisible": true,
+      "fullAddressLine": "4346 Meridian Ave",
+      "fullAddress": "5738 Westbourne Ave, Columbus OH 43213",
+      "countryId": null
+    },
+    "overridableAddressData": {
+      "company": {
+        "defaultValue": "Brightwater Interiors",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "Brightwater Interiors"
+      },
+      "firstLastName": {
+        "defaultValue": "Emery Brook",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "Emery Brook"
+      },
+      "addressLine1": {
+        "defaultValue": "4346 Meridian Ave",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "4346 Meridian Ave"
+      },
+      "addressLine2": {
+        "defaultValue": null,
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": null
+      },
+      "city": {
+        "defaultValue": "Westfield",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "Westfield"
+      },
+      "state": {
+        "defaultValue": "OH",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "OH"
+      },
+      "zipCode": {
+        "defaultValue": "90210",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "90210"
+      },
+      "phone": {
+        "defaultValue": "(614) 706-5958",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "(614) 706-5958"
+      },
+      "email": {
+        "defaultValue": "casey.cedar@example.com",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "casey.cedar@example.com"
+      },
+      "fullAddressLine": "4346 Meridian Ave",
+      "fullAddress": {
+        "defaultValue": "5738 Westbourne Ave, Columbus OH 43213",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "5738 Westbourne Ave, Columbus OH 43213"
+      },
+      "fullCityLine": {
+        "defaultValue": "Riverton",
+        "overrideValue": null,
+        "forceEmpty": false,
+        "value": "Riverton"
+      }
+    },
+    "companyInfo": {
+      "companyId": "5de36dda-9c15-a370-88a4-a0ad1a3c86d3",
+      "companyTypeId": "cd701fe3-9f60-a0b8-076a-95ffee1ee344",
+      "companyDisplayId": null,
+      "companyName": "Brightwater Interiors",
+      "companyCode": "14004OH",
+      "companyEmail": "casey.cedar@example.com",
+      "companyPhone": "555-859-6259",
+      "thumbnailLogo": "5edb2859-aa6f-41ba-8db1-dd6ebbd327b5#nav.png",
+      "companyLogo": "0dfd1405-0546-eb11-822b-fcb1a6dfbbb6#Navis_Horz[2].jpg",
+      "mapsMarkerImage": "5edb2859-aa6f-41ba-8db1-dd6ebbd327b5#nav.png",
+      "mainAddress": {
+        "id": 140026,
+        "isValid": true,
+        "dontValidate": false,
+        "propertyType": 3,
+        "address1Value": "4346 Meridian Ave",
+        "address2Value": "",
+        "countryName": null,
+        "countryCode": null,
+        "countryId": "daf9b34b-ce6a-4f2f-9207-15278c06b7d2",
+        "countrySkipZipCodeVerification": null,
+        "zipCodeResolvingFailed": false,
+        "latitude": 34.05,
+        "longitude": 34.05,
+        "fullCityLine": "Riverton",
+        "coordinates": {
+          "latitude": 34.05,
+          "longitude": 34.05
+        },
+        "address1": "4346 Meridian Ave",
+        "address2": null,
+        "city": "Westfield",
+        "state": "OH",
+        "zipCode": "90210"
+      },
+      "isThirdParty": false,
+      "isActive": false,
+      "isHidden": false
+    },
+    "companyID": "5de36dda-9c15-a370-88a4-a0ad1a3c86d3",
+    "addressID": null,
+    "address1": null,
+    "address2": null,
+    "city": null,
+    "state": null,
+    "stateCode": null,
+    "countryName": null,
+    "countryCode": null,
+    "countryID": null,
+    "zipCode": null,
+    "isActive": true,
+    "createdDate": null,
+    "createdBy": null,
+    "modifiedDate": null,
+    "modifiedBy": null,
+    "latitude": null,
+    "longitude": null,
+    "result": null,
+    "addressMappingID": null,
+    "contactID": null,
+    "userID": "00000000-0000-0000-0000-000000000000",
+    "primaryCustomerName": "Emery Brook",
+    "contactInfo": null
+  },
+  "contactDisplayId": "1308994",
+  "contactTypeId": 4,
+  "department": null,
+  "editable": null,
+  "emailsList": [
+    {
+      "email": {
+        "id": 116237,
+        "email": "casey.cedar@example.com",
+        "invalid": false,
+        "dontSpam": false
+      },
+      "id": 17936,
+      "isActive": true,
+      "deactivatedReason": null,
+      "metaData": null
+    },
+    {
+      "email": {
+        "id": 77049,
+        "email": "avery.alder@example.com",
+        "invalid": false,
+        "dontSpam": false
+      },
+      "id": 305463,
+      "isActive": true,
+      "deactivatedReason": null,
+      "metaData": "Josh"
+    },
+    {
+      "email": {
+        "id": 196279,
+        "email": "casey.cedar@example.com",
+        "invalid": false,
+        "dontSpam": false
+      },
+      "id": 305464,
+      "isActive": true,
+      "deactivatedReason": null,
+      "metaData": "Justine"
+    },
+    {
+      "email": {
+        "id": 258387,
+        "email": "casey.cedar@example.com",
+        "invalid": false,
+        "dontSpam": false
+      },
+      "id": 388549,
+      "isActive": true,
+      "deactivatedReason": null,
+      "metaData": "Meggan"
+    },
+    {
+      "email": {
+        "id": 403195,
+        "email": "jordan.holt@example.com",
+        "invalid": false,
+        "dontSpam": false
+      },
+      "id": 553961,
+      "isActive": true,
+      "deactivatedReason": null,
+      "metaData": null
+    }
+  ],
+  "fax": "555-236-3836",
+  "fullNameUpdateRequired": null,
+  "isActive": true,
+  "isBusiness": true,
+  "isEmpty": false,
+  "isPayer": true,
+  "isPrefered": true,
+  "isPrimary": true,
+  "isPrivate": false,
+  "jobTitle": null,
+  "jobTitleId": null,
+  "legacyGuid": "b6d365b4-0268-a4c4-e50c-35d3d821119b",
+  "ownerFranchiseeId": "5de36dda-9c15-a370-88a4-a0ad1a3c86d3",
+  "phonesList": [
+    {
+      "phone": {
+        "id": 118507,
+        "phone": "555-859-6259"
+      },
+      "id": 25585,
+      "isActive": true,
+      "deactivatedReason": null,
+      "metaData": "Primary"
+    },
+    {
+      "phone": {
+        "id": 106498,
+        "phone": "555-236-3836"
+      },
+      "id": 488221,
+      "isActive": true,
+      "deactivatedReason": null,
+      "metaData": "Fax"
+    }
+  ],
+  "primaryEmail": "casey.cedar@example.com",
+  "primaryPhone": "555-859-6259",
+  "rootContactId": null,
+  "taxId": null,
+  "webSite": null
+}

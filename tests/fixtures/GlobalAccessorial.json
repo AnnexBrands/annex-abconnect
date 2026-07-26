@@ -1,0 +1,158 @@
+[
+  {
+    "id": null,
+    "name": "FedEx® Delivery Signature Options",
+    "category": null,
+    "description": "A specified recipient signature is required upon delivery",
+    "price": "$6.10-$7.55",
+    "options": [
+      {
+        "key": "signatureoption",
+        "type": 1,
+        "radioButtonOptions": [
+          {
+            "description": "No Signature Required",
+            "code": "nosignature"
+          },
+          {
+            "description": "Indirect Signature Required",
+            "code": "indirect"
+          },
+          {
+            "description": "Direct Signature Required",
+            "code": "direct"
+          },
+          {
+            "description": "Adult Signature Required",
+            "code": "adult"
+          }
+        ]
+      }
+    ],
+    "uniqueId": "d84fbf25-b898-a0b2-7a3f-3a8128dab888",
+    "sourceAPIs": [
+      2
+    ]
+  },
+  {
+    "id": null,
+    "name": "Signature Options",
+    "category": null,
+    "description": "Delivery confirmation options with or without signature",
+    "price": "$2.90-$7.55",
+    "options": [
+      {
+        "key": "signatureoption",
+        "type": 1,
+        "radioButtonOptions": [
+          {
+            "description": "No Signature",
+            "code": "nosignature"
+          },
+          {
+            "description": "Signature Required",
+            "code": "direct"
+          },
+          {
+            "description": "Adult Signature Required",
+            "code": "adult"
+          }
+        ]
+      }
+    ],
+    "uniqueId": "258893dd-c7a5-a04d-b2d8-c06e6992daed",
+    "sourceAPIs": [
+      3
+    ]
+  },
+  {
+    "id": null,
+    "name": "Signature Options",
+    "category": null,
+    "description": "A specified recipient signature is required upon delivery",
+    "price": "$3.70-$12.75",
+    "options": [
+      {
+        "key": "signatureoption",
+        "type": 1,
+        "radioButtonOptions": [
+          {
+            "description": "Signature Confirmation",
+            "code": "confirmation"
+          },
+          {
+            "description": "Adult Signature Required",
+            "code": "adult"
+          },
+          {
+            "description": "Adult Signature Restricted Delivery",
+            "code": "adultDelivery"
+          },
+          {
+            "description": "Signature Confirmation Restricted Delivery",
+            "code": "delivery"
+          },
+          {
+            "description": "Certified Mail Restricted Delivery",
+            "code": "certified"
+          }
+        ]
+      }
+    ],
+    "uniqueId": "95e4d1bb-a889-ac38-dd7d-5b8a5fdb798f",
+    "sourceAPIs": [
+      20
+    ]
+  },
+  {
+    "id": null,
+    "name": "Insurance",
+    "category": null,
+    "description": "Standard Shipping Insurance",
+    "price": null,
+    "options": null,
+    "uniqueId": "0ebe2b91-2367-a031-b0af-8d19f5330660",
+    "sourceAPIs": [
+      20
+    ]
+  },
+  {
+    "id": null,
+    "name": "One-Time Courier Pickup",
+    "category": null,
+    "description": "Requires additional arrangement a one-time shipment pickup",
+    "price": null,
+    "options": null,
+    "uniqueId": "8190441c-b985-ab30-eb0f-42520010208c",
+    "sourceAPIs": [
+      2
+    ]
+  },
+  {
+    "id": null,
+    "name": "On-Call Pickup",
+    "category": null,
+    "description": "sanitized text 135",
+    "price": "$7.00-$12.00",
+    "options": [
+      {
+        "key": "oncallpickupoption",
+        "type": 1,
+        "radioButtonOptions": [
+          {
+            "description": "Same-Day Pickup",
+            "code": "SD"
+          },
+          {
+            "description": "Future-Day Pickup",
+            "code": "FD"
+          }
+        ]
+      }
+    ],
+    "uniqueId": "9c93dbfd-6aa1-a2c1-470a-efaa0218924e",
+    "sourceAPIs": [
+      3
+    ]
+  }
+]

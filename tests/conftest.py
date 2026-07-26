@@ -1,0 +1,229 @@
+"""Shared pytest fixtures and configuration."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pytest
+
+FIXTURES_DIR = Path(__file__).parent / "fixtures"
+MOCKS_DIR = FIXTURES_DIR / "mocks"
+REQUESTS_DIR = FIXTURES_DIR / "requests"
+
+
+def _resolve_fixture_path(model_name: str) -> Path | None:
+    """Find fixture file, checking live directory first then mocks/.
+
+    Returns the path if found, or None if neither exists.
+    """
+    live_path = FIXTURES_DIR / f"{model_name}.json"
+    if live_path.exists():
+        return live_path
+    mock_path = MOCKS_DIR / f"{model_name}.json"
+    if mock_path.exists():
+        return mock_path
+    return None
+
+
+def load_fixture(model_name: str) -> dict | list:
+    """Load a JSON fixture by model name.
+
+    Checks ``tests/fixtures/{model_name}.json`` first (live), then falls
+    back to ``tests/fixtures/mocks/{model_name}.json`` (mock). Live
+    fixtures always take precedence.
+
+    Args:
+        model_name: e.g. ``"CompanySimple"`` loads ``tests/fixtures/CompanySimple.json``
+            or ``tests/fixtures/mocks/CompanySimple.json``
+
+    Returns:
+        Parsed JSON data.
+
+    Raises:
+        FileNotFoundError: If fixture file does not exist in either location.
+    """
+    path = _resolve_fixture_path(model_name)
+    if path is None:
+        raise FileNotFoundError(
+            f"Fixture not found: checked {FIXTURES_DIR / f'{model_name}.json'} "
+            f"and {MOCKS_DIR / f'{model_name}.json'}"
+        ) from None
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid JSON in fixture {model_name}.json: {exc}") from exc
+
+
+def require_fixture(
+    model_name: str,
+    method: str = "",
+    path: str = "",
+    *,
+    required: bool = False,
+) -> dict | list:
+    """Load a fixture, or skip/fail when it is missing.
+
+    Checks both live (``tests/fixtures/``) and mock (``tests/fixtures/mocks/``)
+    directories. Live fixtures take precedence.
+
+    Args:
+        model_name: e.g. ``"CompanySimple"``
+        method: HTTP method, e.g. ``"GET"``
+        path: API endpoint path, e.g. ``"/companies/{id}"``
+        required: If ``True``, a missing fixture **fails** the test
+            (use for previously captured live fixtures). If ``False``
+            (default), a missing fixture **skips** with capture
+            instructions (use for pending fixtures).
+
+    Returns:
+        Parsed JSON data (when fixture exists).
+    """
+    fixture_path = _resolve_fixture_path(model_name)
+    if fixture_path is None:
+        if required:
+            pytest.fail(
+                f"Required fixture missing: {model_name}.json — "
+                f"checked {FIXTURES_DIR} and {MOCKS_DIR}"
+            )
+        msg = f"Fixture needed: capture {model_name}.json"
+        if method and path:
+            msg += f" via {method} {path}"
+        pytest.skip(msg)
+    return load_fixture(model_name)
+
+
+def load_request_fixture(model_name: str) -> dict:
+    """Load a request fixture by model name from ``tests/fixtures/requests/``.
+
+    Args:
+        model_name: e.g. ``"AddressValidateParams"`` loads
+            ``tests/fixtures/requests/AddressValidateParams.json``
+
+    Returns:
+        Parsed JSON data as a dict.
+
+    Raises:
+        FileNotFoundError: If fixture file does not exist.
+    """
+    path = REQUESTS_DIR / f"{model_name}.json"
+    if not path.exists():
+        raise FileNotFoundError(f"Request fixture not found: {path}") from None
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid JSON in request fixture {model_name}.json: {exc}") from exc
+
+
+def load_request_kwargs(model_name: str) -> dict:
+    """Load a request fixture and convert alias keys to Python field names.
+
+    Useful for GET params_model fixtures where the endpoint method expects
+    snake_case keyword arguments but the fixture has camelCase alias keys.
+
+    Args:
+        model_name: e.g. ``"AddressValidateParams"``
+
+    Returns:
+        Dict with snake_case field names as keys.
+    """
+    import ab.api.models as models_pkg
+
+    raw = load_request_fixture(model_name)
+    model_cls = getattr(models_pkg, model_name, None)
+    if model_cls is None:
+        return raw
+    alias_map: dict[str, str] = {}
+    for field_name, field_info in model_cls.model_fields.items():
+        alias = field_info.alias if field_info.alias else field_name
+        alias_map[alias] = field_name
+    return {alias_map.get(k, k): v for k, v in raw.items()}
+
+
+def first_or_skip(data: dict | list) -> dict:
+    """Unwrap a fixture to a single model-validatable dict.
+
+    Handles:
+    - dict passthrough (return as-is)
+    - list → extract first element; ``pytest.skip`` on empty list
+    - paginated ``{"data": [...]}`` wrapper → extract first element
+
+    Args:
+        data: Parsed JSON fixture (dict or list).
+
+    Returns:
+        A single dict suitable for ``model_validate()``.
+    """
+    if isinstance(data, list):
+        if not data:
+            pytest.skip("Fixture is an empty list — nothing to validate")
+        return data[0]
+    if isinstance(data, dict) and "data" in data and isinstance(data["data"], list):
+        items = data["data"]
+        if not items:
+            pytest.skip("Fixture has empty paginated data — nothing to validate")
+        return items[0]
+    return data
+
+
+def assert_no_extra_fields(model: object) -> None:
+    """Assert a Pydantic model tree has no undeclared extra fields.
+
+    Walks the model RECURSIVELY (nested models, lists, dicts) — drift confined
+    to a nested model must fail just like drift on the root.
+
+    Args:
+        model: A Pydantic model instance (ResponseModel subclass).
+
+    Raises:
+        AssertionError: If any model in the tree has a non-empty
+            ``__pydantic_extra__``, with a message listing the model class and
+            all undeclared field names.
+    """
+    from pydantic import BaseModel
+
+    problems: list[str] = []
+
+    def _walk(node: object, path: str) -> None:
+        if isinstance(node, BaseModel):
+            extra = getattr(node, "__pydantic_extra__", None)
+            if extra:
+                fields = ", ".join(sorted(extra.keys()))
+                problems.append(
+                    f"{node.__class__.__name__} at {path or '<root>'} has "
+                    f"{len(extra)} undeclared extra field(s): {fields}"
+                )
+            for name in node.__pydantic_fields__:
+                _walk(getattr(node, name), f"{path}.{name}" if path else name)
+        elif isinstance(node, list):
+            for i, item in enumerate(node):
+                _walk(item, f"{path}[{i}]")
+        elif isinstance(node, dict):
+            for key, value in node.items():
+                _walk(value, f"{path}[{key!r}]")
+
+    _walk(model, "")
+    assert not problems, "; ".join(problems)
+
+
+@pytest.fixture(scope="session")
+def fixture_loader():
+    """Provide a fixture loader callable to tests."""
+    return load_fixture
+
+
+@pytest.fixture(scope="session")
+def api():
+    """Session-scoped ABConnectAPI client for live integration tests.
+
+    Requires valid staging credentials in environment or ``.env.staging``.
+    Skips the entire session if credentials are unavailable.
+    """
+    from ab import ABConnectAPI
+    from ab.exceptions import ConfigurationError
+
+    try:
+        client = ABConnectAPI(env="staging")
+    except ConfigurationError:
+        pytest.skip("Staging credentials not available")
+    return client

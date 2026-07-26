@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1303ed82-1636-ab98-9e40-1458ebfbb13d",
+    "key": null,
+    "name": "Corporate",
+    "value": null
+  },
+  {
+    "id": "b62f945e-785f-a317-4780-479115de6f04",
+    "key": null,
+    "name": "Carrier",
+    "value": null
+  },
+  {
+    "id": "9069e71e-4668-aef2-bbaa-cf257d0ebf24",
+    "key": null,
+    "name": "Vendor",
+    "value": null
+  },
+  {
+    "id": "cd701fe3-9f60-a0b8-076a-95ffee1ee344",
+    "key": null,
+    "name": "Franchisee",
+    "value": null
+  },
+  {
+    "id": "f5146b0c-4d7c-a769-6794-baf4cbe9feb1",
+    "key": null,
+    "name": "Customer",
+    "value": null
+  },
+  {
+    "id": "29cb1a59-117c-a242-d9ee-e2c128d6f5b7",
+    "key": null,
+    "name": "Agent",
+    "value": null
+  },
+  {
+    "id": "ba787119-6623-a0eb-5c18-3c9e84bffa6a",
+    "key": null,
+    "name": "Terminal",
+    "value": null
+  },
+  {
+    "id": "080aff78-d64e-ad58-9348-0eeb47d58c8e",
+    "key": null,
+    "name": "National Account",
+    "value": null
+  }
+]

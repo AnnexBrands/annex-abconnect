@@ -1,0 +1,21 @@
+{
+  "customsValue": 1500.0,
+  "commodities": [
+    {
+      "description": "Oil painting",
+      "quantity": 1,
+      "unitPrice": 1500.0,
+      "itemValue": 1500.0,
+      "weight": 12.5,
+      "countryOfManufacture": "US"
+    }
+  ],
+  "invoiceNumber": "7435592",
+  "termsOfSale": "DAP",
+  "soldTo": {
+    "contact": {
+      "name": "Consignee"
+    }
+  },
+  "valuesSpecified": true
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "contactID": 30760,
+    "customerCell": null,
+    "contactDisplayId": "1308994",
+    "contactFullName": "Emery Brook",
+    "contactPhone": "555-859-6259",
+    "contactHomePhone": null,
+    "contactEmail": "casey.cedar@example.com",
+    "masterConstantValue": null,
+    "contactDept": null,
+    "address1": "4346 Meridian Ave",
+    "address2": null,
+    "city": "Westfield",
+    "state": "OH",
+    "zipCode": "90210",
+    "countryName": null,
+    "companyCode": "14004OH",
+    "companyID": "5de36dda-9c15-a370-88a4-a0ad1a3c86d3",
+    "companyName": "Brightwater Interiors",
+    "companyDisplayId": "852949",
+    "isPrefered": true,
+    "industryType": null,
+    "totalRecords": 1
+  }
+]

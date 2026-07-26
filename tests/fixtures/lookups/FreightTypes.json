@@ -1,0 +1,62 @@
+[
+  {
+    "id": "411d1ffe-f7fd-aa48-672a-9ee2da833af7",
+    "key": null,
+    "name": "DRUMS",
+    "value": null
+  },
+  {
+    "id": "df60a0c2-99da-a136-fbbd-c74918c05158",
+    "key": null,
+    "name": "BAGS",
+    "value": null
+  },
+  {
+    "id": "ab76fa6f-d0bf-ab9e-80c2-aa9b7db81bd5",
+    "key": null,
+    "name": "PALLETS",
+    "value": null
+  },
+  {
+    "id": "c3d7ed7c-f643-aa92-b85f-460fef5d4fc3",
+    "key": null,
+    "name": "CARPETS",
+    "value": null
+  },
+  {
+    "id": "eca19d1e-bae3-a848-f2fd-82859b1fe93f",
+    "key": null,
+    "name": "BOXES",
+    "value": null
+  },
+  {
+    "id": "02aa50ef-e540-ae8d-222d-b145d7923dbc",
+    "key": null,
+    "name": "PAILS",
+    "value": null
+  },
+  {
+    "id": "76e3a12c-2f00-a3dc-4e66-f01632dccd49",
+    "key": null,
+    "name": "CYLINDERS",
+    "value": null
+  },
+  {
+    "id": "a8c23e23-9e10-ad21-0518-72e05a5d773f",
+    "key": null,
+    "name": "CARTONS",
+    "value": null
+  },
+  {
+    "id": "56d17951-b016-ad0b-d884-1a695406e7b1",
+    "key": null,
+    "name": "ROLLS",
+    "value": null
+  },
+  {
+    "id": "302a2afe-481d-a6f4-7662-afd2b8dd8640",
+    "key": null,
+    "name": "CRATES",
+    "value": null
+  }
+]

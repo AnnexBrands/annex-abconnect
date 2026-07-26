@@ -1,0 +1,26 @@
+[
+  {
+    "id": "dc4cb759-09c2-a04e-8abf-f43a6807f465",
+    "key": null,
+    "name": "MTC Insured",
+    "value": null
+  },
+  {
+    "id": "a2e68a70-620f-a333-b42b-aefff952640c",
+    "key": null,
+    "name": "MTC Declined",
+    "value": null
+  },
+  {
+    "id": "e9c3eda3-3ddb-a3f0-2411-6f7c7d48c62b",
+    "key": null,
+    "name": "Self-insured",
+    "value": null
+  },
+  {
+    "id": "eb7d0224-7add-ae9f-822e-6f5eaba5eaa4",
+    "key": null,
+    "name": "Pack Only",
+    "value": null
+  }
+]

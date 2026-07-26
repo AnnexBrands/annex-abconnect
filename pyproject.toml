@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "annex-abconnect"
+version = "0.1.14"
+description = "Python SDK for Annex Brands ABConnect APIs"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Brett Monson", email = "bmonson@annexbrands.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "requests>=2.28",
+    "python-dotenv>=1.0",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+
+[project.scripts]
+ex = "examples.__main__:main"
+ab = "ab.cli:main_prod"
+abs = "ab.cli:main_staging"
+
+[project.urls]
+"Repository" = "https://github.com/AnnexBrands/ab"
+"Documentation" = "https://ab-sdk.readthedocs.io/"
+
+[dependency-groups]
+test = [
+    "pytest>=7.0",
+    "coverage>=7.0",
+]
+lint = [
+    # Pinned exactly so local lint results match CI deterministically — ruff's
+    # rule set and formatting evolve between releases, so a floating `>=` would
+    # let `ruff check` disagree across machines.
+    "ruff==0.15.5",
+]
+docs = [
+    "sphinx>=7.0",
+    "sphinx-rtd-theme>=2.0",
+    "myst-parser>=3.0",
+]
+dev = [
+    { include-group = "test" },
+    { include-group = "lint" },
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+# Ship ONLY the library. examples/, scripts/, tests/ are dev/internal artifacts
+# and must never live in the published package.
+include = ["ab*"]
+
+[tool.setuptools.package-data]
+ab = ["py.typed", "api/schemas/*.json"]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "mock: tests backed by mock/fabricated fixtures",
+    "live: tests backed by live-captured fixtures",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.ruff.lint.per-file-ignores]
+# app.py embeds a single-page HTML/JS UI as a string literal; line length is not
+# meaningful inside that template.
+"ab/progress/app.py" = ["E501"]

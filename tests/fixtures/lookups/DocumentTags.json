@@ -1,0 +1,62 @@
+[
+  {
+    "id": "4f837437-38f0-a1a7-95b4-6ecff9fe611f",
+    "key": null,
+    "name": "Pickup",
+    "value": null
+  },
+  {
+    "id": "6a9f2302-adc4-a838-083e-b0e87c560278",
+    "key": null,
+    "name": "Pack Progress",
+    "value": null
+  },
+  {
+    "id": "e8802709-82cc-ae2c-0c02-df69901151ac",
+    "key": null,
+    "name": "Intake",
+    "value": null
+  },
+  {
+    "id": "36f8099f-fea5-a2b9-34b5-7903ff44dfa2",
+    "key": null,
+    "name": "Damage",
+    "value": null
+  },
+  {
+    "id": "8acb3386-3aeb-a6ae-0ed1-283603e04844",
+    "key": null,
+    "name": "Items",
+    "value": null
+  },
+  {
+    "id": "cff7ebee-c087-ad68-b0bb-3d029a7d1f4d",
+    "key": null,
+    "name": "Packed / Final",
+    "value": null
+  },
+  {
+    "id": "e8e6103b-3e74-a899-27de-24d51aea2e3c",
+    "key": null,
+    "name": "Transportation",
+    "value": null
+  },
+  {
+    "id": "d66fb267-82a7-a844-4ea9-18945ca8ce79",
+    "key": null,
+    "name": "Customer Provided",
+    "value": null
+  },
+  {
+    "id": "c679e416-3fc5-a313-288c-467d564d4312",
+    "key": null,
+    "name": "Condition",
+    "value": null
+  },
+  {
+    "id": "25ac580f-3472-a74f-74af-b86a845973a6",
+    "key": null,
+    "name": "Supporting Documents",
+    "value": null
+  }
+]

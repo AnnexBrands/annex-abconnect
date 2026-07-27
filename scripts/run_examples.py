@@ -146,7 +146,11 @@ def _write_results(results: dict[str, dict], today: str) -> None:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--group", help="only run endpoints whose group starts with this")
-    ap.add_argument("--capture", action="store_true", help="re-capture fixtures from live (refresh)")
+    ap.add_argument(
+        "--capture",
+        action="store_true",
+        help="refresh the scratch capture tree from live (never writes tests/fixtures/)",
+    )
     ap.add_argument("--list", action="store_true", dest="list_only", help="dry run; print plan, no network")
     ap.add_argument("--date", help="ISO date to stamp results (default: today)")
     ap.add_argument(
@@ -181,7 +185,10 @@ def main(argv: list[str] | None = None) -> int:
 
     for module in sorted(plan):
         if args.capture:
-            ok, output = _run_module(module, capture_dir=None)  # writes real fixtures
+            # Writes to the scratch capture tree, never to tests/fixtures/:
+            # a committed fixture changes only through the workbench's
+            # propose_fixture() -> review -> approve_fixture() path.
+            ok, output = _run_module(module, capture_dir=None)
             status_line = "captured" if ok else "ERROR"
             print(f"  [{status_line}] python -m {module}")
             if not ok:

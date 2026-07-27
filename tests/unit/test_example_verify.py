@@ -24,21 +24,35 @@ def test_nested_and_underscore_date_keys_are_dropped() -> None:
     assert normalize({"a": {"updatedDateTime": 1, "b": 3}}) == {"a": {"b": 3}}
 
 
-def test_value_difference_fails_with_detail() -> None:
+def test_value_difference_alone_is_not_a_failure() -> None:
+    """Committed fixtures are sanitized, so their values differ from live by
+    design. Comparing by value reported every sanitized endpoint as failing."""
     matches, detail = compare({"id": 2, "name": "y"}, {"id": 1, "name": "x"})
+    assert matches is True
+    assert detail is None
+
+
+def test_type_difference_fails_with_detail() -> None:
+    matches, detail = compare({"id": "2"}, {"id": 1})
     assert matches is False
-    assert detail and "fixture" in detail and "produced" in detail
+    assert detail and "id" in detail
 
 
-def test_list_length_difference_fails() -> None:
-    matches, detail = compare({"items": [1, 2, 3]}, {"items": [1, 2]})
+def test_list_length_difference_is_not_a_failure() -> None:
+    """How many rows the test account happens to hold is not a contract change."""
+    matches, _ = compare({"items": [1, 2, 3]}, {"items": [1, 2]})
+    assert matches is True
+
+
+def test_list_element_type_difference_fails() -> None:
+    matches, detail = compare({"items": ["a"]}, {"items": [1]})
     assert matches is False
-    assert detail
+    assert detail and "items[]" in detail
 
 
-def test_diff_is_capped() -> None:
+def test_detail_is_capped() -> None:
     big_fixture = {f"k{i}": i for i in range(200)}
-    big_produced = {f"k{i}": i + 1 for i in range(200)}
+    big_produced = {f"k{i}": str(i) for i in range(200)}
     matches, detail = compare(big_produced, big_fixture)
     assert matches is False
-    assert detail.count("\n") <= 41  # capped at _MAX_DIFF_LINES + trailer
+    assert detail.count("\n") <= 41  # capped at _MAX_DETAIL_LINES + trailer

@@ -313,28 +313,18 @@ class ExampleRunner:
     # ------------------------------------------------------------------
 
     def _save_fixture(self, result: Any, entry: ExampleEntry) -> None:
-        """Serialise *result* to JSON and write to the fixtures directory."""
-        from pydantic import BaseModel
+        """Persist *result* through the shared capture path.
 
-        if isinstance(result, list):
-            data: Any = [
-                item.model_dump(by_alias=True, mode="json")
-                if isinstance(item, BaseModel)
-                else item
-                for item in result
-            ]
-        elif isinstance(result, BaseModel):
-            data = result.model_dump(by_alias=True, mode="json")
-        elif isinstance(result, bytes):
-            print("  (binary response — fixture save skipped)")
-            return
-        else:
-            data = result
+        This used to serialise straight into ``tests/fixtures/``, which made
+        every legacy example that imports this runner a second route for raw
+        live data to reach the committed tree. Delegating to
+        :func:`examples._capture.save` applies the same guarantees the canonical
+        examples get: sanitized before it touches disk, REVIEW-tier findings
+        refused, and the committed fixture tree unreachable as a destination.
+        """
+        from examples._capture import save
 
-        path = FIXTURES_DIR / entry.fixture_file
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
-        print(f"  Fixture saved → {path}")
+        save(entry.fixture_file, result)
 
 
 def _summarise(obj: Any, max_len: int = 200) -> str:

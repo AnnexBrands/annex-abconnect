@@ -5,12 +5,22 @@ it just printed. This replaces each example's bespoke ``_save`` and adds the one
 piece of magic the run-and-verify harness depends on: **destination redirection**.
 
 - Normal use (an operator running ``python -m examples dashboard``): ``save`` writes
-  the fixture to ``tests/fixtures/<name>`` — examples are the fixture-capture
-  instrument (Constitution II).
+  to the scratch tree ``tests/captures/<name>``.
 - Harness use (``scripts/run_examples.py``): the harness sets
   ``AB_EXAMPLE_CAPTURE_DIR`` before running the example in a subprocess; ``save``
-  then writes to that directory instead, so the harness can diff the freshly
-  produced JSON against the committed fixture **without touching** ``tests/fixtures/``.
+  then writes to that directory instead.
+
+Two invariants hold on every path through this module:
+
+1. **Nothing is written unsanitized.** Every payload goes through
+   ``ab.progress.sanitize`` first, and a capture carrying values the sanitizer
+   could not classify (its REVIEW tier) is refused outright — those values are
+   left verbatim by design, so writing them would persist real data under a
+   name implying it had been cleaned. A ``.review.txt`` note is produced instead.
+2. **The committed fixture tree is never a destination.** ``tests/fixtures/`` is
+   read-only from here, whatever ``AB_EXAMPLE_CAPTURE_DIR`` says. Fixtures are
+   updated through one path only: the workbench's ``propose_fixture()`` ->
+   operator review -> ``approve_fixture(confirm=True, accept_review=...)``.
 
 Serialization is byte-identical to ``examples/dashboard.py``'s original ``_save`` and
 to ``ab.cli.formatter.format_result`` (``model_dump(by_alias=True, mode="json")``),
@@ -29,10 +39,15 @@ from typing import Any
 #: Environment variable the harness sets to redirect captures to a temp dir.
 CAPTURE_DIR_ENV = "AB_EXAMPLE_CAPTURE_DIR"
 
-#: Default destination — the committed fixtures directory.
-FIXTURES_DIR = Path(__file__).resolve().parent.parent / "tests" / "fixtures"
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+
+#: The committed fixture tree. **Never written through this module** — see
+#: :func:`capture_dir`. Read-only here; it is the comparison baseline.
+FIXTURES_DIR = _REPO_ROOT / "tests" / "fixtures"
 #: Request fixtures (bodies / params) live here.
 REQUESTS_DIR = FIXTURES_DIR / "requests"
+#: Default destination for example captures: a scratch tree, git-ignored.
+CAPTURES_DIR = _REPO_ROOT / "tests" / "captures"
 
 
 def load_request(name: str) -> dict:
@@ -45,14 +60,41 @@ def load_request(name: str) -> dict:
     return json.loads((REQUESTS_DIR / name).read_text(encoding="utf-8"))
 
 
+class UnsafeCaptureTarget(RuntimeError):
+    """Raised when a capture would land in the committed fixture tree."""
+
+
+def _is_within(target: Path, parent: Path) -> bool:
+    try:
+        target.resolve().relative_to(parent.resolve())
+    except ValueError:
+        return False
+    return True
+
+
 def capture_dir() -> Path:
-    """Return the directory ``save`` writes to.
+    """Return the directory ``save`` writes to — never the committed tree.
 
     ``AB_EXAMPLE_CAPTURE_DIR`` when set (harness verify mode), else
-    ``tests/fixtures/`` (operator capture mode).
+    ``tests/captures/``.
+
+    Running an example is how a live response is *observed*, not how a fixture
+    is *approved*. Defaulting this to ``tests/fixtures/`` meant an ordinary
+    ``python -m examples.companies`` overwrote committed fixtures with raw live
+    data — that is how 21 carrier secrets and several thousand real UUIDs,
+    emails and addresses once landed in the working tree of a public repo.
+    Committed fixtures are now updated through exactly one path: the workbench's
+    ``propose_fixture()`` -> operator review -> ``approve_fixture()``.
     """
     override = os.environ.get(CAPTURE_DIR_ENV)
-    return Path(override) if override else FIXTURES_DIR
+    target = Path(override) if override else CAPTURES_DIR
+    if _is_within(target, FIXTURES_DIR):
+        raise UnsafeCaptureTarget(
+            f"refusing to capture into the committed fixture tree ({target}). "
+            "Examples observe live responses; fixtures are updated only through "
+            "the workbench: propose_fixture() -> review -> approve_fixture()."
+        )
+    return target
 
 
 #: Env var an operator sets to opt INTO running state-mutating example calls.
@@ -109,9 +151,38 @@ def save(name: str, payload: Any) -> Path | None:
         print(f"  (empty list — not overwriting {capture_dir() / name})")
         return None
 
+    from ab.progress.sanitize import sanitize
+
     data = to_jsonable(payload)
     out = capture_dir() / name
+
+    # Sanitize before the payload ever reaches disk. Deterministic, so an
+    # unchanged response re-captures byte-identically, and it is also what makes
+    # the capture comparable to the (also sanitized) committed fixture.
+    sanitized, report = sanitize(data)
+
+    if report.needs_review:
+        # Fail closed. REVIEW findings are values the sanitizer could not
+        # classify from context and therefore left *verbatim* — writing them
+        # would persist real data under a name that implies it was cleaned.
+        review = out.with_suffix(out.suffix + ".review.txt")
+        review.parent.mkdir(parents=True, exist_ok=True)
+        review.write_text(
+            f"{len(report.review)} value(s) could not be classified and were NOT written.\n"
+            f"Resolve them through the workbench, which can record an operator decision:\n"
+            f"    s.propose_fixture(); s.approve_fixture(confirm=True, accept_review=True)\n\n"
+            + "\n".join(d.render() for d in report.review)
+            + "\n",
+            encoding="utf-8",
+        )
+        print(
+            f"  BLOCKED: {len(report.review)} value(s) need review — no fixture written.\n"
+            f"  review notes -> {review}"
+        )
+        return None
+
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"  saved -> {out}")
+    out.write_text(json.dumps(sanitized, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    note = f" ({report.changed_count} value(s) sanitized)" if report.was_sanitized else ""
+    print(f"  saved -> {out}{note}")
     return out

@@ -163,33 +163,21 @@ def load_response_fixture(model_name: str) -> Any | None:
     return None
 
 
-def compare_to_fixture(payload: Any, fixture: Any) -> tuple[bool, list[str]]:
+def compare_to_fixture(payload: Any, fixture: Any, *, model: Any = None) -> tuple[bool, list[str]]:
     """Structural comparison against the committed fixture (step 11).
 
-    Compares *shape* -- the set of keys at every path -- not values, because the
-    committed fixture is sanitized and its values deliberately differ from live.
+    Delegates to :func:`ab.progress.compare.compare`, the same implementation
+    ``scripts/run_examples.py`` uses, so the notebook and the harness cannot
+    disagree about whether an endpoint matches. Compares shape and JSON value
+    types -- never values, because the committed fixture is sanitized and its
+    values deliberately differ from live.
     """
-    diffs: list[str] = []
+    from ab.progress.compare import compare as compare_structure
 
-    def keyset(node: Any, path: str, out: set[str]) -> None:
-        if isinstance(node, dict):
-            for k, v in node.items():
-                p = f"{path}.{k}" if path else k
-                out.add(p)
-                keyset(v, p, out)
-        elif isinstance(node, list) and node:
-            keyset(node[0], f"{path}[]", out)
-
-    live_keys: set[str] = set()
-    fix_keys: set[str] = set()
-    keyset(payload, "", live_keys)
-    keyset(fixture, "", fix_keys)
-
-    for missing in sorted(fix_keys - live_keys):
-        diffs.append(f"- {missing} (in fixture, absent live)")
-    for added in sorted(live_keys - fix_keys):
-        diffs.append(f"+ {added} (live only, fixture stale)")
-    return (not diffs), diffs
+    report = compare_structure(payload, fixture, model=model)
+    lines = [d.render() for d in report.diffs]
+    lines += [f"+ {e}: undeclared field on the response model" for e in report.extras]
+    return report.ok, lines
 
 
 # ----------------------------------------------------------------------

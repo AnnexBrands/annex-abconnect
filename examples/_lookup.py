@@ -110,8 +110,8 @@ runner.add(
 runner.add(
     "get_refer_category_hierarchy",
     lambda api: api.lookup.get_refer_category_hierarchy(),
-    response_model="List[LookupValue]",
-    fixture_file="LookupValue.json",
+    response_model="List[ReferCategoryHierarchy]",
+    fixture_file="ReferCategoryHierarchy.json",
 )
 
 if __name__ == "__main__":

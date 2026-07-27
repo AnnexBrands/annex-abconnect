@@ -118,7 +118,7 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /lookup/comonInsurance | GET | — | List[LookupValue] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /lookup/densityClassMap | GET | — | List[DensityClassEntry] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /lookup/referCategory | GET | — | List[LookupValue] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/referCategoryHeirachy | GET | — | List[LookupValue] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /lookup/referCategoryHeirachy | GET | — | List[ReferCategoryHierarchy] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /lookup/resetMasterConstantCache | GET | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 — mutating |
 | /commodity/{id} | GET | — | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /commodity/{id} | PUT | CommodityUpdateRequest | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
@@ -143,7 +143,7 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /views/{viewId} | GET | — | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views | POST | GridViewCreateRequest | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views/{viewId} | DELETE | — | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 008 |
-| /views/{viewId}/accessinfo | GET | — | GridViewAccess | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /views/{viewId}/accessinfo | GET | — | List[GridViewAccessEntry] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views/{viewId}/access | PUT | GridViewAccess | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
 | /views/datasetsps | GET | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views/datasetsp/{spName} | GET | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |

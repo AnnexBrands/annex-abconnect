@@ -9,6 +9,7 @@ from ab.api.models.lookup import (
     LookupValue,
     ParcelPackageType,
     PPCCampaign,
+    ReferCategoryHierarchy,
 )
 from tests.conftest import assert_no_extra_fields, first_or_skip, require_fixture
 
@@ -19,6 +20,21 @@ class TestExtendedLookupModels:
         item = first_or_skip(data)
         model = LookupValue.model_validate(item)
         assert isinstance(model, LookupValue)
+        assert_no_extra_fields(model)
+
+    def test_refer_category_hierarchy(self):
+        """`/lookup/referCategoryHeirachy` is not a plain lookup.
+
+        It shared LookupValue with `/lookup/referCategory`, so its 21 referral
+        fields were all undeclared and the two endpoints overwrote each other's
+        fixture. They are separate models now.
+        """
+        data = require_fixture(
+            "ReferCategoryHierarchy", "GET", "/lookup/referCategoryHeirachy"
+        )
+        item = first_or_skip(data)
+        model = ReferCategoryHierarchy.model_validate(item)
+        assert isinstance(model, ReferCategoryHierarchy)
         assert_no_extra_fields(model)
 
     def test_access_key(self):

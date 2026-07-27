@@ -18,6 +18,7 @@ if TYPE_CHECKING:
         LookupValue,
         ParcelPackageType,
         PPCCampaign,
+        ReferCategoryHierarchy,
     )
 
 from ab.api.base import BaseEndpoint
@@ -47,7 +48,9 @@ _DENSITY_CLASS_MAP = Route(
     response_model="List[DensityClassEntry]",
 )
 _REFER_CATEGORIES = Route("GET", "/lookup/referCategory", response_model="List[LookupValue]")
-_REFER_CATEGORY_HIERARCHY = Route("GET", "/lookup/referCategoryHeirachy", response_model="List[LookupValue]")
+_REFER_CATEGORY_HIERARCHY = Route(
+    "GET", "/lookup/referCategoryHeirachy", response_model="List[ReferCategoryHierarchy]"
+)
 _RESET_CACHE = Route("GET", "/lookup/resetMasterConstantCache")
 
 
@@ -211,11 +214,11 @@ class LookupEndpoint(BaseEndpoint):
         """
         return self._request(_REFER_CATEGORIES)
 
-    def get_refer_category_hierarchy(self) -> list[LookupValue]:
+    def get_refer_category_hierarchy(self) -> list[ReferCategoryHierarchy]:
         """GET /lookup/referCategoryHeirachy
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/lookup/get_refer_category_hierarchy.html
-        Response model: List[LookupValue]
+        Response model: List[ReferCategoryHierarchy]
         """
         return self._request(_REFER_CATEGORY_HIERARCHY)
 

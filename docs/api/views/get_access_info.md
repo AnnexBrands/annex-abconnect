@@ -6,7 +6,7 @@
 **Python**
 
 ```python
-api.views.get_access_info(view_id: str) -> GridViewAccess
+api.views.get_access_info(view_id: str) -> list[GridViewAccessEntry]
 ```
 
 **CLI**
@@ -17,15 +17,23 @@ ab views get_access_info <view_id>
 
 GET /views/{viewId}/accessinfo
 
+Returns one grant per company/role/user with access to the view — the
+endpoint answers "who can see this view", so a collection, not a record.
+
 ## Response
 
-Returns `GridViewAccess`.
+Returns a list of `List[GridViewAccessEntry]`.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `viewId` | `Optional[str]` | no | View ID |
-| `users` | `Optional[list[dict]]` | no | User access list |
-| `roles` | `Optional[list[dict]]` | no | Role access list |
+| `id` | `Optional[int]` | no | Access grant ID |
+| `companyId` | `Optional[str]` | no | Company ID |
+| `roleId` | `Optional[str]` | no | Role ID |
+| `userId` | `Optional[str]` | no | User ID |
+| `companyName` | `Optional[str]` | no | Company name |
+| `roleName` | `Optional[str]` | no | Role name |
+| `userLogin` | `Optional[str]` | no | User login |
+| `userEmail` | `Optional[str]` | no | User email |
 
 ---
 

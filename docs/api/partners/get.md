@@ -23,7 +23,7 @@ Returns `Partner`.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `id` | `Optional[str]` | no | Partner ID |
+| `id` | `Optional[int]` | no | Partner ID |
 | `name` | `Optional[str]` | no | Partner name |
 | `type` | `Optional[str]` | no | Partner type |
 | `contactInfo` | `Optional[dict]` | no | Contact information |

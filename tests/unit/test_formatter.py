@@ -162,8 +162,8 @@ class TestDashboardSummaryCliFormat:
         from ab.api.models.dashboard import DashboardItem
 
         rows = [
-            DashboardItem(location="A", jobDisplayID=100, customer="Acme", step=2, carrier="UPS"),
-            DashboardItem(location="B", jobDisplayID=200, customer="Beta", step=3, carrier="FedEx"),
+            DashboardItem(location="A", jobDisplayID=100, customer="Acme", step="2", carrier="UPS"),
+            DashboardItem(location="B", jobDisplayID=200, customer="Beta", step="3", carrier="FedEx"),
         ]
         out = DashboardSummary(inboundCount=0, data=rows).cli_format()
         lines = out.splitlines()
@@ -189,7 +189,7 @@ class TestDashboardItemCliFormat:
             location="LAX",
             jobDisplayID=12345,
             customer="Acme Corporation",
-            step=4,
+            step="4",
             next="PK",
             carrier="UPS",
         )

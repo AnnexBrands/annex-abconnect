@@ -13,8 +13,20 @@ from ab.api.models.mixins import SearchableRequestMixin
 class Commodity(ResponseModel):
     """Commodity record — GET /commodity/{id}."""
 
-    id: Optional[str] = Field(None, description="Commodity ID")
+    # Integer primary key. Live: {"id": 1, ...} from POST /commodity/search.
+    id: Optional[int] = Field(None, description="Commodity ID")
+    code: Optional[str] = Field(None, description="Commodity code")
+    name: Optional[str] = Field(None, description="Commodity name")
     description: Optional[str] = Field(None, description="Commodity description")
+    is_active: Optional[bool] = Field(None, alias="isActive", description="Whether the commodity is active")
+    # Commodities form a tree: search returns each row with its parent denormalized.
+    parent_id: Optional[int] = Field(None, alias="parentId", description="Parent commodity ID")
+    parent_name: Optional[str] = Field(None, alias="parentName", description="Parent commodity name")
+    parent_code: Optional[str] = Field(None, alias="parentCode", description="Parent commodity code")
+    parent_is_active: Optional[bool] = Field(
+        None, alias="parentIsActive", description="Whether the parent commodity is active",
+    )
+    # Freight attributes — returned by GET /commodity/{id}, absent from search rows.
     freight_class: Optional[str] = Field(None, alias="freightClass", description="Freight class")
     nmfc_code: Optional[str] = Field(None, alias="nmfcCode", description="NMFC code")
     weight_min: Optional[float] = Field(None, alias="weightMin", description="Minimum weight")

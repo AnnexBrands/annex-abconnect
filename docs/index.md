@@ -107,6 +107,7 @@ models/notes
 
 quickstart
 certification-evidence
+known-model-defects
 FIXTURES
 ```
 

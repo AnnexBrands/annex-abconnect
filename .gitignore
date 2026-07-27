@@ -49,3 +49,6 @@ captures.json
 coverage.json
 progress.db
 .coverage
+
+# Example capture scratch tree (never committed; fixtures come from the workbench)
+tests/captures/

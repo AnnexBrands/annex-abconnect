@@ -12,7 +12,8 @@ from ab.api.models.base import RequestModel, ResponseModel
 class Partner(ResponseModel):
     """Partner record — GET /partner/{id}."""
 
-    id: Optional[str] = Field(None, description="Partner ID")
+    # Integer primary key. Live: [{"id": 1, "name": "LiveAuctioneers"}, ...].
+    id: Optional[int] = Field(None, description="Partner ID")
     name: Optional[str] = Field(None, description="Partner name")
     type: Optional[str] = Field(None, description="Partner type")
     contact_info: Optional[dict] = Field(None, alias="contactInfo", description="Contact information")

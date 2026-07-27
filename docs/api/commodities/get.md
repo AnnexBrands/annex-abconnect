@@ -23,8 +23,15 @@ Returns `Commodity`.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `id` | `Optional[str]` | no | Commodity ID |
+| `id` | `Optional[int]` | no | Commodity ID |
+| `code` | `Optional[str]` | no | Commodity code |
+| `name` | `Optional[str]` | no | Commodity name |
 | `description` | `Optional[str]` | no | Commodity description |
+| `isActive` | `Optional[bool]` | no | Whether the commodity is active |
+| `parentId` | `Optional[int]` | no | Parent commodity ID |
+| `parentName` | `Optional[str]` | no | Parent commodity name |
+| `parentCode` | `Optional[str]` | no | Parent commodity code |
+| `parentIsActive` | `Optional[bool]` | no | Whether the parent commodity is active |
 | `freightClass` | `Optional[str]` | no | Freight class |
 | `nmfcCode` | `Optional[str]` | no | NMFC code |
 | `weightMin` | `Optional[float]` | no | Minimum weight |

@@ -9,11 +9,11 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 ## Summary
 
 - **Total endpoints**: 239
-- **Complete (all gates pass)**: 175
+- **Complete (all gates pass)**: 174
 - **G1 Model Fidelity**: 188/239 pass
 - **G2 Fixture Status**: 189/239 pass
-- **G3 Test Quality**: 229/239 pass
-- **G4 Doc Accuracy**: 239/239 pass
+- **G3 Test Quality**: 227/239 pass
+- **G4 Doc Accuracy**: 238/239 pass
 - **G5 Param Routing**: 233/239 pass
 - **G6 Request Quality**: 235/239 pass
 
@@ -118,7 +118,7 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /lookup/comonInsurance | GET | api.lookup.get_common_insurance | — | List[CommonInsuranceSlab] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /lookup/densityClassMap | GET | api.lookup.get_density_class_map | — | List[DensityClassEntry] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /lookup/referCategory | GET | api.lookup.get_refer_categories | — | List[LookupValue] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
-| /lookup/referCategoryHeirachy | GET | api.lookup.get_refer_category_hierarchy | — | List[LookupValue] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/referCategoryHeirachy | GET | api.lookup.get_refer_category_hierarchy | — | List[ReferCategoryHierarchy] | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 008 |
 | /lookup/resetMasterConstantCache | GET | api.lookup.reset_cache | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — mutating |
 | /commodity/{id} | GET | api.commodities.get | — | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /commodity/{id} | PUT | api.commodities.update | CommodityUpdateRequest | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
@@ -143,7 +143,7 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /views/{viewId} | GET | api.views.get | — | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views | POST | api.views.create | GridViewCreateRequest | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views/{viewId} | DELETE | api.views.delete | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
-| /views/{viewId}/accessinfo | GET | api.views.get_access_info | — | GridViewAccess | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /views/{viewId}/accessinfo | GET | api.views.get_access_info | — | List[GridViewAccessEntry] | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 008 |
 | /views/{viewId}/access | PUT | api.views.update_access | GridViewAccess | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /views/datasetsps | GET | api.views.get_dataset_sps | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views/datasetsp/{spName} | GET | api.views.get_dataset_sp | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
@@ -169,7 +169,7 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /contacts/{mergeToId}/merge/preview | POST | api.contacts.merge_preview | ContactMergeRequest | ContactMergePreview | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /contacts/{mergeToId}/merge | PUT | api.contacts.merge | ContactMergeRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — destructive |
 | /job/{jobDisplayId}/freightproviders | GET | api.jobs.freight_providers.list | — | List[PricedFreightProvider] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
-| /job/{jobDisplayId}/freightproviders | POST | api.jobs.freight_providers.save | ShipmentPlanProvider | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/freightproviders | POST | api.jobs.freight_providers.save | ShipmentPlanProvider | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /job/{jobDisplayId}/freightproviders/{optionIndex}/ratequote | POST | api.jobs.freight_providers.rate_quote | RateQuoteRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /job/{jobDisplayId}/freightitems | POST | api.jobs.add_freight_items | FreightItemsRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /note | GET | api.notes.list | — | List[GlobalNote] | PASS | PASS | PASS | PASS | PASS | PASS | complete | model realigned to swagger Notes; cli_format added; fixture seeded |

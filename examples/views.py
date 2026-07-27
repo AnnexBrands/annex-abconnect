@@ -33,7 +33,7 @@ def main() -> None:
     print(f"\n# api.views.get_access_info({TEST_VIEW_ID!r})")
     result = api.views.get_access_info(TEST_VIEW_ID)
     print(format_result(result))
-    save("GridViewAccess.json", result)
+    save("GridViewAccessEntry.json", result)
 
     # GET /views/datasetsps
     print("\n# api.views.get_dataset_sps()")

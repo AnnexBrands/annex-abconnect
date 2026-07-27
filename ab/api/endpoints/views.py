@@ -6,7 +6,13 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ab.api.models.shared import ServiceBaseResponse
-    from ab.api.models.views import GridViewAccess, GridViewCreateRequest, GridViewDetails, StoredProcedureColumn
+    from ab.api.models.views import (
+        GridViewAccess,
+        GridViewAccessEntry,
+        GridViewCreateRequest,
+        GridViewDetails,
+        StoredProcedureColumn,
+    )
 
 from ab.api.base import BaseEndpoint
 from ab.api.route import Route
@@ -15,7 +21,9 @@ _LIST = Route("GET", "/views/all", response_model="List[GridViewDetails]")
 _GET = Route("GET", "/views/{viewId}", response_model="GridViewDetails")
 _CREATE = Route("POST", "/views", request_model="GridViewCreateRequest", response_model="GridViewDetails")
 _DELETE = Route("DELETE", "/views/{viewId}", response_model="ServiceBaseResponse")
-_GET_ACCESS_INFO = Route("GET", "/views/{viewId}/accessinfo", response_model="GridViewAccess")
+_GET_ACCESS_INFO = Route(
+    "GET", "/views/{viewId}/accessinfo", response_model="List[GridViewAccessEntry]"
+)
 _UPDATE_ACCESS = Route("PUT", "/views/{viewId}/access", request_model="GridViewAccess")
 _GET_DATASET_SPS = Route("GET", "/views/datasetsps", response_model="List[StoredProcedureColumn]")
 _GET_DATASET_SP = Route("GET", "/views/datasetsp/{spName}", response_model="List[StoredProcedureColumn]")
@@ -63,11 +71,14 @@ class ViewsEndpoint(BaseEndpoint):
         """
         return self._request(_DELETE.bind(viewId=view_id))
 
-    def get_access_info(self, view_id: str) -> GridViewAccess:
+    def get_access_info(self, view_id: str) -> list[GridViewAccessEntry]:
         """GET /views/{viewId}/accessinfo
 
+        Returns one grant per company/role/user with access to the view — the
+        endpoint answers "who can see this view", so a collection, not a record.
+
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/views/get_access_info.html
-        Response model: GridViewAccess
+        Response model: List[GridViewAccessEntry]
         """
         return self._request(_GET_ACCESS_INFO.bind(viewId=view_id))
 

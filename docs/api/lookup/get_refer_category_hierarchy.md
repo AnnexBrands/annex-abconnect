@@ -6,7 +6,7 @@
 **Python**
 
 ```python
-api.lookup.get_refer_category_hierarchy() -> list[LookupValue]
+api.lookup.get_refer_category_hierarchy() -> list[ReferCategoryHierarchy]
 ```
 
 **CLI**
@@ -19,14 +19,31 @@ GET /lookup/referCategoryHeirachy
 
 ## Response
 
-Returns a list of `List[LookupValue]`.
+Returns a list of `List[ReferCategoryHierarchy]`.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `id` | `str \| int \| None` | no | Value ID (Guid, or int for ContactTypes) |
-| `key` | `Optional[str]` | no | Master data key |
-| `name` | `Optional[str]` | no | Display name |
-| `value` | `Optional[str]` | no | Value (Guid) |
+| `jobID` | `Optional[str]` | no | Job ID |
+| `referSubCategoryID` | `Optional[str]` | no | Referral sub-category ID |
+| `referCategoryID` | `Optional[str]` | no | Referral category ID |
+| `referCategoryName` | `Optional[str]` | no | Referral category name |
+| `referSubCategoryName` | `Optional[str]` | no | Referral sub-category name |
+| `createBy` | `Optional[str]` | no | Created by |
+| `modifyBy` | `Optional[str]` | no | Modified by |
+| `createDate` | `Optional[datetime]` | no | Created date |
+| `modifiedDdate` | `Optional[datetime]` | no | Modified date |
+| `isActive` | `Optional[bool]` | no | Whether active |
+| `referUrl` | `Optional[str]` | no | Referral URL |
+| `landingUrl` | `Optional[str]` | no | Landing URL |
+| `submissionUrl` | `Optional[str]` | no | Submission URL |
+| `directEmail` | `Optional[str]` | no | Direct email |
+| `companyID` | `Optional[str]` | no | Company ID |
+| `contactID` | `Optional[str]` | no | Contact ID |
+| `industryTypeID` | `Optional[str]` | no | Industry type ID |
+| `industryTypes` | `Optional[str]` | no | Industry types |
+| `actionType` | `Optional[str]` | no | Action type |
+| `referedInternetId` | `Optional[str]` | no | Referred internet ID |
+| `isPaid` | `Optional[bool]` | no | Whether paid |
 
 ---
 

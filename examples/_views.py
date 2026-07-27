@@ -51,8 +51,8 @@ runner.add(
 runner.add(
     "get_access_info",
     lambda api: api.views.get_access_info(TEST_VIEW_ID),
-    response_model="GridViewAccess",
-    fixture_file="GridViewAccess.json",
+    response_model="List[GridViewAccessEntry]",
+    fixture_file="GridViewAccessEntry.json",
 )
 
 runner.add(

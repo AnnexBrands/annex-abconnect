@@ -43,6 +43,20 @@
       "fixture": "ContactDetailedInfo.json",
       "detail": null
     },
+    "api.contacts.get_primary_details": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "ContactPrimaryDetails.json",
+      "detail": null
+    },
+    "api.dashboard.get": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "DashboardSummary.json",
+      "detail": null
+    },
     "api.dashboard.get_grid_views": {
       "status": "passing",
       "checked": "2026-07-26",
@@ -230,7 +244,7 @@
       "checked": "2026-07-26",
       "source": "live",
       "fixture": "LookupValue.json",
-      "detail": "+ [].actionType: live only, fixture stale\n+ [].companyID: live only, fixture stale\n+ [].contactID: live only, fixture stale\n+ [].createBy: live only, fixture stale\n+ [].directEmail: live only, fixture stale\n+ [].industryTypeID: live only, fixture stale\n+ [].industryTypes: live only, fixture stale\n+ [].isActive: live only, fixture stale\n+ [].isPaid: live only, fixture stale\n+ [].jobID: live only, fixture stale\n+ [].landingUrl: live only, fixture stale\n+ [].modifiedDdate: live only, fixture stale\n+ [].modifyBy: live only, fixture stale\n+ [].referCategoryID: live only, fixture stale\n+ [].referCategoryName: live only, fixture stale\n+ [].referSubCategoryID: live only, fixture stale\n+ [].referSubCategoryName: live only, fixture stale\n+ [].referUrl: live only, fixture stale\n+ [].referedInternetId: live only, fixture stale\n+ [].submissionUrl: live only, fixture stale"
+      "detail": "- [].id: in fixture, absent live\n- [].key: in fixture, absent live\n- [].name: in fixture, absent live\n- [].value: in fixture, absent live\n+ [].actionType: live only, fixture stale\n+ [].companyID: live only, fixture stale\n+ [].contactID: live only, fixture stale\n+ [].createBy: live only, fixture stale\n+ [].directEmail: live only, fixture stale\n+ [].industryTypeID: live only, fixture stale\n+ [].industryTypes: live only, fixture stale\n+ [].isActive: live only, fixture stale\n+ [].isPaid: live only, fixture stale\n+ [].jobID: live only, fixture stale\n+ [].landingUrl: live only, fixture stale\n+ [].modifiedDdate: live only, fixture stale\n+ [].modifyBy: live only, fixture stale\n+ [].referCategoryID: live only, fixture stale\n+ [].referCategoryName: live only, fixture stale\n+ [].referSubCategoryID: live only, fixture stale\n+ [].referSubCategoryName: live only, fixture stale\n+ [].referUrl: live only, fixture stale\n+ [].referedInternetId: live only, fixture stale\n+ [].submissionUrl: live only, fixture stale"
     },
     "api.lookup.get_refer_category_hierarchy": {
       "status": "failing",
@@ -272,6 +286,13 @@
       "checked": "2026-07-26",
       "source": "live",
       "fixture": "ShipmentInfo.json",
+      "detail": null
+    },
+    "api.views.get_access_info": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "GridViewAccessEntry.json",
       "detail": null
     },
     "api.web2lead.get": {

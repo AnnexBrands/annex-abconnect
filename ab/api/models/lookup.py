@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Optional, Union
 
 from pydantic import Field
@@ -64,6 +65,61 @@ class LookupItem(ResponseModel):
 
 
 # ---- Extended lookup models (008) -----------------------------------------
+
+
+class ReferCategoryHierarchy(ResponseModel):
+    """A referral-category hierarchy row — GET /lookup/referCategoryHeirachy.
+
+    Despite living under ``/lookup``, this endpoint does not return the generic
+    ``{id, key, name, value}`` lookup shape. It returns a referral record with
+    its category and sub-category denormalized, plus campaign and ownership
+    fields. It shared :class:`LookupValue` with the neighbouring
+    ``/lookup/referCategory`` (which genuinely is a plain lookup), so every
+    field below was undeclared and the two endpoints overwrote each other's
+    fixture.
+    """
+
+    job_id: Optional[str] = Field(None, alias="jobID", description="Job ID")
+    refer_sub_category_id: Optional[str] = Field(
+        None, alias="referSubCategoryID", description="Referral sub-category ID",
+    )
+    refer_category_id: Optional[str] = Field(
+        None, alias="referCategoryID", description="Referral category ID",
+    )
+    refer_category_name: Optional[str] = Field(
+        None, alias="referCategoryName", description="Referral category name",
+    )
+    refer_sub_category_name: Optional[str] = Field(
+        None, alias="referSubCategoryName", description="Referral sub-category name",
+    )
+    create_by: Optional[str] = Field(None, alias="createBy", description="Created by")
+    modify_by: Optional[str] = Field(None, alias="modifyBy", description="Modified by")
+    create_date: Optional[datetime] = Field(None, alias="createDate", description="Created date")
+    # Spelled "modifiedDdate" on the wire — a server-side typo, mirrored here so
+    # the alias matches what actually arrives.
+    modified_date: Optional[datetime] = Field(
+        None, alias="modifiedDdate", description="Modified date",
+    )
+    is_active: Optional[bool] = Field(None, alias="isActive", description="Whether active")
+    refer_url: Optional[str] = Field(None, alias="referUrl", description="Referral URL")
+    landing_url: Optional[str] = Field(None, alias="landingUrl", description="Landing URL")
+    submission_url: Optional[str] = Field(
+        None, alias="submissionUrl", description="Submission URL",
+    )
+    direct_email: Optional[str] = Field(None, alias="directEmail", description="Direct email")
+    company_id: Optional[str] = Field(None, alias="companyID", description="Company ID")
+    contact_id: Optional[str] = Field(None, alias="contactID", description="Contact ID")
+    industry_type_id: Optional[str] = Field(
+        None, alias="industryTypeID", description="Industry type ID",
+    )
+    industry_types: Optional[str] = Field(
+        None, alias="industryTypes", description="Industry types",
+    )
+    action_type: Optional[str] = Field(None, alias="actionType", description="Action type")
+    refered_internet_id: Optional[str] = Field(
+        None, alias="referedInternetId", description="Referred internet ID",
+    )
+    is_paid: Optional[bool] = Field(None, alias="isPaid", description="Whether paid")
 
 
 class LookupValue(ResponseModel):

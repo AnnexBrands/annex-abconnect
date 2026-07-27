@@ -42,7 +42,11 @@ class DashboardItem(ResponseModel):
     pause: Optional[int] = Field(None, description="Pause flag")
     labels: Optional[str] = Field(None, description="Labels")
     ops_form: Optional[str] = Field(None, alias="opsForm", description="Ops form")
-    step: Optional[int] = Field(None, description="Workflow step")
+    # A short label, not a number. Live values include "1 ", "2 ", "2.", "10" --
+    # padded, and "2." does not parse as an integer at all, so this was never an
+    # int that happened to arrive as text. Kept as the string the API sends
+    # rather than coerced, which would have to invent a reading for "2.".
+    step: Optional[str] = Field(None, description="Workflow step label")
     ship_by: Optional[datetime] = Field(None, alias="shipBy", description="Ship-by date-time")
     expedite: Optional[str] = Field(None, description="Expedite flag")
     note: Optional[str] = Field(None, description="Note")

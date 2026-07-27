@@ -399,6 +399,20 @@ class CertificationSession:
             self.checks.add(
                 "response-model validation", True, type(result).__name__
             )
+        elif isinstance(result, list) and any(hasattr(i, "model_dump") for i in result):
+            # A List[...] route: dump element-wise. Without this the payload
+            # stays a list of model *objects*, which is not JSON-able, and
+            # approve_fixture() fails at the last step of the workflow.
+            self.response_payload = [
+                item.model_dump(by_alias=True, mode="json")
+                if hasattr(item, "model_dump")
+                else item
+                for item in result
+            ]
+            element = next(type(i).__name__ for i in result if hasattr(i, "model_dump"))
+            self.checks.add(
+                "response-model validation", True, f"List[{element}] ({len(result)} items)"
+            )
         else:
             self.response_payload = result
             self.checks.add(

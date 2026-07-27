@@ -549,13 +549,17 @@ class CertificationSession:
             "source": "workbench",
             "environment": self.environment,
             "mutation_class": self.mutation_class.value,
-            "fixture": f"{self.response_model_name}.json",
+            # A 204 endpoint has no response body, so no fixture to name.
+            "fixture": f"{self.response_model_name}.json" if self.response_model_name else None,
             # MUST come from the same function the verifier uses
             # (ab.progress.certification.fixture_sha256, which hashes the file
             # bytes on disk). Hashing the in-memory payload instead produces a
             # different digest for identical content, and every endpoint would
             # be reported stale the moment it was certified.
-            "fixture_sha256": committed_fixture_sha256(self.response_model_name),
+            "fixture_sha256": (
+                committed_fixture_sha256(self.response_model_name)
+                if self.response_model_name else None
+            ),
             "detail": None,
         }
         if self.sanitize_report:

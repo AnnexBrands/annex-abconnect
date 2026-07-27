@@ -35,6 +35,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from ab.progress.certification import MutationClass  # noqa: E402
+from ab.progress.certification import fixture_sha256 as committed_fixture_sha256  # noqa: E402
 from ab.progress.example_gen import strip_list_wrapper  # noqa: E402
 from ab.progress.example_index import build_example_index  # noqa: E402
 from ab.progress.example_verify import compare  # noqa: E402
@@ -240,6 +241,16 @@ def main(argv: list[str] | None = None) -> int:
                     "fixture": fixture,
                     "detail": detail,
                 }
+                if matches:
+                    # Hash the committed fixture *file bytes* via the same
+                    # function the verifier uses. Hashing the produced payload
+                    # instead yields a different digest for identical content
+                    # and every endpoint reads as stale the moment it passes.
+                    # Recorded only for passing results: a failing run's digest
+                    # would pin evidence to a fixture that did not match.
+                    digest = committed_fixture_sha256(fixture.removesuffix(".json"))
+                    if digest is not None:
+                        results[key]["fixture_sha256"] = digest
                 if not args.no_log:
                     # Record the produced JSON so the interactive app can show it.
                     from ab.progress import db

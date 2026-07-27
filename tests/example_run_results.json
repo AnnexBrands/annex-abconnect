@@ -8,7 +8,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "AddressIsValidResult.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "641bb0d4e83af4d10153f3e5ed8aab035bece99c66c2fb20160a428976f69318"
     },
     "api.catalog.get": {
       "status": "passing",
@@ -17,7 +18,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "CatalogExpandedDto.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "afabc66309e5f84cbe57719264da475c28231f1f66e03b24b81ff99f17655ea5"
     },
     "api.companies.get_by_id": {
       "status": "passing",
@@ -26,7 +28,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "CompanySimple.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "cc241df2e0e7d7be962a16f4a5105992835ca48ecdba59bc64e685b4ca22b959"
     },
     "api.companies.get_details": {
       "status": "failing",
@@ -44,7 +47,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "ContactSimple.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "438aedc6470cd67ce010b6e4a01cc6af558bca522141a9f898093d895c01156d"
     },
     "api.contacts.get_details": {
       "status": "passing",
@@ -53,7 +57,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "ContactDetailedInfo.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "a971c8af491ebaa47ad16f66c44bcc7080e818d43a2fb4a64312bc29e4a6e88c"
     },
     "api.contacts.get_primary_details": {
       "status": "passing",
@@ -62,7 +67,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "ContactPrimaryDetails.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "6e3b909f10663a0177316c412018f63e969f1f4ee0c44bf3eef64d089929eef9"
     },
     "api.dashboard.get": {
       "status": "passing",
@@ -71,7 +77,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "DashboardSummary.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "fabcdf55cf89b147544953de80fe80b626a6a20750965fd349c4d50e528b7e31"
     },
     "api.dashboard.get_grid_views": {
       "status": "passing",
@@ -80,7 +87,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "GridViewInfo.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "d651e81821713a1794be020398217ef939922a5b93b337b683640009764c79c7"
     },
     "api.documents.list": {
       "status": "failing",
@@ -98,7 +106,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "FormsShipmentPlan.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "6c75e08ff032c475fb5054440c1e7eaecca36ffe4b28a1709cbdf81e3b86a69d"
     },
     "api.jobs.get": {
       "status": "passing",
@@ -107,43 +116,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "Job.json",
-      "detail": null
-    },
-    "api.jobs.get_calendar_items": {
-      "status": "passing",
-      "checked": "2026-07-27",
-      "source": "live",
-      "environment": "staging",
-      "mutation_class": "read_only",
-      "fixture": "CalendarItem.json",
-      "detail": null
-    },
-    "api.jobs.get_packaging_containers": {
-      "status": "passing",
-      "checked": "2026-07-27",
-      "source": "live",
-      "environment": "staging",
-      "mutation_class": "read_only",
-      "fixture": "PackagingContainer.json",
-      "detail": null
-    },
-    "api.jobs.get_price": {
-      "status": "passing",
-      "checked": "2026-07-27",
-      "source": "live",
-      "environment": "staging",
-      "mutation_class": "read_only",
-      "fixture": "JobPrice.json",
-      "detail": null
-    },
-    "api.jobs.get_update_page_config": {
-      "status": "passing",
-      "checked": "2026-07-27",
-      "source": "live",
-      "environment": "staging",
-      "mutation_class": "read_only",
-      "fixture": "JobUpdatePageConfig.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "146e06456a8c76e996fed59a6b73f85629c9a5401007d114abda9831ca1d21a0"
     },
     "api.jobs.note.get": {
       "status": "passing",
@@ -152,7 +126,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "JobNote.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "cee9b2079f88efdc1b0bdc91bf9659db24e3cfaf1a691a52b6cf1adc59714316"
     },
     "api.jobs.on_hold.list": {
       "status": "passing",
@@ -161,16 +136,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "ExtendedOnHoldInfo.json",
-      "detail": null
-    },
-    "api.jobs.search": {
-      "status": "passing",
-      "checked": "2026-07-27",
-      "source": "live",
-      "environment": "staging",
-      "mutation_class": "read_only",
-      "fixture": "JobSearchResult.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "528561b2bfd6f2bc7ba9cdf8b7b33342ac7e92912eb7731a446f30f83aa8ff79"
     },
     "api.jobs.timeline.create_task": {
       "status": "passing",
@@ -201,7 +168,30 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "TimelineResponse.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "aca92f4f0a8a93245aee6d48cec2e6caab0f44a691ebcc3d93c9724f1fce26f6"
+    },
+    "api.jobs.timeline.update_task": {
+      "status": "passing",
+      "checked": "2026-07-27",
+      "source": "workbench",
+      "environment": "staging",
+      "mutation_class": "circular_restored",
+      "fixture": null,
+      "fixture_sha256": null,
+      "detail": null,
+      "evidence": {
+        "record_identifier": "job 4000000 timeline task 688007 (taskCode PU)",
+        "environment": "staging",
+        "precondition": "task 688007 exists, plannedStartDate='2026-08-01T09:00:00', job status '2 - Scheduled'",
+        "mutation": "PATCH /job/4000000/timeline/688007 {\"truckId\": null, \"plannedStartDate\": {\"value\": \"2026-08-05T14:00:00\"}, \"preferredStartDate\": null, \"plannedEndDate\": null, \"preferredEndDate\": null}",
+        "expected_result": "plannedStartDate becomes 2026-08-05T14:00:00, readable back via GET timeline",
+        "observed_result": "HTTP 204; read-back '2026-08-01T09:00:00' -> '2026-08-05T14:00:00'",
+        "restoration": "PATCH /job/4000000/timeline/688007 {\"plannedStartDate\": {\"value\": \"2026-08-01T09:00:00\"}} -> read-back '2026-08-01T09:00:00' (== prior); DELETE /job/4000000/timeline/688007; final tasks=[] status '1 - New Job'",
+        "final_state_verified": true,
+        "timestamp": "2026-07-27T15:23:11Z",
+        "evidence_ref": "docs/evidence/timeline-update-task-investigation.md"
+      }
     },
     "api.jobs.tracking.get": {
       "status": "passing",
@@ -210,7 +200,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "TrackingInfo.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "ed0a46ecdded0b2ef59c900e40c4fa41c73aaab863e75ce44e37751e2f0dd772"
     },
     "api.jobs.tracking.v3": {
       "status": "passing",
@@ -219,7 +210,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "TrackingInfoV3.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "40aae1947a5853c4cf3bc3919bfc78723d342c762e0046dfa9cfa5ab0e9f3258"
     },
     "api.lookup.get_access_key": {
       "status": "passing",
@@ -228,7 +220,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "AccessKeySetup.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "8354fa3472938809173926c664b4bcd6acdd5841310ec2856df7dd976a649f15"
     },
     "api.lookup.get_access_keys": {
       "status": "passing",
@@ -237,7 +230,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "AccessKey.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "f3efdfb4568491e5c86193d059bf2fd742c2cfcf226eb2964da3724676760f68"
     },
     "api.lookup.get_by_key": {
       "status": "passing",
@@ -246,7 +240,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "LookupValue.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "6618fe7b41a58be70417645bc93ff8255ca9ce7f488ef46898f8707dc3e03272"
     },
     "api.lookup.get_common_insurance": {
       "status": "passing",
@@ -255,7 +250,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "CommonInsuranceSlab.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "e169caee9b9ce201295e675275e9c47863354d9166c42662b4a13416da8b6f94"
     },
     "api.lookup.get_contact_types": {
       "status": "passing",
@@ -264,7 +260,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "ContactTypeEntity.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "15aced99bb696b5bc00c3ae7784c2311892d6ce59f91fb65148d8b5cd6375f91"
     },
     "api.lookup.get_countries": {
       "status": "passing",
@@ -273,7 +270,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "CountryCodeDto.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "e1559f7bdaa80dadc0fd5515c1332e3766e1207c8e03fe7e84963b8273c4a311"
     },
     "api.lookup.get_density_class_map": {
       "status": "passing",
@@ -282,7 +280,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "DensityClassEntry.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "8a4c53bf83ee09b532607aa99d4effff0b359b261d42a37dc727eca84c43ae47"
     },
     "api.lookup.get_document_types": {
       "status": "passing",
@@ -291,7 +290,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "DocumentTypeBySource.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "2e78ad92acc64adf87873c0cd158fe5cdd43f0c19d360a9963b9f33d08dc06df"
     },
     "api.lookup.get_items": {
       "status": "passing",
@@ -300,7 +300,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "LookupItem.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "8c70fc29adb076f8ff83558d9918f8548e3d24f4c7ff1366094fd1e9b780e462"
     },
     "api.lookup.get_job_statuses": {
       "status": "passing",
@@ -309,7 +310,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "JobStatus.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "8642f9517e540c9dbd73977ab272d4b0c2635d2cf3592ed231bf2e879d7d3086"
     },
     "api.lookup.get_parcel_package_types": {
       "status": "passing",
@@ -318,7 +320,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "ParcelPackageType.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "6638eca624f21a675998e6adaef1046365451d6088dd388673615d6d53cc4fa3"
     },
     "api.lookup.get_ppc_campaigns": {
       "status": "passing",
@@ -327,7 +330,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "PPCCampaign.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "9c548dd794d4faaf8d0ea5fed3c8650bdff643ca7faa87941adbf587c0d39928"
     },
     "api.lookup.get_refer_categories": {
       "status": "failing",
@@ -345,7 +349,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "GlobalNote.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "edbb3b5dadced85152060c336b097b29b0edf16dfaac5650945a3cdb277d7a91"
     },
     "api.notes.suggest_users": {
       "status": "passing",
@@ -354,7 +359,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "SuggestedUser.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "abff10353178e6b5ec895f30186d2a2b05ba4b8c437d5476296ee24721b7ce0d"
     },
     "api.sellers.get": {
       "status": "passing",
@@ -363,7 +369,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "SellerExpandedDto.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "d20a0a21f8abc94871111befae6ff4e567834ca3c1d9870b994cfdd926ca9893"
     },
     "api.shipments.get_global_accessorials": {
       "status": "passing",
@@ -372,7 +379,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "GlobalAccessorial.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "778999f80b23fef4de5a5267bdb0dfa1e40bf4396c5541fb0eac1aa1fa958643"
     },
     "api.shipments.get_shipment": {
       "status": "passing",
@@ -381,7 +389,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "ShipmentInfo.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "08d00e69fb9ea816bc7608b6d3cc3ffbc3c9b8031f9ba0bf25e49b92b13eb400"
     },
     "api.views.get_access_info": {
       "status": "passing",
@@ -390,7 +399,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "GridViewAccessEntry.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "4565b4bb03c78321192556761c0197f7d18d54a485e27c71bef3e59229277306"
     },
     "api.web2lead.get": {
       "status": "passing",
@@ -399,7 +409,8 @@
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "Web2LeadResponse.json",
-      "detail": null
+      "detail": null,
+      "fixture_sha256": "dec0e69f1ac7f680a8a985cf1a78f8a6d0bb0d289a65d8310f25cc6bf60795c0"
     }
   }
 }

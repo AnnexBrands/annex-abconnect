@@ -4,6 +4,71 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
+## [0.1.15] - 2026-07-27
+
+Certification infrastructure release. The SDK surface changes are corrections
+found by running every read-only endpoint against live staging, so several are
+breaking for callers relying on the previous (wrong) types.
+
+### Fixed — model contracts, all verified against live staging
+
+- `Commodity.id` and `Partner.id` were `str`; the API returns an integer primary
+  key. `Commodity` also gained `code`, `name`, `isActive` and the four `parent*`
+  fields it denormalizes into every search row, none of which were declared.
+- `DashboardItem.step` was `int`. Live sends `"1 "`, `"2 "`, `"2."`, `"10"` —
+  padded labels, and `"2."` does not parse as an integer, so it was never an int
+  arriving as text.
+- `GET /views/{viewId}/accessinfo` returns `List[GridViewAccessEntry]`, not a
+  single `GridViewAccess`. One class was serving both this response and the
+  `PUT /views/{viewId}/access` request body; every field the GET returns was
+  undeclared *and* the list could not validate against an object.
+- `GET /lookup/referCategoryHeirachy` returns `List[ReferCategoryHierarchy]`. It
+  lives under `/lookup` but returns a 21-field referral record, and shared
+  `LookupValue` with `/lookup/referCategory`, which genuinely is a plain lookup.
+- `PATCH /job/{jobDisplayId}/timeline/{timelineTaskId}` sent a body no field of
+  which existed in Swagger's `UpdateTaskModel`. The API answered **204** and
+  applied nothing — indistinguishable from success at the call site. The request
+  model now mirrors the contract (`truckId`, `plannedStartDate`,
+  `preferredStartDate`, `plannedEndDate`, `preferredEndDate`, each a
+  `{"value": ...}` override wrapper) and accepts a bare scalar, wrapping it.
+  Its route also declared `response_model="TimelineTask"` where the API returns
+  204 No Content.
+
+### Added
+
+- `ab.progress.compare` — one structural comparator shared by the harness and
+  the certification workbench. Committed fixtures are sanitized, so comparing by
+  value reported every sanitized endpoint as permanently failing;
+  `api.address.validate` was "failing" purely because its fixture held the
+  sanitizer's synthetic coordinates. Comparison is now model parse, undeclared
+  fields, keys, nested structure, JSON value types and merged list element
+  shapes — never values.
+- `ab.progress.certify` — interactive certification workbench, and
+  `notebooks/certify_endpoint.ipynb`, generated from
+  `scripts/generate_certify_notebook.py` and held to it by a test.
+- `fixture_sha256` on every passing run result, pinning evidence to the exact
+  fixture bytes verified, with staleness/refresh regression tests.
+- `docs/known-model-defects.md` — every read-only endpoint carries exactly one
+  explicit blocking state, keeping HTTP 400/401/404/500 distinct.
+
+### Security
+
+- Example captures can no longer write the committed fixture tree.
+  `_capture.save()` defaulted to `tests/fixtures/`, so an ordinary
+  `python -m examples.companies` overwrote fixtures with the raw live response;
+  a single run put carrier secrets and real UUIDs, emails, phone numbers and
+  street addresses into the working tree. Captures now go to a git-ignored
+  scratch tree, are sanitized before reaching disk, and refuse the committed
+  tree outright. `examples/_runner.py` held a second copy of the same write.
+  A committed fixture now changes through one path only: the workbench's
+  `propose_fixture()` → operator review → `approve_fixture()`.
+
+### Certification
+
+- `api.jobs.timeline.create_task` and `api.jobs.timeline.update_task` certified
+  as `circular_restored` with full restoration evidence.
+- live_verified 36, certified 36.
+
 ## [0.1.13] - 2026-07-12
 
 ### Added

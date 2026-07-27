@@ -59,15 +59,21 @@ endpoint against arbitrary data.
 Add approved values to `examples/constants.py` so examples and tests agree on
 one source, then re-run the read-only sweep.
 
-## Environment fault
+## Environment: resolved (transient staging fault)
 
-`tests/helpers/test_timeline_helpers.py` cannot pass at present. Staging returns
-**HTTP 500 with an empty body for every timeline task creation** (`pack_start`,
-`storage_begin`, and the rest), on a job verified clean: `delete_all` succeeds,
-all four task codes read back as absent, and the timeline reports `tasks=[]`
-with status "1 - New Job".
+For a period on 2026-07-26, staging returned **HTTP 500 with an empty body for
+every timeline task creation** (`pack_start`, `storage_begin`), on a job verified
+clean — `delete_all` succeeded, all four task codes read back absent, the
+timeline reported `tasks=[]` at status "1 - New Job". It reproduced on an
+unmodified checkout and across repeated attempts, so it was not test pollution
+or an SDK regression.
 
-This reproduces on an unmodified checkout, so it is neither test pollution nor
-an SDK regression — the shared test job is already at its documented baseline.
-The suite will pass again when the server-side fault clears; nothing in this
-repository can restore it.
+It has since cleared on its own, from the same baseline and the same call, with
+no change on this side: `tests/helpers/test_timeline_helpers.py` passes 14/14.
+Recorded because a transient 500 on `POST /api/job/{id}/timeline` is worth
+knowing about if it recurs — the failing window left no error body and no
+correlation id to trace, which is itself worth fixing server-side.
+
+**Classification: `environment_blocked` while it lasts, never SDK certification
+failure.** Nothing in this repository can restore staging, and a red suite for
+this reason must not be read as the SDK being wrong.

@@ -206,6 +206,68 @@ def test_verify_mode_still_refuses_the_committed_tree(monkeypatch) -> None:
         save("CompanyDetails.json", LIVE_RESPONSE)
 
 
+def test_verify_mode_writes_no_payload_into_the_committed_tree(tmp_path, monkeypatch) -> None:
+    """Neither a raw payload nor a redacted one may reach ``tests/fixtures/``.
+
+    Redaction exists so the harness has something to compare; it is not a
+    licence to write into the committed tree. Asserted over the whole tree,
+    byte for byte, across both a clean payload and a REVIEW-flagged one.
+    """
+    before = {
+        p.relative_to(FIXTURES_DIR).as_posix(): p.read_bytes()
+        for p in FIXTURES_DIR.rglob("*")
+        if p.is_file()
+    }
+    monkeypatch.setenv(_capture.VERIFY_MODE_ENV, "1")
+    monkeypatch.setenv(_capture.CAPTURE_DIR_ENV, str(tmp_path))
+
+    save("CompanyDetails.json", LIVE_RESPONSE)
+    save("Web2LeadResponse.json", {"errorMessage": "Invalid Access Key", "ok": False})
+    save("Job.json", [{"name": "Dana Whitfield"}])
+
+    after = {
+        p.relative_to(FIXTURES_DIR).as_posix(): p.read_bytes()
+        for p in FIXTURES_DIR.rglob("*")
+        if p.is_file()
+    }
+    assert after == before, "verify mode wrote into the committed fixture tree"
+
+
+def test_verify_mode_never_puts_an_unclassified_value_on_disk(tmp_path, monkeypatch) -> None:
+    """The REVIEW original must not appear in the capture, the review note, or
+    any other file the run produces."""
+    monkeypatch.setenv(_capture.VERIFY_MODE_ENV, "1")
+    secret_text = "Invalid Access Key for tenant Dana Whitfield"
+    _capture_to(tmp_path, monkeypatch, {"errorMessage": secret_text, "ok": True})
+
+    for path in tmp_path.rglob("*"):
+        if not path.is_file() or path.name.endswith(".review.txt"):
+            continue
+        assert secret_text not in path.read_text(encoding="utf-8"), (
+            f"unclassified value written to {path.name}"
+        )
+
+
+def test_only_operator_approval_can_write_a_review_flagged_fixture(tmp_path, monkeypatch) -> None:
+    """Capture mode cannot produce it at all; the workbench can, and only with
+    ``accept_review=True``. This is the whole difference between the two paths."""
+    from ab.progress.certify import CertificationSession
+    from ab.progress.certify import session as sess
+
+    # Capture mode: refused outright, no amount of retrying writes it.
+    monkeypatch.delenv(_capture.VERIFY_MODE_ENV, raising=False)
+    assert _capture_to(tmp_path, monkeypatch, {"name": "Dana Whitfield"}) is None
+
+    # Workbench: refused without approval, permitted with it.
+    monkeypatch.setattr(sess, "FIXTURES_DIR", tmp_path)
+    s = CertificationSession("api.address.validate")
+    s.record_response({"name": "Dana Whitfield", "isValid": True})
+    s.propose_fixture()
+    with pytest.raises(PermissionError):
+        s.approve_fixture(confirm=True)
+    assert s.approve_fixture(confirm=True, accept_review=True).is_file()
+
+
 def test_verify_mode_does_not_weaken_secret_or_pii_handling(tmp_path, monkeypatch) -> None:
     """Redaction is for REVIEW-tier values only; high-confidence detections are
     still substituted, and secrets still never appear."""

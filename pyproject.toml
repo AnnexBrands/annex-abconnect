@@ -34,7 +34,7 @@ ab = "ab.cli:main_prod"
 abs = "ab.cli:main_staging"
 
 [project.urls]
-"Repository" = "https://github.com/AnnexBrands/ab"
+"Repository" = "https://github.com/AnnexBrands/annex-abconnect"
 "Documentation" = "https://ab-sdk.readthedocs.io/"
 
 [dependency-groups]
@@ -52,6 +52,17 @@ docs = [
     "sphinx>=7.0",
     "sphinx-rtd-theme>=2.0",
     "myst-parser>=3.0",
+]
+notebook = [
+    # Deliberately NOT in `dev`. The workbench notebook is an operator UI, not a
+    # dependency of the SDK or of the test suite: `ab.progress.certify` is pure
+    # Python and `tests/test_notebook_is_thin.py` reads the .ipynb as JSON. Only
+    # executing the notebook needs a kernel, so keep this heavy tree opt-in
+    # (`uv run --group notebook ...`) rather than in every contributor's sync.
+    "jupyterlab>=4.0",
+    "ipykernel>=6.29",
+    "nbclient>=0.10",
+    "nbformat>=5.10",
 ]
 dev = [
     { include-group = "test" },

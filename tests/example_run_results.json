@@ -1,304 +1,403 @@
 {
-  "schema": 1,
+  "schema": 2,
   "results": {
     "api.address.validate": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "AddressIsValidResult.json",
       "detail": null
     },
     "api.catalog.get": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "CatalogExpandedDto.json",
       "detail": null
     },
     "api.companies.get_by_id": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "CompanySimple.json",
       "detail": null
     },
     "api.companies.get_details": {
       "status": "failing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "CompanyDetails.json",
       "detail": "+ addresses: live only, fixture stale\n+ contacts: live only, fixture stale\n+ settings: live only, fixture stale"
     },
     "api.contacts.get": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "ContactSimple.json",
       "detail": null
     },
     "api.contacts.get_details": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "ContactDetailedInfo.json",
       "detail": null
     },
     "api.contacts.get_primary_details": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "ContactPrimaryDetails.json",
       "detail": null
     },
     "api.dashboard.get": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "DashboardSummary.json",
       "detail": null
     },
     "api.dashboard.get_grid_views": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "GridViewInfo.json",
       "detail": null
     },
     "api.documents.list": {
       "status": "failing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "Document.json",
       "detail": "~ <root>: fixture object, live list"
     },
     "api.jobs.form.shipments": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "FormsShipmentPlan.json",
       "detail": null
     },
     "api.jobs.get": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "Job.json",
       "detail": null
     },
     "api.jobs.get_calendar_items": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "CalendarItem.json",
       "detail": null
     },
     "api.jobs.get_packaging_containers": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "PackagingContainer.json",
       "detail": null
     },
     "api.jobs.get_price": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "JobPrice.json",
       "detail": null
     },
     "api.jobs.get_update_page_config": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "JobUpdatePageConfig.json",
       "detail": null
     },
     "api.jobs.note.get": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "JobNote.json",
       "detail": null
     },
     "api.jobs.on_hold.list": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "ExtendedOnHoldInfo.json",
       "detail": null
     },
     "api.jobs.search": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "JobSearchResult.json",
       "detail": null
     },
+    "api.jobs.timeline.create_task": {
+      "status": "passing",
+      "checked": "2026-07-27",
+      "source": "workbench",
+      "environment": "staging",
+      "mutation_class": "circular_restored",
+      "fixture": "TimelineSaveResponse.json",
+      "fixture_sha256": "cf0b4627968b2afcc05550b978d7b92893bea8a16b4f53db1f88a5292aee1f02",
+      "detail": null,
+      "evidence": {
+        "record_identifier": "job 4000000 timeline task 687981 (taskCode PU)",
+        "environment": "staging",
+        "precondition": "job 4000000 at baseline: tasks=[], jobSubManagementStatus='1 - New Job'",
+        "mutation": "POST /job/4000000/timeline {'taskCode':'PU','plannedStartDate':'2026-08-01T09:00:00'}",
+        "expected_result": "task created and listed by GET /job/4000000/timeline; job status advances to '2 - Scheduled'",
+        "observed_result": "HTTP 200 TimelineSaveResponse taskExists=false id=687981; status '1 - New Job' -> '2 - Scheduled'",
+        "restoration": "DELETE /job/4000000/timeline/687981 via api.jobs.tasks.delete(JOB,'PU')",
+        "final_state_verified": true,
+        "timestamp": "2026-07-27T14:31:20Z",
+        "evidence_ref": "docs/evidence/timeline-create-task-certification.md"
+      }
+    },
     "api.jobs.timeline.response": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "TimelineResponse.json",
       "detail": null
     },
     "api.jobs.tracking.get": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "TrackingInfo.json",
       "detail": null
     },
     "api.jobs.tracking.v3": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "TrackingInfoV3.json",
       "detail": null
     },
     "api.lookup.get_access_key": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "AccessKeySetup.json",
       "detail": null
     },
     "api.lookup.get_access_keys": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "AccessKey.json",
       "detail": null
     },
     "api.lookup.get_by_key": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "LookupValue.json",
       "detail": null
     },
     "api.lookup.get_common_insurance": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "CommonInsuranceSlab.json",
       "detail": null
     },
     "api.lookup.get_contact_types": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "ContactTypeEntity.json",
       "detail": null
     },
     "api.lookup.get_countries": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "CountryCodeDto.json",
       "detail": null
     },
     "api.lookup.get_density_class_map": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "DensityClassEntry.json",
       "detail": null
     },
     "api.lookup.get_document_types": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "DocumentTypeBySource.json",
       "detail": null
     },
     "api.lookup.get_items": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "LookupItem.json",
       "detail": null
     },
     "api.lookup.get_job_statuses": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "JobStatus.json",
       "detail": null
     },
     "api.lookup.get_parcel_package_types": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "ParcelPackageType.json",
       "detail": null
     },
     "api.lookup.get_ppc_campaigns": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "PPCCampaign.json",
       "detail": null
     },
     "api.lookup.get_refer_categories": {
       "status": "failing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "LookupValue.json",
       "detail": "- [].id: in fixture, absent live\n- [].key: in fixture, absent live\n- [].name: in fixture, absent live\n- [].value: in fixture, absent live\n+ [].actionType: live only, fixture stale\n+ [].companyID: live only, fixture stale\n+ [].contactID: live only, fixture stale\n+ [].createBy: live only, fixture stale\n+ [].directEmail: live only, fixture stale\n+ [].industryTypeID: live only, fixture stale\n+ [].industryTypes: live only, fixture stale\n+ [].isActive: live only, fixture stale\n+ [].isPaid: live only, fixture stale\n+ [].jobID: live only, fixture stale\n+ [].landingUrl: live only, fixture stale\n+ [].modifiedDdate: live only, fixture stale\n+ [].modifyBy: live only, fixture stale\n+ [].referCategoryID: live only, fixture stale\n+ [].referCategoryName: live only, fixture stale\n+ [].referSubCategoryID: live only, fixture stale\n+ [].referSubCategoryName: live only, fixture stale\n+ [].referUrl: live only, fixture stale\n+ [].referedInternetId: live only, fixture stale\n+ [].submissionUrl: live only, fixture stale"
     },
-    "api.lookup.get_refer_category_hierarchy": {
-      "status": "failing",
-      "checked": "2026-07-26",
-      "source": "live",
-      "fixture": "LookupValue.json",
-      "detail": "+ [].actionType: live only, fixture stale\n+ [].companyID: live only, fixture stale\n+ [].contactID: live only, fixture stale\n+ [].createBy: live only, fixture stale\n+ [].directEmail: live only, fixture stale\n+ [].industryTypeID: live only, fixture stale\n+ [].industryTypes: live only, fixture stale\n+ [].isActive: live only, fixture stale\n+ [].isPaid: live only, fixture stale\n+ [].jobID: live only, fixture stale\n+ [].landingUrl: live only, fixture stale\n+ [].modifiedDdate: live only, fixture stale\n+ [].modifyBy: live only, fixture stale\n+ [].referCategoryID: live only, fixture stale\n+ [].referCategoryName: live only, fixture stale\n+ [].referSubCategoryID: live only, fixture stale\n+ [].referSubCategoryName: live only, fixture stale\n+ [].referUrl: live only, fixture stale\n+ [].referedInternetId: live only, fixture stale\n+ [].submissionUrl: live only, fixture stale"
-    },
     "api.notes.list": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "GlobalNote.json",
       "detail": null
     },
     "api.notes.suggest_users": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "SuggestedUser.json",
       "detail": null
     },
     "api.sellers.get": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "SellerExpandedDto.json",
       "detail": null
     },
     "api.shipments.get_global_accessorials": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "GlobalAccessorial.json",
       "detail": null
     },
     "api.shipments.get_shipment": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "ShipmentInfo.json",
       "detail": null
     },
     "api.views.get_access_info": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "GridViewAccessEntry.json",
       "detail": null
     },
     "api.web2lead.get": {
       "status": "passing",
-      "checked": "2026-07-26",
+      "checked": "2026-07-27",
       "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
       "fixture": "Web2LeadResponse.json",
       "detail": null
     }

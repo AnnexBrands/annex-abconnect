@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from ab.api.models.base import RequestModel, ResponseModel
 from ab.api.models.common import CompanyAddress
@@ -983,13 +983,73 @@ class CarrierTaskRequest(BaseTimelineTaskRequest):
     )
 
 
-class TimelineTaskUpdateRequest(RequestModel):
-    """Body for PATCH /job/{jobDisplayId}/timeline/{timelineTaskId}."""
+class UpdateDateValue(RequestModel):
+    """Override wrapper for a date — Swagger ``UpdateDateModel``.
 
-    status: Optional[int] = Field(None, description="New status code")
-    scheduled_date: Optional[str] = Field(None, alias="scheduledDate", description="Updated schedule")
-    completed_date: Optional[str] = Field(None, alias="completedDate", description="Completion date")
-    comments: Optional[str] = Field(None, description="Updated notes")
+    The endpoint distinguishes "leave this alone" (property absent) from "clear
+    this" (``{"value": null}``), which a bare nullable date cannot express.
+    """
+
+    value: Optional[datetime] = Field(None, description="New value, or null to clear")
+
+
+class UpdateTruckValue(RequestModel):
+    """Override wrapper for a truck id — Swagger ``UpdateTruckModel``."""
+
+    value: Optional[int] = Field(None, description="New truck ID, or null to clear")
+
+
+class TimelineTaskUpdateRequest(RequestModel):
+    """Body for PATCH /job/{jobDisplayId}/timeline/{timelineTaskId}.
+
+    Mirrors Swagger ``UpdateTaskModel``, which declares these five properties
+    and nothing else (``additionalProperties: false``).
+
+    This previously declared ``status``, ``scheduledDate``, ``completedDate``
+    and ``comments`` — none of which are in the contract. The API answered
+    **204** and applied nothing: unknown properties were dropped, only
+    ``modifiedDate`` moved, and every requested value stayed null. A 204 is
+    indistinguishable from success at the call site, so the endpoint looked
+    healthy while discarding every payload. See
+    ``tests/unit/test_timeline_update_transport.py``.
+    """
+
+    truck_id: Optional[UpdateTruckValue] = Field(None, alias="truckId", description="Assigned truck")
+    planned_start_date: Optional[UpdateDateValue] = Field(
+        None, alias="plannedStartDate", description="Planned start",
+    )
+    preferred_start_date: Optional[UpdateDateValue] = Field(
+        None, alias="preferredStartDate", description="Preferred start",
+    )
+    planned_end_date: Optional[UpdateDateValue] = Field(
+        None, alias="plannedEndDate", description="Planned end",
+    )
+    preferred_end_date: Optional[UpdateDateValue] = Field(
+        None, alias="preferredEndDate", description="Preferred end",
+    )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _wrap_bare_values(cls, data: Any) -> Any:
+        """Accept ``plannedStartDate="2026-08-05T14:00:00"`` as well as the wrapper.
+
+        The wrapper is the wire shape, not something a caller should have to
+        remember. A bare scalar is unambiguous, and silently sending it
+        unwrapped is exactly the failure this model exists to prevent.
+        """
+        if not isinstance(data, dict):
+            return data
+        wrapped = dict(data)
+        for key in (
+            "truckId", "truck_id",
+            "plannedStartDate", "planned_start_date",
+            "preferredStartDate", "preferred_start_date",
+            "plannedEndDate", "planned_end_date",
+            "preferredEndDate", "preferred_end_date",
+        ):
+            if key in wrapped and not isinstance(wrapped[key], (dict, RequestModel)):
+                wrapped[key] = {"value": wrapped[key]}
+        return wrapped
 
 
 class IncrementStatusRequest(RequestModel):

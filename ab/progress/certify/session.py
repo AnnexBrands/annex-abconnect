@@ -230,7 +230,7 @@ class CertificationSession:
             self.route.params_model
         )
 
-    def validate_request(self, data: dict) -> Any:
+    def validate_request(self, data: dict, model: Any = None) -> Any:
         """Cast raw request data into the endpoint's model (steps 4-6).
 
         Populates two different views, because they are genuinely different:
@@ -244,8 +244,15 @@ class CertificationSession:
         bound SDK method raises ``TypeError: unexpected keyword argument
         'Line1'``. Resolving that here means every endpoint gets it right rather
         than each notebook cell hand-mapping aliases.
+
+        *model* names the concrete request class for endpoints whose body is
+        polymorphic. ``POST /job/{id}/timeline`` is one: the body varies by
+        ``taskCode`` (``SimpleTaskRequest``, ``CarrierTaskRequest``, ...), so the
+        route deliberately declares no ``request_model`` and the operator picks
+        the one they are certifying. Without this the session fell back to the
+        route's *query-params* model and rejected a valid body.
         """
-        model_cls = self.request_model()
+        model_cls = model or self.request_model()
         if model_cls is None:
             self.request_payload = dict(data)
             self.call_kwargs = dict(data)

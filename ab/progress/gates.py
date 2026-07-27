@@ -373,7 +373,12 @@ def _route_has_params_model(file_content: str, endpoint_path: str) -> bool:
         re.DOTALL,
     )
 
-    for match in route_pattern.finditer(file_content):
+    # Strip comments first. The pattern above cannot match across a ")", so a
+    # single parenthesis inside a comment *within* a Route(...) block truncates
+    # the match before params_model is seen and silently fails the gate.
+    uncommented = re.sub(r"#[^\n]*", "", file_content)
+
+    for match in route_pattern.finditer(uncommented):
         route_text = match.group(0)
         if "params_model" in route_text:
             return True

@@ -34,6 +34,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+from ab.progress.certification import MutationClass  # noqa: E402
 from ab.progress.example_gen import strip_list_wrapper  # noqa: E402
 from ab.progress.example_index import build_example_index  # noqa: E402
 from ab.progress.example_verify import compare  # noqa: E402
@@ -137,7 +138,7 @@ def _write_results(results: dict[str, dict], today: str) -> None:
     merged.update(results)
     ordered = {k: merged[k] for k in sorted(merged)}
     RESULTS_JSON.write_text(
-        json.dumps({"schema": 1, "results": ordered}, indent=2, ensure_ascii=False) + "\n",
+        json.dumps({"schema": 2, "results": ordered}, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
     print(
@@ -230,6 +231,12 @@ def main(argv: list[str] | None = None) -> int:
                     "status": "passing" if matches else "failing",
                     "checked": today,
                     "source": "live",
+                    # Schema 2 fields. The workbench writes them too, and both
+                    # writers share this file — an entry missing them makes the
+                    # whole file fail schema-2 validation the moment the
+                    # workbench certifies anything.
+                    "environment": "staging",
+                    "mutation_class": MutationClass.READ_ONLY.value,
                     "fixture": fixture,
                     "detail": detail,
                 }

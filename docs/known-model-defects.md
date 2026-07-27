@@ -18,6 +18,20 @@ the model or the API is wrong.
 | `api.partners.list` | `Partner.id` | `str` | `1` (int) | Same shape of defect as `Commodity.id`. |
 | `api.dashboard.get_grid_views` | `DashboardSummary.data[].step` | `int` | `"2."` (str) | Not merely a string — `"2."` does not parse as an integer, so widening to `int \| str` is not enough on its own; the trailing dot needs a decision. |
 | `api.views.get_access_info` | `GridViewAccess` | object | `[{...}]` (list) | The endpoint returns a collection; the route/model expects a single object. Needs a list wrapper, not a field type change. |
+| `api.documents.list` | root | object | list | Same shape of defect as `GridViewAccess`, found once the comparator stopped drowning in false failures. |
+
+## Stale fixtures
+
+Live responses carry fields the committed fixture predates. These are not model
+defects — the SDK parses them — but the fixture no longer represents the
+endpoint. Refresh each through the workbench so the new fields are sanitized and
+approved rather than captured raw.
+
+| Endpoint | Fields live-only |
+| --- | --- |
+| `api.companies.get_details` | `addresses`, `contacts`, `settings` |
+| `api.lookup.get_refer_categories` | 12 fields incl. `actionType`, `companyID`, `contactID`, `directEmail`, `landingUrl` |
+| `api.lookup.get_refer_category_hierarchy` | same 12 fields |
 
 Each is covered by a regression test in `tests/test_compare.py`, so whichever
 way they are resolved, the comparator keeps proving it can still tell this class
@@ -39,6 +53,8 @@ endpoint against arbitrary data.
 | `examples.lots` | HTTP 400 | A valid lot request body. |
 | `examples.contacts_extended` | HTTP 400 | `statuses` must be a non-empty array. |
 | `examples.rfq` | HTTP 401 | Credentials or a scope the current staging user lacks. |
+| `examples.commodities`, `examples.commodity_maps`, `examples.partners`, `examples.dashboard`, `examples.views` | model validation | Blocked by the confirmed defects above, not by data. |
+| `examples.contacts`, `examples.companies_extended`, `examples.jobs.feedback`, `examples.jobs.on_hold`, `examples.jobs.payment`, `examples.jobs.shipment` | raises | Needs a staging record the current constants do not point at. |
 
 Add approved values to `examples/constants.py` so examples and tests agree on
 one source, then re-run the read-only sweep.

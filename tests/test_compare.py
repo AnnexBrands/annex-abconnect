@@ -35,7 +35,7 @@ def test_sanitized_identifiers_and_names_are_not_a_failure() -> None:
     live = {
         "id": "daf9b34b-ce6a-4f2f-9207-15278c06b7d2",
         "contactName": "Dana Whitfield",
-        "email": "dana.whitfield@lefflers.com",
+        "email": "dana.whitfield@test.com",
     }
     assert compare(live, fixture).ok
 

@@ -114,6 +114,9 @@ def _run_module(module: str, capture_dir: Path | None) -> tuple[bool, str]:
     env = dict(os.environ)
     if capture_dir is not None:
         env["AB_EXAMPLE_CAPTURE_DIR"] = str(capture_dir)
+        # This capture is compared and then discarded, so values the sanitizer
+        # could not classify are redacted rather than blocking the check.
+        env["AB_EXAMPLE_VERIFY"] = "1"
     proc = subprocess.run(
         [sys.executable, "-m", module],
         cwd=str(REPO_ROOT),

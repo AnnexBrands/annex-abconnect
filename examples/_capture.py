@@ -100,6 +100,49 @@ def capture_dir() -> Path:
 #: Env var an operator sets to opt INTO running state-mutating example calls.
 RUN_MUTATIONS_ENV = "AB_RUN_MUTATIONS"
 
+#: Set by ``scripts/run_examples.py``: this capture exists only to be compared
+#: and then thrown away, never to become a fixture.
+VERIFY_MODE_ENV = "AB_EXAMPLE_VERIFY"
+
+#: What a REVIEW-tier string becomes in a verify capture.
+REVIEW_PLACEHOLDER = "REVIEW-REDACTED"
+
+
+def verify_mode() -> bool:
+    """True when the harness is capturing purely to compare structure."""
+    return os.environ.get(VERIFY_MODE_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _placeholder(value: Any) -> Any:
+    """A stand-in of the same JSON type, carrying none of the original."""
+    if isinstance(value, str):
+        return REVIEW_PLACEHOLDER
+    if isinstance(value, float):
+        return 0.0
+    if isinstance(value, int):
+        return 0
+    return None
+
+
+def redact(node: Any, originals: list[Any]) -> Any:
+    """Replace every occurrence of a REVIEW-flagged value with a placeholder.
+
+    Matching is by value rather than by path, so a value flagged once is redacted
+    everywhere it appears. That over-redacts in principle -- an unrelated field
+    holding the same string loses it too -- which is the safe direction, and
+    costs nothing: the comparator reads types and structure, never values.
+    """
+    if isinstance(node, dict):
+        return {k: redact(v, originals) for k, v in node.items()}
+    if isinstance(node, list):
+        return [redact(v, originals) for v in node]
+    if node is None or isinstance(node, bool):
+        return node
+    for original in originals:
+        if type(node) is type(original) and node == original:
+            return _placeholder(node)
+    return node
+
 
 def mutations_enabled() -> bool:
     """True only when the operator explicitly opts into mutating calls.
@@ -162,24 +205,37 @@ def save(name: str, payload: Any) -> Path | None:
     sanitized, report = sanitize(data)
 
     if report.needs_review:
-        # Fail closed. REVIEW findings are values the sanitizer could not
-        # classify from context and therefore left *verbatim* — writing them
-        # would persist real data under a name that implies it was cleaned.
+        # REVIEW findings are values the sanitizer could not classify from
+        # context and therefore left *verbatim*. They never reach disk here.
         review = out.with_suffix(out.suffix + ".review.txt")
         review.parent.mkdir(parents=True, exist_ok=True)
         review.write_text(
-            f"{len(report.review)} value(s) could not be classified and were NOT written.\n"
-            f"Resolve them through the workbench, which can record an operator decision:\n"
+            f"{len(report.review)} value(s) could not be classified.\n"
+            f"To turn this capture into a committed fixture, resolve them through the\n"
+            f"workbench, which records an operator decision:\n"
             f"    s.propose_fixture(); s.approve_fixture(confirm=True, accept_review=True)\n\n"
             + "\n".join(d.render() for d in report.review)
             + "\n",
             encoding="utf-8",
         )
-        print(
-            f"  BLOCKED: {len(report.review)} value(s) need review — no fixture written.\n"
-            f"  review notes -> {review}"
-        )
-        return None
+
+        if not verify_mode():
+            # Capture mode: fail closed. Writing these would persist real data
+            # under a name implying it had been cleaned.
+            print(
+                f"  BLOCKED: {len(report.review)} value(s) need review — no fixture written.\n"
+                f"  review notes -> {review}"
+            )
+            return None
+
+        # Verify mode: the harness compares structure and discards the file, and
+        # free text (an error message, a note, a description) is flagged on most
+        # responses -- failing closed here would leave the sweep unable to check
+        # anything rather than making it safer. Redact to a same-typed
+        # placeholder: the unclassified value still never reaches disk, and shape
+        # -- all the comparator reads -- survives.
+        sanitized = redact(sanitized, [d.original for d in report.review])
+        print(f"  ({len(report.review)} unclassified value(s) redacted for comparison)")
 
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(sanitized, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

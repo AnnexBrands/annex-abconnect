@@ -9,8 +9,9 @@ tree of a public repository.
 Two properties close that hole, and both are asserted here:
 
 1. the committed fixture tree is not a reachable destination from ``save()``;
-2. nothing reaches disk unsanitized, and anything the sanitizer cannot classify
-   blocks the write rather than being written verbatim.
+2. nothing reaches disk unsanitized, and a value the sanitizer cannot classify
+   is never written verbatim — it blocks the capture outright, or, when the
+   harness is only comparing structure, is redacted to a same-typed placeholder.
 
 These are deliberately black-box: they assert on the *bytes on disk*, not on
 which helper was called, so a future capture helper that forgets to sanitize
@@ -35,7 +36,7 @@ FIXTURES_DIR = REPO_ROOT / "tests" / "fixtures"
 #: A response with one of everything the sanitizer is supposed to catch.
 LIVE_RESPONSE = {
     "companyName": "Lefflers Antiques",
-    "contactEmail": "dana.whitfield@lefflers.com",
+    "contactEmail": "dana.whitfield@test.com",
     "phone": "619-555-0134",
     "addressLine1": "7580 Metropolitan Dr",
     "city": "San Diego",
@@ -54,7 +55,7 @@ LIVE_RESPONSE = {
 
 _SECRETS = ("s3cr3t-carrier-key", "AKIAIOSFODNN7EXAMPLE")
 _PII = (
-    "dana.whitfield@lefflers.com",
+    "dana.whitfield@test.com",
     "619-555-0134",
     "7580 Metropolitan Dr",
     "daf9b34b-ce6a-4f2f-9207-15278c06b7d2",
@@ -171,6 +172,61 @@ def test_review_tier_blocks_the_write_and_leaves_a_note(tmp_path, monkeypatch) -
 def test_review_note_does_not_itself_become_a_fixture(tmp_path, monkeypatch) -> None:
     _capture_to(tmp_path, monkeypatch, {"name": "Dana Whitfield"})
     assert not list(tmp_path.glob("*.json"))
+
+
+# ---------------------------------------------------------------------------
+# Verify mode: comparable without disclosing
+# ---------------------------------------------------------------------------
+
+
+def test_verify_mode_redacts_review_values_instead_of_disclosing_them(
+    tmp_path, monkeypatch
+) -> None:
+    """The harness compares structure and throws the file away. Free text is
+    flagged on most responses, so failing closed here would stop the sweep
+    checking anything — but the unclassified value must still never land."""
+    monkeypatch.setenv(_capture.VERIFY_MODE_ENV, "1")
+    payload = {"errorMessage": "Invalid Access Key for tenant Lefflers", "code": 500}
+    out = _capture_to(tmp_path, monkeypatch, payload)
+
+    assert out is not None, "verify mode must still produce something to compare"
+    written = out.read_text(encoding="utf-8")
+    assert "Invalid Access Key for tenant Lefflers" not in written
+    data = json.loads(written)
+    assert data["errorMessage"] == _capture.REVIEW_PLACEHOLDER
+    assert isinstance(data["errorMessage"], str), "type must survive for comparison"
+    assert data["code"] == 500
+    assert list(tmp_path.glob("*.review.txt")), "the note is still produced"
+
+
+def test_verify_mode_still_refuses_the_committed_tree(monkeypatch) -> None:
+    monkeypatch.setenv(_capture.VERIFY_MODE_ENV, "1")
+    monkeypatch.setenv(_capture.CAPTURE_DIR_ENV, str(FIXTURES_DIR))
+    with pytest.raises(UnsafeCaptureTarget):
+        save("CompanyDetails.json", LIVE_RESPONSE)
+
+
+def test_verify_mode_does_not_weaken_secret_or_pii_handling(tmp_path, monkeypatch) -> None:
+    """Redaction is for REVIEW-tier values only; high-confidence detections are
+    still substituted, and secrets still never appear."""
+    monkeypatch.setenv(_capture.VERIFY_MODE_ENV, "1")
+    out = _capture_to(tmp_path, monkeypatch, LIVE_RESPONSE)
+    assert out is not None
+    written = out.read_text(encoding="utf-8")
+    for value in (*_SECRETS, *_PII):
+        assert value not in written
+
+
+def test_redaction_preserves_structure_and_types(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv(_capture.VERIFY_MODE_ENV, "1")
+    payload = {"note": "freeform text", "items": [{"note": "freeform text", "n": 1}]}
+    out = _capture_to(tmp_path, monkeypatch, payload)
+    assert out is not None
+    data = json.loads(out.read_text(encoding="utf-8"))
+    assert set(data) == set(payload)
+    assert isinstance(data["items"], list)
+    assert isinstance(data["items"][0]["note"], str)
+    assert data["items"][0]["n"] == 1
 
 
 # ---------------------------------------------------------------------------

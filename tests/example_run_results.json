@@ -1,17 +1,285 @@
 {
-  "schema": 2,
-  "_comment": "Committed run evidence. Schema 2 adds environment, mutation_class, fixture_sha256 (content-derived staleness) and the `evidence` block required for restoration-verified certification of mutating endpoints. See ab/progress/certification.py and docs/certification-evidence.md.",
+  "schema": 1,
   "results": {
     "api.address.validate": {
       "status": "passing",
-      "checked": "2026-06-06",
+      "checked": "2026-07-26",
       "source": "live",
-      "environment": "staging",
-      "mutation_class": "read_only",
       "fixture": "AddressIsValidResult.json",
-      "fixture_sha256": "641bb0d4e83af4d10153f3e5ed8aab035bece99c66c2fb20160a428976f69318",
-      "detail": null,
-      "sanitized": true
+      "detail": null
+    },
+    "api.catalog.get": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "CatalogExpandedDto.json",
+      "detail": null
+    },
+    "api.companies.get_by_id": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "CompanySimple.json",
+      "detail": null
+    },
+    "api.companies.get_details": {
+      "status": "failing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "CompanyDetails.json",
+      "detail": "+ addresses: live only, fixture stale\n+ contacts: live only, fixture stale\n+ settings: live only, fixture stale"
+    },
+    "api.contacts.get": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "ContactSimple.json",
+      "detail": null
+    },
+    "api.contacts.get_details": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "ContactDetailedInfo.json",
+      "detail": null
+    },
+    "api.dashboard.get_grid_views": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "GridViewInfo.json",
+      "detail": null
+    },
+    "api.documents.list": {
+      "status": "failing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "Document.json",
+      "detail": "~ <root>: fixture object, live list"
+    },
+    "api.jobs.form.shipments": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "FormsShipmentPlan.json",
+      "detail": null
+    },
+    "api.jobs.get": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "Job.json",
+      "detail": null
+    },
+    "api.jobs.get_calendar_items": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "CalendarItem.json",
+      "detail": null
+    },
+    "api.jobs.get_packaging_containers": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "PackagingContainer.json",
+      "detail": null
+    },
+    "api.jobs.get_price": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "JobPrice.json",
+      "detail": null
+    },
+    "api.jobs.get_update_page_config": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "JobUpdatePageConfig.json",
+      "detail": null
+    },
+    "api.jobs.note.get": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "JobNote.json",
+      "detail": null
+    },
+    "api.jobs.on_hold.list": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "ExtendedOnHoldInfo.json",
+      "detail": null
+    },
+    "api.jobs.search": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "JobSearchResult.json",
+      "detail": null
+    },
+    "api.jobs.timeline.response": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "TimelineResponse.json",
+      "detail": null
+    },
+    "api.jobs.tracking.get": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "TrackingInfo.json",
+      "detail": null
+    },
+    "api.jobs.tracking.v3": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "TrackingInfoV3.json",
+      "detail": null
+    },
+    "api.lookup.get_access_key": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "AccessKeySetup.json",
+      "detail": null
+    },
+    "api.lookup.get_access_keys": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "AccessKey.json",
+      "detail": null
+    },
+    "api.lookup.get_by_key": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "LookupValue.json",
+      "detail": null
+    },
+    "api.lookup.get_common_insurance": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "CommonInsuranceSlab.json",
+      "detail": null
+    },
+    "api.lookup.get_contact_types": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "ContactTypeEntity.json",
+      "detail": null
+    },
+    "api.lookup.get_countries": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "CountryCodeDto.json",
+      "detail": null
+    },
+    "api.lookup.get_density_class_map": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "DensityClassEntry.json",
+      "detail": null
+    },
+    "api.lookup.get_document_types": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "DocumentTypeBySource.json",
+      "detail": null
+    },
+    "api.lookup.get_items": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "LookupItem.json",
+      "detail": null
+    },
+    "api.lookup.get_job_statuses": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "JobStatus.json",
+      "detail": null
+    },
+    "api.lookup.get_parcel_package_types": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "ParcelPackageType.json",
+      "detail": null
+    },
+    "api.lookup.get_ppc_campaigns": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "PPCCampaign.json",
+      "detail": null
+    },
+    "api.lookup.get_refer_categories": {
+      "status": "failing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "LookupValue.json",
+      "detail": "+ [].actionType: live only, fixture stale\n+ [].companyID: live only, fixture stale\n+ [].contactID: live only, fixture stale\n+ [].createBy: live only, fixture stale\n+ [].directEmail: live only, fixture stale\n+ [].industryTypeID: live only, fixture stale\n+ [].industryTypes: live only, fixture stale\n+ [].isActive: live only, fixture stale\n+ [].isPaid: live only, fixture stale\n+ [].jobID: live only, fixture stale\n+ [].landingUrl: live only, fixture stale\n+ [].modifiedDdate: live only, fixture stale\n+ [].modifyBy: live only, fixture stale\n+ [].referCategoryID: live only, fixture stale\n+ [].referCategoryName: live only, fixture stale\n+ [].referSubCategoryID: live only, fixture stale\n+ [].referSubCategoryName: live only, fixture stale\n+ [].referUrl: live only, fixture stale\n+ [].referedInternetId: live only, fixture stale\n+ [].submissionUrl: live only, fixture stale"
+    },
+    "api.lookup.get_refer_category_hierarchy": {
+      "status": "failing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "LookupValue.json",
+      "detail": "+ [].actionType: live only, fixture stale\n+ [].companyID: live only, fixture stale\n+ [].contactID: live only, fixture stale\n+ [].createBy: live only, fixture stale\n+ [].directEmail: live only, fixture stale\n+ [].industryTypeID: live only, fixture stale\n+ [].industryTypes: live only, fixture stale\n+ [].isActive: live only, fixture stale\n+ [].isPaid: live only, fixture stale\n+ [].jobID: live only, fixture stale\n+ [].landingUrl: live only, fixture stale\n+ [].modifiedDdate: live only, fixture stale\n+ [].modifyBy: live only, fixture stale\n+ [].referCategoryID: live only, fixture stale\n+ [].referCategoryName: live only, fixture stale\n+ [].referSubCategoryID: live only, fixture stale\n+ [].referSubCategoryName: live only, fixture stale\n+ [].referUrl: live only, fixture stale\n+ [].referedInternetId: live only, fixture stale\n+ [].submissionUrl: live only, fixture stale"
+    },
+    "api.notes.list": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "GlobalNote.json",
+      "detail": null
+    },
+    "api.notes.suggest_users": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "SuggestedUser.json",
+      "detail": null
+    },
+    "api.sellers.get": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "SellerExpandedDto.json",
+      "detail": null
+    },
+    "api.shipments.get_global_accessorials": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "GlobalAccessorial.json",
+      "detail": null
+    },
+    "api.shipments.get_shipment": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "ShipmentInfo.json",
+      "detail": null
+    },
+    "api.web2lead.get": {
+      "status": "passing",
+      "checked": "2026-07-26",
+      "source": "live",
+      "fixture": "Web2LeadResponse.json",
+      "detail": null
     }
   }
 }

@@ -201,11 +201,22 @@ class EndpointCertification:
         return True
 
     @property
+    def returns_no_content(self) -> bool:
+        """True when the route declares no response model (HTTP 204).
+
+        Such an endpoint has no response body, so a response fixture and a
+        response-model test are not merely missing — there is nothing for them
+        to contain. Requiring them made a 204 endpoint permanently
+        uncertifiable. ``PATCH /job/{id}/timeline/{taskId}`` is one.
+        """
+        return not self.response_model
+
+    @property
     def structurally_complete(self) -> bool:
         return (
             self.has_example
-            and self.has_fixture
-            and self.has_model_test
+            and (self.returns_no_content or self.has_fixture)
+            and (self.returns_no_content or self.has_model_test)
             and self.has_sphinx
         )
 
@@ -264,9 +275,9 @@ class EndpointCertification:
         out: list[str] = []
         if not self.has_example:
             out.append("no canonical example")
-        if not self.has_fixture:
+        if not self.returns_no_content and not self.has_fixture:
             out.append("no fixture")
-        if not self.has_model_test:
+        if not self.returns_no_content and not self.has_model_test:
             out.append("no model test")
         if not self.has_sphinx:
             out.append("no Sphinx page")

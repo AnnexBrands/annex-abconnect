@@ -40,6 +40,10 @@ _TIMELINE = Route("GET", "/job/{jobDisplayId}/timeline", response_model="Timelin
 _POST_TIMELINE = Route(
     "POST",
     "/job/{jobDisplayId}/timeline",
+    # No request_model: the body is polymorphic by taskCode (Swagger BaseTaskModel
+    # with per-task-code examples; here BaseTimelineTaskRequest and its
+    # InTheFieldTaskRequest / SimpleTaskRequest / CarrierTaskRequest subclasses).
+    # Pinning the base here would reject every subclass's own fields.
     params_model="TimelineCreateParams",
     response_model="TimelineSaveResponse",
 )
@@ -52,7 +56,10 @@ _PATCH_TASK = Route(
     "PATCH",
     "/job/{jobDisplayId}/timeline/{timelineTaskId}",
     request_model="TimelineTaskUpdateRequest",
-    response_model="TimelineTask",
+    # Swagger declares 204 No Content and the API returns an empty body.
+    # Declaring TimelineTask here made the method claim to return a task it
+    # never receives.
+    response_model=None,
 )
 _DELETE_TASK = Route(
     "DELETE",
@@ -139,14 +146,13 @@ class JobTimelineEndpoint(BaseEndpoint):
         task_id: str,
         *,
         data: TimelineTaskUpdateRequest | dict,
-    ) -> TimelineTask:
+    ) -> None:
         """``PATCH /job/{jobDisplayId}/timeline/{timelineTaskId}``
 
         Request model: :class:`TimelineTaskUpdateRequest`.
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/timeline.update_task.html
         Request model: TimelineTaskUpdateRequest
-        Response model: TimelineTask
         """
         return self._request(
             _PATCH_TASK.bind(jobDisplayId=job_display_id, timelineTaskId=task_id),

@@ -217,6 +217,8 @@ from ab.api.models.jobs import (
     TrackingInfoV3,
     TrackingV3Params,
     TransferModel,
+    UpdateDateValue,
+    UpdateTruckValue,
     WorkTimeLogRequest,
 )
 from ab.api.models.lookup import (
@@ -413,7 +415,7 @@ __all__ = [
     "TimelineTask", "TimelineAgent", "TimelineResponse", "TimelineSaveResponse",
     "BaseTimelineTaskRequest", "InTheFieldTaskRequest", "SimpleTaskRequest", "CarrierTaskRequest",
     "TimeLogRequest", "TimeLogPauseRequest", "WorkTimeLogRequest", "InitialNoteRequest", "TaskTruckInfoRequest",
-    "TimelineTaskUpdateRequest", "IncrementStatusRequest",
+    "TimelineTaskUpdateRequest", "UpdateDateValue", "UpdateTruckValue", "IncrementStatusRequest",
     "TrackingInfo", "TrackingInfoV3",
     "ShipmentTrackingDetails", "ShipmentDetails", "ShipmentTrackingDocument",
     "JobNote", "JobNoteCreateRequest", "JobNoteUpdateRequest",

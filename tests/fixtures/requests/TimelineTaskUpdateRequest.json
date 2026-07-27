@@ -1,6 +1,5 @@
 {
-  "status": null,
-  "scheduledDate": null,
-  "completedDate": null,
-  "comments": null
+  "plannedStartDate": {
+    "value": "2026-08-05T14:00:00"
+  }
 }

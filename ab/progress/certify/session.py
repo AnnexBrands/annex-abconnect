@@ -230,7 +230,7 @@ class CertificationSession:
             self.route.params_model
         )
 
-    def validate_request(self, data: dict) -> Any:
+    def validate_request(self, data: dict, model: Any = None) -> Any:
         """Cast raw request data into the endpoint's model (steps 4-6).
 
         Populates two different views, because they are genuinely different:
@@ -244,8 +244,15 @@ class CertificationSession:
         bound SDK method raises ``TypeError: unexpected keyword argument
         'Line1'``. Resolving that here means every endpoint gets it right rather
         than each notebook cell hand-mapping aliases.
+
+        *model* names the concrete request class for endpoints whose body is
+        polymorphic. ``POST /job/{id}/timeline`` is one: the body varies by
+        ``taskCode`` (``SimpleTaskRequest``, ``CarrierTaskRequest``, ...), so the
+        route deliberately declares no ``request_model`` and the operator picks
+        the one they are certifying. Without this the session fell back to the
+        route's *query-params* model and rejected a valid body.
         """
-        model_cls = self.request_model()
+        model_cls = model or self.request_model()
         if model_cls is None:
             self.request_payload = dict(data)
             self.call_kwargs = dict(data)
@@ -542,13 +549,17 @@ class CertificationSession:
             "source": "workbench",
             "environment": self.environment,
             "mutation_class": self.mutation_class.value,
-            "fixture": f"{self.response_model_name}.json",
+            # A 204 endpoint has no response body, so no fixture to name.
+            "fixture": f"{self.response_model_name}.json" if self.response_model_name else None,
             # MUST come from the same function the verifier uses
             # (ab.progress.certification.fixture_sha256, which hashes the file
             # bytes on disk). Hashing the in-memory payload instead produces a
             # different digest for identical content, and every endpoint would
             # be reported stale the moment it was certified.
-            "fixture_sha256": committed_fixture_sha256(self.response_model_name),
+            "fixture_sha256": (
+                committed_fixture_sha256(self.response_model_name)
+                if self.response_model_name else None
+            ),
             "detail": None,
         }
         if self.sanitize_report:

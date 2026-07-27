@@ -16,7 +16,9 @@ from ab.progress.certification import MutationClass, MutationEvidence, fixture_s
 from ab.progress.report import RUN_RESULTS_JSON, is_report_current, load_run_results
 
 _PERSISTED_STATUSES = {"passing", "failing", "binary"}
-_SOURCES = {"live", "paste", "binary"}
+# "workbench" is written by ab.progress.certify when an operator certifies
+# an endpoint interactively — the only source for mutating endpoints.
+_SOURCES = {"live", "paste", "binary", "workbench"}
 #: Schema 2 (issue #69) added environment, mutation_class, fixture_sha256 and the
 #: mutation `evidence` block. Schema 1 entries still load, but carry no hash and
 #: are therefore reported as stale rather than verified.

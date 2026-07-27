@@ -1,9 +1,18 @@
 """Sphinx configuration for the AB SDK documentation."""
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 project = "AB SDK"
 copyright = "2026, AnnexBrands"
 author = "AnnexBrands"
-release = "0.1.12"
+
+# Read from package metadata rather than hand-maintained here: this was pinned
+# at 0.1.12 while the package shipped 0.1.14.
+try:
+    release = _pkg_version("annex-abconnect")
+except PackageNotFoundError:  # pragma: no cover - docs built without an install
+    release = "0.0.0+unknown"
 
 extensions = [
     "sphinx.ext.autodoc",

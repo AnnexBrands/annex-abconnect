@@ -18,6 +18,30 @@ ABCONNECT_CLIENT_SECRET=my-secret-uuid
 ABCONNECT_ENVIRONMENT=staging
 ```
 
+### OAuth scopes (optional)
+
+The SDK requests a scope set appropriate to the environment, so you normally
+set nothing:
+
+| Environment | Default scopes |
+|---|---|
+| `staging` | `roles portalApi customerPortalApi catalog offline_access` |
+| `production` | `roles portalApi customerPortalApi offline_access` |
+
+`catalog` is offered by the staging IdentityServer only. If your client is
+provisioned differently, override the whole set:
+
+```ini
+ABCONNECT_SCOPES=roles portalApi offline_access
+```
+
+The server rejects the **entire** grant with `invalid_scope` when any one
+requested scope is not provisioned for your client, so the override must be a
+subset your client allows. Keep `offline_access` unless you want a password
+grant on every session — it is what makes the server issue a refresh token.
+A scope change applies at the next password grant; delete the cached token
+under `~/.cache/ab/` to apply it immediately.
+
 ## Basic Usage
 
 ```python

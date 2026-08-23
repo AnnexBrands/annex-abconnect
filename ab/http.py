@@ -87,22 +87,56 @@ class HttpClient:
         """Password grant using caller-supplied credentials."""
         if not username or not password:
             raise AuthenticationError("Password grant requires username and password")
+        scope = self._settings.oauth_scopes
         data = {
             "grant_type": "password",
             "username": username,
             "password": password,
             "client_id": self._settings.client_id,
             "client_secret": self._settings.client_secret,
-            "scope": "offline_access",
+            "scope": scope,
         }
         resp = requests.post(self._settings.identity_url, data=data, timeout=self._settings.timeout)
         if not resp.ok:
-            raise AuthenticationError(
-                f"Login failed for {username}: {resp.status_code} {resp.text}"
-            )
+            raise AuthenticationError(self._login_failure_message(username, resp, scope))
         return self._store_token(resp.json())
 
+    def _login_failure_message(self, username: str, resp: "requests.Response", scope: str) -> str:
+        """Explain a failed grant, spelling out scope rejections.
+
+        The server rejects the *whole* grant with a bare ``invalid_scope`` when
+        any single requested scope is not provisioned for the client, without
+        saying which one -- so name the set that was asked for and where to
+        change it.
+        """
+        base = f"Login failed for {username}: {resp.status_code} {resp.text}"
+        try:
+            error = resp.json().get("error")
+        except ValueError:
+            error = None
+        if error != "invalid_scope":
+            return base
+        return (
+            f"{base}\nRequested scopes: {scope!r}. The server rejects the entire "
+            "grant when any one scope is not provisioned for client "
+            f"{self._settings.client_id!r} on {self._settings.environment}. Set "
+            "ABCONNECT_SCOPES (or ABConnectSettings.scopes) to the subset your "
+            "client allows."
+        )
+
     def _refresh_token(self, refresh_token: str) -> Optional[Token]:
+        """Exchange a refresh token for a fresh access token.
+
+        Deliberately sends **no** ``scope``: the refresh token already carries
+        the scopes granted to it, and the server replays them in full (verified
+        against staging on 2026-08-23). Passing a scope here could only narrow
+        the result, and passing a *wider* set than was originally granted is an
+        error.
+
+        One consequence: changing :attr:`~ab.config.ABConnectSettings.scopes`
+        takes effect at the next password grant, not the next refresh. Clear the
+        stored token to apply a scope change immediately.
+        """
         data = {
             "grant_type": "refresh_token",
             "refresh_token": refresh_token,

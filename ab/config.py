@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Literal, Optional
+from typing import ClassVar, Literal, Optional
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -45,6 +45,14 @@ class ABConnectSettings(BaseSettings):
         default="production", description="Target environment"
     )
     access_key: Optional[str] = Field(default=None, description="ABC API access key")
+    scopes: Optional[str] = Field(
+        default=None,
+        description=(
+            "Space-separated OAuth scopes to request. When unset, defaults to "
+            "the environment's scope set (see the `oauth_scopes` property). "
+            "Override when your client is provisioned differently."
+        ),
+    )
     timeout: int = Field(default=30, description="HTTP request timeout in seconds")
     max_attempts: int = Field(default=3, description="Max total attempts per request (1 initial + retries)")
 
@@ -66,6 +74,29 @@ class ABConnectSettings(BaseSettings):
                 "Set them as environment variables or in your .env file."
             )
         return self
+
+    #: Scopes requested when :attr:`scopes` is not set. ``catalog`` exists on the
+    #: staging IdentityServer only -- production answers ``invalid_scope`` for it,
+    #: and one bad scope fails the whole grant, so the default is per-environment
+    #: rather than a single list. Verified against both servers on 2026-08-23.
+    #: Move ``catalog`` into the production tuple once that server offers it.
+    _DEFAULT_SCOPES: ClassVar[dict[str, tuple[str, ...]]] = {
+        "staging": ("roles", "portalApi", "customerPortalApi", "catalog", "offline_access"),
+        "production": ("roles", "portalApi", "customerPortalApi", "offline_access"),
+    }
+
+    @property
+    def oauth_scopes(self) -> str:
+        """Space-separated scopes to request from the token endpoint.
+
+        ``offline_access`` is what makes the server issue a refresh token, which
+        the SDK relies on to avoid a password grant per session; it stays in
+        every default. A custom :attr:`scopes` value is passed through verbatim,
+        so an override that drops it also drops refresh-token support.
+        """
+        if self.scopes is not None:
+            return self.scopes
+        return " ".join(self._DEFAULT_SCOPES[self.environment])
 
     @property
     def identity_url(self) -> str:

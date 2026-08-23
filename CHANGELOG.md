@@ -4,6 +4,46 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
+## [0.2.1] - 2026-08-23
+
+OAuth scopes are configurable, and the requested set now matches what each
+IdentityServer actually offers.
+
+### Fixed
+
+- The token grant hardcoded `scope=offline_access`, so every token the SDK
+  minted carried that one scope and never the `catalog` scope the staging
+  IdentityServer offers. Neither API enforces scopes today, which is why
+  nothing had broken; the day the Catalog API starts enforcing, every call
+  would have returned 403.
+
+### Added
+
+- `ABCONNECT_SCOPES` (`ABConnectSettings.scopes`) overrides the requested
+  scopes; `ABConnectSettings.oauth_scopes` resolves the effective value.
+- Per-environment defaults, because the servers differ and one unavailable
+  scope fails the *whole* grant with `invalid_scope`:
+  - staging: `roles portalApi customerPortalApi catalog offline_access`
+  - production: `roles portalApi customerPortalApi offline_access`
+  Both verified against the live discovery documents and real grants on
+  2026-08-23. `catalog` exists on staging only; `openid` and `profile` are
+  advertised by both servers but rejected for the `toolsApp` client.
+- A failed grant returning `invalid_scope` now reports the scopes requested,
+  the client ID, the environment, and the setting to change — the server
+  rejects the whole grant without naming the offending scope.
+- `tests/integration/test_oauth_scopes.py` pins each environment's default
+  against that server's advertised scopes, so a default that drifts from the
+  server fails loudly. One test deliberately fails when production gains the
+  `catalog` scope, as the prompt to move it into the production default.
+
+### Notes
+
+- The refresh grant deliberately sends no `scope`: the refresh token replays
+  the scopes it was granted. A scope change therefore takes effect at the next
+  password grant — clear the stored token to apply it immediately.
+- `offline_access` stays in every default; without it the server issues no
+  refresh token and every session falls back to a password grant.
+
 ## [0.2.0] - 2026-08-23
 
 Catalog schema migration. The Catalog API's database schema changed and the SDK

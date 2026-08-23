@@ -1,0 +1,25 @@
+{
+  "id": 4,
+  "lotId": 10,
+  "clientItemData": [
+    {
+      "Qty": 1,
+      "L": 25.0,
+      "W": 19.0,
+      "H": 13.0,
+      "Wgt": 42.0,
+      "Cpack": "",
+      "description": "Client-supplied dims",
+      "forceCrate": null,
+      "ItemID": "",
+      "Notes": "",
+      "notedConditions": "",
+      "doNotTip": null,
+      "commodityId": ""
+    }
+  ],
+  "createdBy": 6006,
+  "createdDate": "2026-08-23T15:05:47.424218Z",
+  "modifiedBy": null,
+  "modifiedDate": null
+}

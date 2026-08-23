@@ -1,7 +1,7 @@
 {
   "Id": null,
-  "CustomerCatalogId": null,
-  "Agent": null,
+  "AgentCompanyId": null,
+  "PlatformCatalogId": null,
   "Title": null,
   "StartDate": null,
   "EndDate": null,

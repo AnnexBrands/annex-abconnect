@@ -11,13 +11,13 @@ from __future__ import annotations
 from ab.progress.inventory import RouteClass, reconcile
 
 #: Public discoverable SDK methods carrying a Route. The certification denominator.
-EXPECTED_PUBLIC_ENDPOINTS = 218
+EXPECTED_PUBLIC_ENDPOINTS = 226
 
 #: Every module-level Route object under ab.api.endpoints (the gate/fixture feed).
-EXPECTED_ROUTE_OBJECTS = 235
+EXPECTED_ROUTE_OBJECTS = 245
 
 #: Underscore-prefixed module constants shared by several public methods.
-EXPECTED_INTERNAL_SHARED = 18
+EXPECTED_INTERNAL_SHARED = 20
 
 
 def test_public_endpoint_inventory_is_pinned() -> None:
@@ -34,7 +34,7 @@ def test_route_object_inventory_is_pinned() -> None:
 
 
 def test_inventories_reconcile_exactly() -> None:
-    """235 route objects = 217 bound to public methods + 18 internal constants."""
+    """245 route objects = 225 bound to public methods + 20 internal constants."""
     r = reconcile()
     bound = len(r.by_class(RouteClass.PUBLIC))
     internal = len(r.by_class(RouteClass.INTERNAL_SHARED))

@@ -34,6 +34,7 @@ if TYPE_CHECKING:
         NotificationsEndpoint,
         PartnersEndpoint,
         PaymentsEndpoint,
+        PlatformsEndpoint,
         ReportsEndpoint,
         RFQEndpoint,
         SellersEndpoint,
@@ -101,6 +102,7 @@ class ABConnectAPI:
     catalog: CatalogEndpoint
     lots: LotsEndpoint
     sellers: SellersEndpoint
+    platforms: PlatformsEndpoint
     autoprice: AutoPriceEndpoint
     web2lead: Web2LeadEndpoint
     webhooks: WebhooksEndpoint
@@ -253,6 +255,7 @@ class ABConnectAPI:
             NotificationsEndpoint,
             PartnersEndpoint,
             PaymentsEndpoint,
+            PlatformsEndpoint,
             ReportsEndpoint,
             RFQEndpoint,
             SellersEndpoint,
@@ -296,6 +299,7 @@ class ABConnectAPI:
         self.catalog: CatalogEndpoint = CatalogEndpoint(self._catalog)
         self.lots: LotsEndpoint = LotsEndpoint(self._catalog)
         self.sellers: SellersEndpoint = SellersEndpoint(self._catalog)
+        self.platforms: PlatformsEndpoint = PlatformsEndpoint(self._catalog)
 
         # ABC endpoints
         self.autoprice: AutoPriceEndpoint = AutoPriceEndpoint(self._abc)

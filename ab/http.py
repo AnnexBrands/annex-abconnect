@@ -47,6 +47,11 @@ class HttpClient:
         self._allow_password_fallback = allow_password_fallback
         self._extra_headers = extra_headers
 
+    @property
+    def environment(self) -> str:
+        """The environment this client targets (``"staging"`` or ``"production"``)."""
+        return self._settings.environment
+
     # ------------------------------------------------------------------
     # Authentication
     # ------------------------------------------------------------------

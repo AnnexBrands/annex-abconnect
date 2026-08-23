@@ -6,6 +6,14 @@
    :undoc-members:
 ```
 
+```{note}
+The lots surface targets the **migrated Catalog schema**, which is deployed to
+staging only. A lot no longer carries `customer_item_id` — its external
+identity lives per-platform in `platforms` — and `overriden_data` is now
+`item_data`. Calling these methods against production raises
+{class}`~ab.exceptions.CatalogSchemaMismatchError`.
+```
+
 ## Per-endpoint reference
 
 Each route-backed method has its own page rendering the HTTP route, the
@@ -28,11 +36,22 @@ lots/*
 
 `POST /Lot` — Create a new lot.
 
+**Returns:** {class}`~ab.api.models.lots.LotDto`
+
 ```python
 from ab import ABConnectAPI
 
 api = ABConnectAPI(env="staging")
-api.lots.create({"catalogId": 1, "name": "New Lot"})
+lot = api.lots.create(data={
+    "initialData": {"Qty": 1, "L": 24.0, "W": 18.0, "H": 12.0, "Wgt": 40.0},
+    "catalogs": [{"catalogId": 1, "lotNumber": "A-1"}],
+    "platforms": [{"platformId": 1, "platformItemId": "ITEM-001"}],
+})
+```
+
+```{note}
+Lot numbers must be unique within a catalog — the API answers `400
+Catalogs: Each lot must have a unique LotNumber within the catalog` otherwise.
 ```
 
 ### list
@@ -46,7 +65,10 @@ api.lots.create({"catalogId": 1, "name": "New Lot"})
 lots = api.lots.list(page_number=1, page_size=25)
 
 # Filter by lot number
-lots = api.lots.list(lot_number="L001")
+lots = api.lots.list(lot_number="A-1")
+
+# Filter by the lot's external ID on a platform
+lots = api.lots.list(platform_item_id="ITEM-001")
 ```
 
 ### get
@@ -56,15 +78,22 @@ lots = api.lots.list(lot_number="L001")
 **Returns:** {class}`~ab.api.models.lots.LotDto`
 
 ```python
-lot = api.lots.get(100)
+lot = api.lots.get(1)
+print(lot.initial_data.wgt, [p.platform_item_id for p in lot.platforms or []])
 ```
 
 ### update
 
-`PUT /Lot/{id}` — Update a lot.
+`PUT /Lot/{id}` — Update a lot. `initial_data` is create-only and cannot be
+changed here.
+
+**Returns:** {class}`~ab.api.models.lots.LotDto`
 
 ```python
-api.lots.update(100, {"name": "Updated Lot"})
+api.lots.update(1, data={
+    "itemData": [{"Qty": 1, "L": 26.0, "W": 20.0, "H": 14.0, "Wgt": 44.0}],
+    "catalogs": [{"catalogId": 1, "lotNumber": "A-1"}],
+})
 ```
 
 ### delete
@@ -72,15 +101,68 @@ api.lots.update(100, {"name": "Updated Lot"})
 `DELETE /Lot/{id}` — Delete a lot.
 
 ```python
-api.lots.delete(100)
+api.lots.delete(1)
 ```
 
-### get_overrides
+### merge
 
-`POST /Lot/overrides` — Get lot overrides for customer items.
+`POST /Lot/{targetId}/merge/{sourceId}` — Fold the source lot's catalog and
+platform associations into the target and remove the source.
 
-**Returns:** `list[`{class}`~ab.api.models.lots.LotOverrideDto`]`
+**Returns:** {class}`~ab.api.models.lots.LotDto`
+
+```{warning}
+Destructive: the source lot does not survive the call.
+```
 
 ```python
-overrides = api.lots.get_overrides(["item-id-1", "item-id-2"])
+merged = api.lots.merge(target_id=1, source_id=2)
+```
+
+### item_data
+
+`POST /Lot/ItemData` — Look up item data for lots by customer item ID. A read
+despite the POST verb; the query travels in the body because the ID list can be
+long. Replaces the retired `POST /Lot/get-overrides`.
+
+**Returns:** `list[`{class}`~ab.api.models.lots.LotItemDataDto``]`
+
+```python
+rows = api.lots.item_data(data={
+    "partnerId": 77,
+    "customerItemIds": ["ITEM-001", "ITEM-002"],
+})
+```
+
+### create_client_item_data
+
+`POST /Lot/{id}/ClientItemData` — Attach a client-supplied item data record to
+a lot. Each call adds a new record rather than replacing existing ones.
+
+**Returns:** {class}`~ab.api.models.lots.LotClientItemDataDto`
+
+```python
+record = api.lots.create_client_item_data(1, data={
+    "clientItemData": [{"Qty": 1, "L": 25.0, "W": 19.0, "H": 13.0, "Wgt": 42.0}],
+})
+```
+
+### list_client_item_data
+
+`GET /Lot/{id}/ClientItemData` — List a lot's client item data records
+(paginated).
+
+**Returns:** {class}`~ab.api.models.shared.PaginatedList`\[{class}`~ab.api.models.lots.LotClientItemDataDto`\]
+
+```python
+records = api.lots.list_client_item_data(1, page_size=25)
+```
+
+### delete_client_item_data
+
+`DELETE /Lot/{lotId}/ClientItemData/{clientItemDataId}` — Delete one client
+item data record from a lot.
+
+```python
+api.lots.delete_client_item_data(1, 4)
 ```

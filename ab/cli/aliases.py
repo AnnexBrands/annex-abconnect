@@ -20,6 +20,7 @@ ALIASES: dict[str, str] = {
     "note": "notes",
     "parc": "parcels",
     "pay": "payments",
+    "plat": "platforms",
     "sell": "sellers",
     "ship": "shipments",
     "tk": "timeline",

@@ -4,6 +4,84 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
+## [0.2.0] - 2026-08-23
+
+Catalog schema migration. The Catalog API's database schema changed and the SDK
+now models the **migrated schema, which is deployed to staging only**.
+Production still serves the pre-migration schema, so the `catalog`, `lots`,
+`sellers` and `platforms` endpoints raise `CatalogSchemaMismatchError` when the
+client targets production. Pin `annex-abconnect==0.1.15` to keep calling
+production's catalog surface until it migrates.
+
+Every route below was exercised against live staging on 2026-08-23; the two
+exceptions are called out under "Known gaps".
+
+### Breaking — retired routes
+
+- `POST /Bulk/insert` is gone, replaced by `POST /Bulk/upsert`.
+  `api.catalog.bulk_insert()` -> `api.catalog.bulk_upsert()`. The new route
+  returns `list[CatalogWithLotsDto]` (the old one returned nothing) and matches
+  rows on `customerCatalogId` / `customerItemId`, so re-sending a payload now
+  updates instead of duplicating.
+- `POST /Lot/get-overrides` is gone, replaced by `POST /Lot/ItemData`.
+  `api.lots.get_overrides(ids)` -> `api.lots.item_data(data=...)`, which takes a
+  `GetLotsItemDataQuery` (a required `partnerId` plus the ID list) and returns
+  `list[LotItemDataDto]` in place of `list[LotOverrideDto]`.
+
+### Breaking — retired fields, matching the database's `Obsolete*` columns
+
+- `Catalogs.Agent` -> `agentCompanyIds`. `CatalogDto.agent` (a single string) is
+  now `agent_company_ids` (a list), backed by the `CatalogAgentCompanies` join.
+  `api.catalog.list(agent=...)` -> `api.catalog.list(agent_company_id=...)`.
+- `Catalogs.CustomerCatalogId` is retired. A catalog's external identity lives
+  per-platform on `CatalogPlatformDto.platform_catalog_id`.
+  `api.catalog.list(customer_catalog_id=...)` ->
+  `api.catalog.list(platform_catalog_id=...)`.
+- `Lots.CustomerItemId` is retired. A lot's external identity lives per-platform
+  on `LotPlatformDto.platform_item_id`.
+  `api.lots.list(customer_item_id=...)` -> `api.lots.list(platform_item_id=...)`.
+- A catalog now has **one** seller (`Catalogs.SellerId`), not a list.
+  `CatalogWithSellersDto` is deleted; reads return a singular `seller` and
+  `AddCatalogRequest`/`UpdateCatalogRequest` take a required `sellerId` in place
+  of `sellerIds`. Both also now require `isCompleted`.
+- `overridenData` is renamed `itemData` on `LotDto`, `AddLotRequest` and
+  `UpdateLotRequest`.
+- `LotDataDto.value` is gone — the migrated swagger no longer declares it.
+- Response model changes: `GET /Catalog` and `GET /Catalog/{id}` return
+  `CatalogWithLotsDto`; `POST /Catalog` and `PUT /Catalog/{id}` return
+  `CatalogExpandedDto` (previously `CatalogWithSellersDto`).
+
+### Added
+
+- `api.platforms` — full CRUD over the new `/Platform` surface (`PlatformDto`,
+  `AddPlatformRequest`, `UpdatePlatformRequest`, `PlatformListParams`), plus the
+  `CatalogPlatformDto` / `LotPlatformDto` association models.
+- `api.catalog.merge(target_id, source_id)` and
+  `api.lots.merge(target_id, source_id)` — destructive; the source does not
+  survive the call.
+- Lot client item data: `api.lots.create_client_item_data()`,
+  `api.lots.list_client_item_data()`, `api.lots.delete_client_item_data()`
+  (`LotClientItemDataDto`, `AddLotClientItemDataRequest`).
+- `CatalogSchemaMismatchError`, raised before any request leaves the client when
+  the catalog surface is called against an environment running the old schema.
+
+### Fixed — contract corrections found against live staging
+
+- `BulkUpsertCatalogRequest.seller` is required, though swagger declares it
+  nullable: the API answers `400 Catalogs[0].Seller: The Seller field is
+  required` without it.
+
+### Known gaps — certified as unverified, not as working
+
+- `POST /Bulk/upsert` answers `404 Resource not found` on staging for any
+  non-empty `catalogs` list (an empty list returns `200 []`). The request shape
+  is confirmed by the API's own model binding; the handler fails downstream.
+  Unverified end to end.
+- `POST /Lot/ItemData` answers `200 []` for every query shape tried, including
+  one matching a freshly created lot on a matching partner's platform. The route
+  is reachable and the empty-array contract holds, but `LotItemDataDto`'s shape
+  is asserted from swagger rather than from a captured response.
+
 ## [0.1.15] - 2026-07-27
 
 Certification infrastructure release. The SDK surface changes are corrections

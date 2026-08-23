@@ -7,6 +7,25 @@ had invented field names for ``AddCatalogRequest``,
 ``UpdateCatalogRequest``, and ``BulkInsertRequest`` that did not match
 either source — see ``specs/036-lotsdb-migration-prep/gap-recommendations.md``.
 
+**Staging schema migration.** These models target the migrated Catalog
+schema, which at the time of writing is deployed to staging only. The
+breaking changes all follow the database's retired columns:
+
+- ``Catalogs.Agent`` is retired (``ObsoleteAgent``). Agents are now a
+  many-to-many through ``CatalogAgentCompanies``, surfaced as
+  ``agentCompanyIds``.
+- ``Catalogs.CustomerCatalogId`` is retired
+  (``ObsoleteCustomerCatalogId``). The catalog's external identity now
+  lives per-platform on
+  :class:`~ab.api.models.platforms.CatalogPlatformDto.platform_catalog_id`.
+- A catalog now has **one** seller (``Catalogs.SellerId``), not a list.
+  ``CatalogWithSellersDto`` is gone; reads return ``seller`` and writes
+  take ``sellerId``.
+
+The bulk upsert models are the exception — they still speak
+``customerCatalogId`` / ``customerItemId`` because bulk import matches
+incoming rows on the caller's own identifiers.
+
 ``SellerDto`` is a TYPE_CHECKING-only import to break the
 ``catalog`` ↔ ``sellers`` circular reference; :func:`_rebuild_catalog_models`
 at the bottom of the module does the runtime import and calls
@@ -22,38 +41,42 @@ from pydantic import Field
 
 from ab.api.models.base import RequestModel, ResponseModel
 from ab.api.models.lots import LotCatalogInformationDto, LotDataDto
+from ab.api.models.platforms import CatalogPlatformDto
 
 if TYPE_CHECKING:
     from ab.api.models.sellers import SellerDto
 
 
 class CatalogDto(ResponseModel):
-    """Core catalog information — parent of :class:`CatalogWithSellersDto`
-    and :class:`CatalogExpandedDto`."""
+    """Core catalog information — parent of :class:`CatalogExpandedDto`
+    and embedded in ``SellerExpandedDto.catalogs``."""
 
     id: int = Field(..., description="Catalog ID")
-    customer_catalog_id: Optional[str] = Field(
-        None, alias="customerCatalogId", description="Customer-facing catalog ID",
+    agent_company_ids: Optional[List[str]] = Field(
+        None, alias="agentCompanyIds", description="Agent company IDs assigned to the catalog",
     )
-    agent: Optional[str] = Field(None, description="Assigned agent code")
     title: Optional[str] = Field(None, description="Catalog title")
     start_date: datetime = Field(..., alias="startDate", description="Catalog start date-time")
     end_date: datetime = Field(..., alias="endDate", description="Catalog end date-time")
     is_completed: bool = Field(..., alias="isCompleted", description="Whether the catalog is completed")
 
 
-class CatalogWithSellersDto(CatalogDto):
-    """Catalog with embedded sellers — returned by ``POST /Catalog`` and
-    ``PUT /Catalog/{id}``."""
-
-    sellers: Optional[List["SellerDto"]] = Field(None, description="Attached sellers")
-
-
 class CatalogExpandedDto(CatalogDto):
-    """Catalog with sellers and lot summaries — returned by
-    ``GET /Catalog/{id}``."""
+    """Catalog with its seller and platform associations — returned by
+    ``POST /Catalog`` and ``PUT /Catalog/{id}``."""
 
-    sellers: Optional[List["SellerDto"]] = Field(None, description="Attached sellers")
+    seller: Optional["SellerDto"] = Field(None, description="Owning seller")
+    platforms: Optional[List[CatalogPlatformDto]] = Field(
+        None, description="Platform associations carrying the catalog's external IDs",
+    )
+
+
+class CatalogWithLotsDto(CatalogExpandedDto):
+    """Catalog with seller, platforms and lot summaries — returned by
+    ``GET /Catalog``, ``GET /Catalog/{id}``,
+    ``POST /Catalog/{targetId}/merge/{sourceId}`` and
+    ``POST /Bulk/upsert``."""
+
     lots: Optional[List[LotCatalogInformationDto]] = Field(
         None, description="Lot summaries belonging to the catalog",
     )
@@ -62,18 +85,22 @@ class CatalogExpandedDto(CatalogDto):
 class AddCatalogRequest(RequestModel):
     """Body for ``POST /Catalog``.
 
-    ``start_date`` and ``end_date`` are required per swagger (no
-    ``nullable: true``). All other fields are optional.
+    ``start_date``, ``end_date``, ``is_completed`` and ``seller_id`` are
+    required per swagger (no ``nullable: true``). All other fields are
+    optional.
     """
 
-    customer_catalog_id: Optional[str] = Field(
-        None, alias="customerCatalogId", description="Customer-facing catalog ID",
+    agent_company_ids: Optional[List[str]] = Field(
+        None, alias="agentCompanyIds", description="Agent company IDs to assign",
     )
-    agent: Optional[str] = Field(None, description="Assigned agent code")
     title: Optional[str] = Field(None, description="Catalog title")
     start_date: datetime = Field(..., alias="startDate", description="Catalog start date-time")
     end_date: datetime = Field(..., alias="endDate", description="Catalog end date-time")
-    seller_ids: Optional[List[int]] = Field(None, alias="sellerIds", description="Seller IDs to attach")
+    is_completed: bool = Field(..., alias="isCompleted", description="Whether the catalog is completed")
+    seller_id: int = Field(..., alias="sellerId", description="Owning seller ID")
+    platforms: Optional[List[CatalogPlatformDto]] = Field(
+        None, description="Platforms this catalog is published to, with its external ID on each",
+    )
 
 
 class UpdateCatalogRequest(AddCatalogRequest):
@@ -85,10 +112,12 @@ class CatalogListParams(RequestModel):
     """Query parameters for ``GET /Catalog``."""
 
     id: Optional[int] = Field(None, alias="Id", description="Filter by catalog ID")
-    customer_catalog_id: Optional[str] = Field(
-        None, alias="CustomerCatalogId", description="Filter by customer catalog ID",
+    agent_company_id: Optional[str] = Field(
+        None, alias="AgentCompanyId", description="Filter by assigned agent company ID",
     )
-    agent: Optional[str] = Field(None, alias="Agent", description="Filter by agent")
+    platform_catalog_id: Optional[str] = Field(
+        None, alias="PlatformCatalogId", description="Filter by the catalog's external ID on a platform",
+    )
     title: Optional[str] = Field(None, alias="Title", description="Filter by title")
     start_date: Optional[str] = Field(None, alias="StartDate", description="Filter by start date (date-time)")
     end_date: Optional[str] = Field(None, alias="EndDate", description="Filter by end date (date-time)")
@@ -103,49 +132,61 @@ class CatalogListParams(RequestModel):
 # =============================================================================
 
 
-class BulkInsertSellerRequest(RequestModel):
-    """Seller entry inside a bulk insert payload."""
+class BulkUpsertSellerRequest(RequestModel):
+    """Seller entry inside a bulk upsert payload."""
 
     name: Optional[str] = Field(None, description="Seller name")
     customer_display_id: int = Field(..., alias="customerDisplayId", description="Customer display ID")
     is_active: bool = Field(..., alias="isActive", description="Whether the seller is active")
 
 
-class BulkInsertLotRequest(RequestModel):
-    """Lot entry inside a bulk insert payload."""
+class BulkUpsertLotRequest(RequestModel):
+    """Lot entry inside a bulk upsert payload.
+
+    ``data`` is a single :class:`LotDataDto` — the bulk shape does not
+    split initial and override measurements the way ``POST /Lot`` does.
+    """
 
     customer_item_id: Optional[str] = Field(None, alias="customerItemId", description="Customer item ID")
     lot_number: Optional[str] = Field(None, alias="lotNumber", description="Lot number")
     image_links: Optional[List[str]] = Field(None, alias="imageLinks", description="Image URLs")
-    initial_data: Optional[LotDataDto] = Field(None, alias="initialData", description="Initial lot measurements")
-    overriden_data: Optional[List[LotDataDto]] = Field(
-        None, alias="overridenData", description="Per-catalog override entries",
-    )
+    data: Optional[LotDataDto] = Field(None, description="Lot measurements")
 
 
-class BulkInsertCatalogRequest(RequestModel):
-    """Catalog entry inside a bulk insert payload. Nests lots and sellers."""
+class BulkUpsertCatalogRequest(RequestModel):
+    """Catalog entry inside a bulk upsert payload. Nests its lots and its
+    single seller.
+
+    ``seller`` is **required**, which swagger gets wrong — it declares the
+    property nullable, but the API answers a payload without it with
+    ``400 Catalogs[0].Seller: The Seller field is required``. Verified
+    against staging on 2026-08-23.
+    """
 
     customer_catalog_id: Optional[str] = Field(None, alias="customerCatalogId", description="Customer catalog ID")
-    agent: Optional[str] = Field(None, description="Assigned agent code")
     title: Optional[str] = Field(None, description="Catalog title")
     start_date: datetime = Field(..., alias="startDate", description="Catalog start date-time")
     end_date: datetime = Field(..., alias="endDate", description="Catalog end date-time")
-    lots: Optional[List[BulkInsertLotRequest]] = Field(None, description="Lots in this catalog")
-    sellers: Optional[List[BulkInsertSellerRequest]] = Field(None, description="Sellers in this catalog")
+    lots: Optional[List[BulkUpsertLotRequest]] = Field(None, description="Lots in this catalog")
+    seller: BulkUpsertSellerRequest = Field(..., description="Seller that owns this catalog")
 
 
-class BulkInsertRequest(RequestModel):
-    """Body for ``POST /Bulk/insert``.
+class BulkUpsertRequest(RequestModel):
+    """Body for ``POST /Bulk/upsert``.
 
     Per swagger, the top-level payload contains exactly one key —
-    ``catalogs`` — a list of :class:`BulkInsertCatalogRequest`. Each
-    nested catalog carries its own lots and sellers. This is a nested
+    ``catalogs`` — a list of :class:`BulkUpsertCatalogRequest`. Each
+    nested catalog carries its own lots and seller. This is a nested
     bulk shape, *not* a flat list of rows.
+
+    Rows are matched on ``customer_catalog_id`` / ``customer_item_id``,
+    so re-sending a payload updates the existing records rather than
+    duplicating them — the behaviour change from the retired
+    ``POST /Bulk/insert``.
     """
 
-    catalogs: Optional[List[BulkInsertCatalogRequest]] = Field(
-        None, description="Catalogs to insert, each with nested lots and sellers",
+    catalogs: Optional[List[BulkUpsertCatalogRequest]] = Field(
+        None, description="Catalogs to upsert, each with nested lots and seller",
     )
 
 
@@ -158,8 +199,8 @@ def _rebuild_catalog_models() -> None:
     """
     from ab.api.models.sellers import SellerDto  # noqa: F401
 
-    CatalogWithSellersDto.model_rebuild()
     CatalogExpandedDto.model_rebuild()
+    CatalogWithLotsDto.model_rebuild()
 
 
 _rebuild_catalog_models()

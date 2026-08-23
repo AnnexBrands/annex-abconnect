@@ -1,0 +1,26 @@
+{
+  "id": 1,
+  "agentCompanyIds": [],
+  "title": "test",
+  "startDate": "2026-02-18T09:34:16.856000",
+  "endDate": "2026-02-18T11:35:16.856000",
+  "isCompleted": false,
+  "seller": {
+    "id": 3,
+    "name": "string",
+    "customerDisplayId": 1,
+    "isActive": true,
+    "displayId": null
+  },
+  "platforms": [],
+  "lots": [
+    {
+      "id": 2,
+      "lotNumber": "42"
+    },
+    {
+      "id": 1,
+      "lotNumber": "string"
+    }
+  ]
+}

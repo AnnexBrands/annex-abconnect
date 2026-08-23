@@ -1,6 +1,6 @@
 {
-  "customerItemId": null,
   "imageLinks": null,
-  "overridenData": null,
-  "catalogs": null
+  "itemData": null,
+  "catalogs": null,
+  "platforms": null
 }

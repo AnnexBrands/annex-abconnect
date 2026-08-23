@@ -6,6 +6,14 @@
    :undoc-members:
 ```
 
+```{note}
+The catalog surface targets the **migrated Catalog schema**, which is deployed
+to staging only. A catalog carries `agent_company_ids`, exactly one `seller`,
+and per-platform external IDs in `platforms`; the old `customer_catalog_id`,
+`agent` and `sellers` list are gone. Calling these methods against production
+raises {class}`~ab.exceptions.CatalogSchemaMismatchError`.
+```
+
 ## Per-endpoint reference
 
 Each route-backed method has its own page rendering the HTTP route, the
@@ -28,47 +36,68 @@ catalog/*
 
 `POST /Catalog` — Create a new catalog.
 
+**Returns:** {class}`~ab.api.models.catalog.CatalogExpandedDto`
+
 ```python
 from ab import ABConnectAPI
 
 api = ABConnectAPI(env="staging")
-result = api.catalog.create({"name": "New Catalog"})
+created = api.catalog.create(data={
+    "title": "Fall Auction",
+    "startDate": "2026-09-01T00:00:00Z",
+    "endDate": "2026-09-30T23:59:59Z",
+    "isCompleted": False,
+    "sellerId": 2,
+    "platforms": [{"platformId": 1, "platformCatalogId": "FALL-2026"}],
+})
+print(created.seller.name)
 ```
 
 ### list
 
 `GET /Catalog` — List catalogs with optional filters (paginated).
 
-**Returns:** {class}`~ab.api.models.shared.PaginatedList`\[{class}`~ab.api.models.catalog.CatalogExpandedDto`\]
+**Returns:** {class}`~ab.api.models.shared.PaginatedList`\[{class}`~ab.api.models.catalog.CatalogWithLotsDto`\]
 
 ```python
 # List all catalogs
 catalogs = api.catalog.list(page_number=1, page_size=25)
 
-# Filter by agent and completion status
-catalogs = api.catalog.list(agent="Smith", is_completed=False)
+# Filter by agent company and completion status
+catalogs = api.catalog.list(agent_company_id="...", is_completed=False)
+
+# Filter by a catalog's external ID on a platform
+catalogs = api.catalog.list(platform_catalog_id="FALL-2026")
 
 # Filter by seller IDs
-catalogs = api.catalog.list(seller_ids=[1103])
+catalogs = api.catalog.list(seller_ids=[2])
 ```
 
 ### get
 
 `GET /Catalog/{id}` — Get a catalog by ID.
 
-**Returns:** {class}`~ab.api.models.catalog.CatalogExpandedDto`
+**Returns:** {class}`~ab.api.models.catalog.CatalogWithLotsDto`
 
 ```python
 catalog = api.catalog.get(1)
-print(catalog.name)
+print(catalog.title, catalog.seller.name, len(catalog.lots or []))
 ```
 
 ### update
 
 `PUT /Catalog/{id}` — Update a catalog.
 
+**Returns:** {class}`~ab.api.models.catalog.CatalogExpandedDto`
+
 ```python
-api.catalog.update(1, {"name": "Updated Catalog"})
+api.catalog.update(1, data={
+    "title": "Fall Auction (revised)",
+    "startDate": "2026-09-01T00:00:00Z",
+    "endDate": "2026-09-30T23:59:59Z",
+    "isCompleted": False,
+    "sellerId": 2,
+})
 ```
 
 ### delete
@@ -79,10 +108,43 @@ api.catalog.update(1, {"name": "Updated Catalog"})
 api.catalog.delete(1)
 ```
 
-### bulk_insert
+### merge
 
-`POST /Catalog/bulkInsert` — Bulk insert catalog items.
+`POST /Catalog/{targetId}/merge/{sourceId}` — Fold the source catalog's lots
+into the target and remove the source.
+
+**Returns:** {class}`~ab.api.models.catalog.CatalogWithLotsDto`
+
+```{warning}
+Destructive: the source catalog does not survive the call.
+```
 
 ```python
-api.catalog.bulk_insert({"items": [...]})
+merged = api.catalog.merge(target_id=1, source_id=2)
+```
+
+### bulk_upsert
+
+`POST /Bulk/upsert` — Upsert a nested tree of catalogs, each with its lots and
+its seller. Rows are matched on `customer_catalog_id` / `customer_item_id`, so
+re-sending a payload updates the existing records rather than duplicating them.
+
+**Returns:** `list[`{class}`~ab.api.models.catalog.CatalogWithLotsDto``]`
+
+```python
+api.catalog.bulk_upsert(data={"catalogs": [{
+    "customerCatalogId": "FALL-2026",
+    "title": "Fall Auction",
+    "startDate": "2026-09-01T00:00:00Z",
+    "endDate": "2026-09-30T23:59:59Z",
+    "seller": {"name": "Estate Co", "customerDisplayId": 1001, "isActive": True},
+    "lots": [{"customerItemId": "ITEM-001", "lotNumber": "A-1",
+              "data": {"Qty": 1, "L": 24.0, "W": 18.0, "H": 12.0, "Wgt": 40.0}}],
+}]})
+```
+
+```{note}
+`seller` is required on every bulk catalog entry, though swagger declares it
+nullable. Staging additionally answers `404` for any non-empty `catalogs` list —
+see `FIXTURES.md` for the current certification status of this route.
 ```

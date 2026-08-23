@@ -31,7 +31,8 @@ if TYPE_CHECKING:
 
 class SellerDto(ResponseModel):
     """Seller summary — returned by ``POST /Seller``, ``PUT /Seller/{id}``,
-    and embedded in ``CatalogWithSellersDto.sellers``."""
+    and embedded as the singular ``seller`` on
+    :class:`~ab.api.models.catalog.CatalogExpandedDto`."""
 
     id: int = Field(..., description="Seller ID")
     name: Optional[str] = Field(None, description="Seller name")

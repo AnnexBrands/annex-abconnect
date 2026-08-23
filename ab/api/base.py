@@ -7,11 +7,28 @@ import re
 from typing import Any, Optional, Tuple, Type
 
 from ab.api.route import Route
+from ab.exceptions import CatalogSchemaMismatchError
 from ab.http import HttpClient
 
 logger = logging.getLogger(__name__)
 
 _LIST_RE = re.compile(r"^List\[(\w+)]$")
+
+#: Environments running the migrated Catalog schema that
+#: ``ab.api.models.{catalog,lots,sellers,platforms}`` are written against.
+#: Production still serves the pre-migration schema — see
+#: :class:`~ab.exceptions.CatalogSchemaMismatchError`.
+_CATALOG_SCHEMA_ENVIRONMENTS = frozenset({"staging"})
+
+_CATALOG_SCHEMA_MISMATCH_MESSAGE = (
+    "The catalog surface targets the migrated Catalog schema "
+    "(agentCompanyIds, a singular seller, per-platform external IDs, "
+    "/Platform, /Bulk/upsert), which is deployed to staging only. This "
+    "client targets {environment!r}, which still serves the legacy schema, "
+    "so {method} {path} would send a body the API rejects or drop fields it "
+    "still returns. Use env='staging', or pin annex-abconnect==0.1.15 for "
+    "the legacy catalog models."
+)
 
 
 class BaseEndpoint:
@@ -27,6 +44,23 @@ class BaseEndpoint:
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
+
+    def _guard_schema_support(self, route: Route, client: HttpClient) -> None:
+        """Fail fast when the route's surface does not match the environment.
+
+        Only the catalog surface is version-skewed today: the SDK models the
+        migrated schema, which only staging serves.
+        """
+        if route.api_surface != "catalog":
+            return
+        environment = getattr(client, "environment", None)
+        if environment is None or environment in _CATALOG_SCHEMA_ENVIRONMENTS:
+            return
+        raise CatalogSchemaMismatchError(
+            _CATALOG_SCHEMA_MISMATCH_MESSAGE.format(
+                environment=environment, method=route.method, path=route.path,
+            )
+        )
 
     def _resolve_model(self, name: str) -> Type:
         """Lazily resolve a model name string to its class."""
@@ -111,6 +145,9 @@ class BaseEndpoint:
           ``json`` is in kwargs)
         - response model casting (single or ``List[Model]``)
         """
+        target = client or self._client
+        self._guard_schema_support(route, target)
+
         # Validate outbound body
         if "json" in kwargs and route.request_model:
             model_cls = self._resolve_model(route.request_model)
@@ -125,7 +162,6 @@ class BaseEndpoint:
             if hasattr(model_cls, "check"):
                 kwargs["params"] = model_cls.check(params)
 
-        target = client or self._client
         if route.auth_optional:
             kwargs.setdefault("auth_optional", True)
         response = target.request(route.method, route.path, **kwargs)
@@ -175,6 +211,8 @@ class BaseEndpoint:
     def _paginated_request(self, route: Route, item_model: str, **kwargs: Any) -> Any:
         """Dispatch a route expecting a PaginatedList response."""
         from ab.api.models.shared import PaginatedList
+
+        self._guard_schema_support(route, self._client)
 
         # Validate outbound query params (mirrors _request logic)
         if "params" in kwargs and route.params_model:

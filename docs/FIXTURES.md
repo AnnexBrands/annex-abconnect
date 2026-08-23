@@ -8,14 +8,14 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 
 ## Summary
 
-- **Total endpoints**: 231
-- **Complete (all gates pass)**: 38
-- **G1 Model Fidelity**: 71/231 pass
-- **G2 Fixture Status**: 75/231 pass
-- **G3 Test Quality**: 139/231 pass
-- **G4 Doc Accuracy**: 157/231 pass
-- **G5 Param Routing**: 216/231 pass
-- **G6 Request Quality**: 223/231 pass
+- **Total endpoints**: 251
+- **Complete (all gates pass)**: 187
+- **G1 Model Fidelity**: 202/251 pass
+- **G2 Fixture Status**: 203/251 pass
+- **G3 Test Quality**: 237/251 pass
+- **G4 Doc Accuracy**: 249/251 pass
+- **G5 Param Routing**: 244/251 pass
+- **G6 Request Quality**: 244/251 pass
 
 ## Status Legend
 
@@ -25,239 +25,256 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 
 ## ACPortal Endpoints
 
-| Endpoint Path | Method | Req Model | Resp Model | G1 | G2 | G3 | G4 | G5 | G6 | Status | Notes |
-|---------------|--------|-----------|------------|----|----|----|----|----|----|--------|-------|
-| /companies/{id} | GET | — | CompanySimple | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /companies/{companyId}/details | GET | — | CompanyDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 500 on staging — needs company UUID with populated details |
-| /companies/{companyId}/fulldetails | GET | — | CompanyDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /companies/{companyId}/fulldetails | PUT | CompanyDetails | CompanyDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid CompanyDetails kwargs |
-| /companies/fulldetails | POST | CompanyDetails | str | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid CompanyDetails kwargs for new company |
-| /companies/search/v2 | POST | CompanySearchRequest | List[SearchCompanyResponse] | PASS | PASS | PASS | PASS | PASS | PASS | complete | Request fixture captured; response needs valid search that returns results |
-| /companies/list | POST | ListRequest | List[CompanySimple] | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid ListRequest kwargs |
-| /companies/availableByCurrentUser | GET | — | List[CompanySimple] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /contacts/user | GET | — | ContactSimple | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /contacts/{contactId}/primarydetails | GET | — | ContactPrimaryDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /contacts/{contactId}/editdetails | GET | — | ContactDetailedInfo | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 500 on staging — was previously captured but now fails |
-| /contacts/v2/search | POST | ContactSearchRequest | List[SearchContactEntityResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 400 — needs PageSize (1-32767) and PageNumber (1-32767) in request body |
-| /documents | GET | — | Document | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 500 on staging — was previously captured but now fails |
-| /address/isvalid | GET | — | AddressIsValidResult | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
-| /address/propertytype | GET | — | int | PASS | PASS | PASS | PASS | PASS | PASS | complete | Query params: needs valid address1, city, state, zip_code for a real address |
-| /lookup/contactTypes | GET | — | List[ContactTypeEntity] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /lookup/countries | GET | — | List[CountryCodeDto] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /lookup/jobStatuses | GET | — | List[JobStatus] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /lookup/items | GET | — | List[LookupItem] | PASS | PASS | PASS | PASS | PASS | PASS | complete | Returns 204 — research ABConnectTools for required query params |
-| /users/list | POST | ListRequest | List[User] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging. Model warning: response is paginated wrapper (totalCount, data) |
-| /users/roles | GET | — | List[str] | PASS | PASS | PASS | PASS | PASS | PASS | complete | Fixed — route uses List[str]; API returns plain strings, not UserRole objects |
-| /job/{jobDisplayId} | GET | — | Job | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 500 on staging |
-| /job/{jobDisplayId}/price | GET | — | JobPrice | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /job/{jobDisplayId}/calendaritems | GET | — | List[CalendarItem] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /job/{jobDisplayId}/updatePageConfig | GET | — | JobUpdatePageConfig | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /job/search | GET | — | JobSearchResult | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 404 on staging |
-| /job/{jobDisplayId}/timeline | GET | — | TimelineResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs job ID with active timeline |
-| /job/{jobDisplayId}/timeline/{taskCode}/agent | GET | — | TimelineAgent | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs job ID + task code |
-| /job/{jobDisplayId}/tracking | GET | — | TrackingInfo | FAIL | PASS | PASS | PASS | PASS | PASS | incomplete | Works but no fixture_file set in example |
-| /v3/job/{jobDisplayId}/tracking/{historyAmount} | GET | — | TrackingInfoV3 | FAIL | PASS | PASS | PASS | PASS | PASS | incomplete | Works but no fixture_file set in example |
-| /job/{jobDisplayId}/payment | GET | — | PaymentInfo | FAIL | FAIL | PASS | FAIL | FAIL | PASS | incomplete | Works but no fixture_file set in example |
-| /job/{jobDisplayId}/payment/sources | GET | — | List[PaymentSource] | FAIL | FAIL | PASS | FAIL | PASS | PASS | incomplete | Works but no fixture_file set in example |
-| /job/{jobDisplayId}/payment/ACHPaymentSession | POST | ACHSessionRequest | ACHSessionResponse | FAIL | FAIL | PASS | FAIL | PASS | PASS | incomplete | Needs ACH session params |
-| /job/{jobDisplayId}/note | GET | — | List[JobNote] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | Model bug — id field typed as str but API returns int |
-| /job/{jobDisplayId}/parcelitems | GET | — | List[ParcelItem] | FAIL | PASS | FAIL | PASS | PASS | PASS | incomplete | Returns empty list — needs job with parcel items |
-| /job/{jobDisplayId}/parcel-items-with-materials | GET | — | List[ParcelItemWithMaterials] | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | Returns empty list — needs job with packed items |
-| /job/{jobDisplayId}/packagingcontainers | GET | — | List[PackagingContainer] | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | Model has warning fields — works but model incomplete |
-| /job/{jobDisplayId}/shipment/ratequotes | GET | — | List[RateQuote] | PASS | PASS | PASS | FAIL | FAIL | PASS | incomplete | 2026-02-14, staging |
-| /job/{jobDisplayId}/shipment/accessorials | GET | — | List[Accessorial] | PASS | PASS | PASS | FAIL | PASS | PASS | incomplete | 2026-02-14, staging |
-| /job/{jobDisplayId}/shipment/origindestination | GET | — | ShipmentOriginDestination | PASS | PASS | PASS | FAIL | PASS | PASS | incomplete | 2026-02-14, staging |
-| /job/{jobDisplayId}/shipment/ratesstate | GET | — | RatesState | PASS | PASS | PASS | FAIL | PASS | PASS | incomplete | 2026-02-14, staging |
-| /shipment | GET | — | ShipmentInfo | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
-| /shipment/accessorials | GET | — | List[GlobalAccessorial] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
-| /job/{jobDisplayId}/form/shipments | GET | — | List[FormsShipmentPlan] | PASS | PASS | PASS | FAIL | PASS | PASS | incomplete | 2026-02-14, staging |
-| /autoprice/quickquote | POST | QuoteRequestModel | QuickQuoteResponse | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | Request model validation error — field names don't match (originZip vs OriginZip) |
-| /AutoPrice/QuoteRequest | POST | QuoteRequestModel | QuoteRequestResponse | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | Needs items array with weight, class fields and valid origin/destination |
-| /rfq/{rfqId} | GET | — | QuoteRequestDisplayInfo | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 — run examples/rfq.py |
-| /rfq/forjob/{jobId} | GET | — | List[QuoteRequestDisplayInfo] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /rfq/{rfqId}/accept | POST | AcceptModel | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 — mutating |
-| /rfq/{rfqId}/decline | POST | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 — mutating |
-| /rfq/{rfqId}/cancel | POST | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 — mutating |
-| /rfq/{rfqId}/acceptwinner | POST | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 — mutating |
-| /rfq/{rfqId}/comment | POST | AcceptModel | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/rfq | GET | — | List[QuoteRequestDisplayInfo] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/rfq/statusof/{rfqServiceType}/forcompany/{companyId} | GET | — | QuoteRequestStatus | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/onhold | GET | — | List[ExtendedOnHoldInfo] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/onhold | POST | SaveOnHoldRequest | SaveOnHoldResponse | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/onhold | DELETE | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 — destructive |
-| /job/{jobDisplayId}/onhold/{id} | GET | — | OnHoldDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/onhold/{onHoldId} | PUT | SaveOnHoldRequest | SaveOnHoldResponse | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/onhold/followupuser/{contactId} | GET | — | OnHoldUser | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/onhold/followupusers | GET | — | List[OnHoldUser] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/onhold/{onHoldId}/comment | POST | OnHoldCommentRequest | OnHoldNoteDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/onhold/{onHoldId}/dates | PUT | SaveOnHoldDatesModel | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/onhold/{onHoldId}/resolve | PUT | ResolveOnHoldRequest | ResolveJobOnHoldResponse | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /reports/insurance | POST | InsuranceReportRequest | InsuranceReport | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /reports/sales | POST | SalesForecastReportRequest | SalesForecastReport | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /reports/sales/summary | POST | SalesForecastSummaryRequest | SalesForecastSummary | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /reports/salesDrilldown | POST | Web2LeadRevenueFilter | List[RevenueCustomer] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /reports/topRevenueCustomers | POST | Web2LeadRevenueFilter | List[RevenueCustomer] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /reports/topRevenueSalesReps | POST | Web2LeadRevenueFilter | List[RevenueCustomer] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /reports/referredBy | POST | ReferredByReportRequest | ReferredByReport | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /reports/web2Lead | POST | Web2LeadV2RequestModel | Web2LeadReport | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/email | POST | SendEmailRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 — fire-and-forget |
-| /job/{jobDisplayId}/email/senddocument | POST | SendDocumentEmailModel | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/email/createtransactionalemail | POST | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/email/{emailTemplateGuid}/send | POST | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/sms | GET | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/sms | POST | SendSMSModel | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/sms/read | POST | MarkSmsAsReadModel | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/sms/templatebased/{templateId} | GET | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /lookup/{masterConstantKey} | GET | — | List[LookupValue] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/{masterConstantKey}/{valueId} | GET | — | LookupValue | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/accessKeys | GET | — | List[AccessKey] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/accessKey/{accessKey} | GET | — | AccessKey | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/PPCCampaigns | GET | — | List[LookupValue] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/parcelPackageTypes | GET | — | List[ParcelPackageType] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/documentTypes | GET | — | List[LookupValue] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/comonInsurance | GET | — | List[LookupValue] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/densityClassMap | GET | — | List[DensityClassEntry] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/referCategory | GET | — | List[LookupValue] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/referCategoryHeirachy | GET | — | List[ReferCategoryHierarchy] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /lookup/resetMasterConstantCache | GET | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 — mutating |
-| /commodity/{id} | GET | — | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /commodity/{id} | PUT | CommodityUpdateRequest | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /commodity | POST | CommodityCreateRequest | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /commodity/search | POST | CommoditySearchRequest | List[Commodity] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /commodity/suggestions | POST | CommoditySuggestionRequest | List[Commodity] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /commodity-map/{id} | GET | — | CommodityMap | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /commodity-map/{id} | PUT | CommodityMapUpdateRequest | CommodityMap | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /commodity-map/{id} | DELETE | — | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 008 |
-| /commodity-map | POST | CommodityMapCreateRequest | CommodityMap | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /commodity-map/search | POST | CommodityMapSearchRequest | List[CommodityMap] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /dashboard | GET | — | DashboardSummary | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /dashboard/gridviews | GET | — | List[GridViewInfo] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /dashboard/gridviewstate/{id} | GET | — | GridViewState | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /dashboard/gridviewstate/{id} | POST | GridViewState | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /dashboard/inbound | POST | DashboardCompanyRequest | — | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | 008 |
-| /dashboard/inhouse | POST | DashboardCompanyRequest | — | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | 008 |
-| /dashboard/outbound | POST | DashboardCompanyRequest | — | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | 008 |
-| /dashboard/local-deliveries | POST | DashboardCompanyRequest | — | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | 008 |
-| /dashboard/recentestimates | POST | DashboardCompanyRequest | — | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | 008 |
-| /views/all | GET | — | List[GridViewDetails] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /views/{viewId} | GET | — | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /views | POST | GridViewCreateRequest | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /views/{viewId} | DELETE | — | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 008 |
-| /views/{viewId}/accessinfo | GET | — | List[GridViewAccessEntry] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /views/{viewId}/access | PUT | GridViewAccess | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /views/datasetsps | GET | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /views/datasetsp/{spName} | GET | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /companies/brands | GET | — | List[CompanyBrand] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /companies/brandstree | GET | — | List[BrandTree] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /companies/geoAreaCompanies | GET | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/geosettings | GET | — | GeoSettings | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/geosettings | POST | GeoSettingsSaveRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /companies/geosettings | GET | — | GeoSettings | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /companies/search/carrier-accounts | GET | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /companies/suggest-carriers | GET | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/carrierAcounts | GET | — | List[CarrierAccount] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/carrierAcounts | POST | CarrierAccountSaveRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/packagingsettings | GET | — | PackagingSettings | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/packagingsettings | POST | PackagingSettingsSaveRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/packaginglabor | GET | — | PackagingLabor | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/packaginglabor | POST | PackagingLaborSaveRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/inheritedPackagingTariffs | GET | — | List[PackagingTariff] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /companies/{companyId}/inheritedpackaginglabor | GET | — | PackagingLabor | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /contacts/{contactId}/history | POST | ContactHistoryCreateRequest | ContactHistory | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /contacts/{contactId}/history/aggregated | GET | — | ContactHistoryAggregated | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /contacts/{contactId}/history/graphdata | GET | — | ContactGraphData | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /contacts/{mergeToId}/merge/preview | POST | ContactMergeRequest | ContactMergePreview | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /contacts/{mergeToId}/merge | PUT | ContactMergeRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 — destructive |
-| /job/{jobDisplayId}/freightproviders | GET | — | List[PricedFreightProvider] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/freightproviders | POST | ShipmentPlanProvider | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/freightproviders/{optionIndex}/ratequote | POST | RateQuoteRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /job/{jobDisplayId}/freightitems | POST | FreightItemsRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 008 |
-| /note | GET | — | List[GlobalNote] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /note | POST | GlobalNoteCreateRequest | GlobalNote | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /note/{id} | PUT | GlobalNoteUpdateRequest | GlobalNote | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /note/suggestUsers | GET | — | List[SuggestedUser] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /partner | GET | — | List[Partner] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /partner/{id} | GET | — | Partner | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /partner/search | POST | PartnerSearchRequest | List[Partner] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
-| /Seller/{id} | GET | — | SellerExpandedDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /Seller | GET | — | PaginatedList[SellerExpandedDto] | FAIL | FAIL | FAIL | PASS | FAIL | PASS | incomplete | 2026-02-14, staging |
-| /Catalog | GET | — | PaginatedList[CatalogExpandedDto] | FAIL | FAIL | FAIL | PASS | FAIL | PASS | incomplete | Returns empty — research ABConnectTools for required params |
-| /Catalog/{id} | GET | — | CatalogExpandedDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | Needs valid catalog ID |
-| /Lot | GET | — | PaginatedList[LotDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | Needs valid catalog ID param |
-| /Lot/{id} | GET | — | LotDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | Needs valid lot ID |
-| /Lot/overrides | POST | LotOverrideDto | LotOverrideDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | Needs lot override params |
-| /Web2Lead | GET | — | Web2LeadResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
-| /Web2Lead/post | POST | Web2LeadRequest | Web2LeadResponse | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | 020 |
-| /job | POST | JobCreateRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /job/update | POST | JobUpdateRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /job/save | PUT | JobSaveRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /job/transfer/{jobDisplayId} | POST | TransferModel | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/status/quote | POST | — | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/shipment/ratequotes | POST | ShipmentRateQuoteRequest | List[RateQuote] | PASS | PASS | PASS | FAIL | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/shipment/book | POST | ShipmentBookRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/shipment | DELETE | — | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/shipment/accessorial | POST | AccessorialAddRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/shipment/accessorial/{addOnId} | DELETE | — | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/shipment/exportdata | POST | ShipmentExportRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/payment/bysource | POST | PayBySourceRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/payment/ACHCreditTransfer | POST | ACHCreditTransferRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/payment/attachCustomerBank | POST | AttachBankRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/payment/verifyJobACHSource | POST | VerifyACHRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/payment/banksource | POST | BankSourceRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /job/{jobDisplayId}/payment/cancelJobACHVerification | POST | — | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 020 |
-| /contacts/editdetails | POST | ContactEditRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /contacts/{contactId}/editdetails | PUT | ContactEditRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /documents | POST | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /documents/update/{docId} | PUT | DocumentUpdateRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /users/user | POST | UserCreateRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /users/user | PUT | UserUpdateRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /autoprice/v2/quoterequest | POST | QuoteRequestModel | QuoteRequestResponse | FAIL | FAIL | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
-| /Catalog/{id} | DELETE | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /Catalog/{id} | PUT | UpdateCatalogRequest | CatalogWithSellersDto | FAIL | FAIL | PASS | PASS | PASS | FAIL | incomplete | 020 |
-| /Bulk/insert | POST | BulkInsertRequest | — | FAIL | FAIL | FAIL | FAIL | PASS | FAIL | incomplete | 020 |
-| /Seller | POST | AddSellerRequest | SellerDto | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | 020 |
-| /Seller/{id} | PUT | UpdateSellerRequest | SellerDto | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | 020 |
-| /Seller/{id} | DELETE | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /Lot | POST | AddLotRequest | LotDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 020 |
-| /Lot/{id} | PUT | UpdateLotRequest | LotDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 020 |
-| /Lot/{id} | DELETE | — | — | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | 020 |
-| /Lot/get-overrides | POST | — | List[LotOverrideDto] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 020 |
-| /Catalog | POST | AddCatalogRequest | CatalogWithSellersDto | FAIL | FAIL | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
-| /contacts/{id} | GET | — | ContactSimple | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /documents/get/{docPath} | GET | — | bytes | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
-| /documents/list | GET | — | List[Document] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/form/address-label | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/bill-of-lading | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/credit-card-authorization | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/customer-quote | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/invoice | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/invoice/editable | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/item-labels | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/operations | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/packaging-labels | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/packaging-specification | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/packing-slip | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/quick-sale | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/usar | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | FAIL | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/form/usar/editable | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/parcelitems/{parcelItemId} | DELETE | — | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/timeline/{timelineTaskId} | DELETE | — | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/note/{id} | GET | — | JobNote | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/timeline/{timelineTaskIdentifier} | GET | — | TimelineTask | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/timeline/incrementjobstatus | POST | IncrementStatusRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/timeline/{timelineTaskId} | PATCH | TimelineTaskUpdateRequest | TimelineTask | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/item/notes | POST | ItemNotesRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/note | POST | JobNoteCreateRequest | JobNote | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/parcelitems | POST | ParcelItemCreateRequest | ParcelItem | FAIL | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/timeline | POST | — | TimelineSaveResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/item/{itemId} | PUT | ItemUpdateRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/note/{id} | PUT | JobNoteUpdateRequest | JobNote | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/searchByDetails | POST | JobSearchRequest | List[JobSearchResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/timeline/undoincrementjobstatus | POST | IncrementStatusRequest | ServiceBaseResponse | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/payment/create | GET | — | PaymentInfo | FAIL | FAIL | PASS | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /job/{jobDisplayId}/shipment/exportdata | GET | — | ShipmentExportData | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /shipment/document/{docId} | GET | — | bytes | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
-| /Web2Lead/get | GET | — | Web2LeadResponse | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | auto-discovered |
+| Endpoint Path | Method | Python Path | Req Model | Resp Model | G1 | G2 | G3 | G4 | G5 | G6 | Status | Notes |
+|---------------|--------|-------------|-----------|------------|----|----|----|----|----|----|----|-------|
+| /companies/{id} | GET | api.companies.get_by_id | — | CompanySimple | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /companies/{companyId}/details | GET | api.companies.get_details | — | CompanyDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 500 on staging — needs company UUID with populated details |
+| /companies/{companyId}/fulldetails | GET | api.companies.get_fulldetails | — | CompanyDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /companies/{companyId}/fulldetails | PUT | api.companies.update_fulldetails | CompanyDetails | CompanyDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid CompanyDetails kwargs |
+| /companies/fulldetails | POST | api.companies.create | CompanyDetails | str | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid CompanyDetails kwargs for new company |
+| /companies/search/v2 | POST | api.companies.search | CompanySearchRequest | List[SearchCompanyResponse] | PASS | PASS | PASS | PASS | PASS | PASS | complete | Request fixture captured; response needs valid search that returns results |
+| /companies/list | POST | api.companies.list | ListRequest | List[CompanySimple] | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid ListRequest kwargs |
+| /companies/availableByCurrentUser | GET | api.companies.available_by_current_user | — | List[CompanySimple] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /contacts/user | GET | api.contacts.get_current_user | — | ContactSimple | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /contacts/{contactId}/primarydetails | GET | api.contacts.get_primary_details | — | ContactPrimaryDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /contacts/{contactId}/editdetails | GET | api.contacts.get_details | — | ContactDetailedInfo | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 500 on staging — was previously captured but now fails |
+| /contacts/v2/search | POST | api.contacts.search | ContactSearchRequest | List[SearchContactEntityResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 400 — needs PageSize (1-32767) and PageNumber (1-32767) in request body |
+| /documents | GET | — | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 500 on staging — was previously captured but now fails |
+| /address/isvalid | GET | api.address.validate | — | AddressIsValidResult | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /address/propertytype | GET | api.address.get_property_type | — | int | PASS | PASS | PASS | PASS | PASS | PASS | complete | Query params: needs valid address1, city, state, zip_code for a real address |
+| /lookup/contactTypes | GET | api.lookup.get_contact_types | — | List[ContactTypeEntity] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /lookup/countries | GET | api.lookup.get_countries | — | List[CountryCodeDto] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /lookup/jobStatuses | GET | api.lookup.get_job_statuses | — | List[JobStatus] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /lookup/items | GET | api.lookup.get_items | — | List[LookupItem] | PASS | PASS | PASS | PASS | PASS | PASS | complete | Returns 204 — research ABConnectTools for required query params |
+| /users/list | POST | api.users.list | ListRequest | List[User] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging. Model warning: response is paginated wrapper (totalCount, data) |
+| /users/roles | GET | api.users.get_roles | — | List[str] | PASS | PASS | PASS | PASS | PASS | PASS | complete | Fixed — route uses List[str]; API returns plain strings, not UserRole objects |
+| /job/{jobDisplayId} | GET | api.jobs.get | — | Job | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 500 on staging |
+| /job/{jobDisplayId}/price | GET | api.jobs.get_price | — | JobPrice | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /job/{jobDisplayId}/calendaritems | GET | api.jobs.get_calendar_items | — | List[CalendarItem] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /job/{jobDisplayId}/updatePageConfig | GET | api.jobs.get_update_page_config | — | JobUpdatePageConfig | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /job/search | GET | api.jobs.search | — | JobSearchResult | PASS | PASS | PASS | PASS | PASS | PASS | complete | HTTP 404 on staging |
+| /job/{jobDisplayId}/timeline | GET | api.jobs.timeline.response | — | TimelineResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs job ID with active timeline |
+| /job/{jobDisplayId}/timeline/{taskCode}/agent | GET | — | — | TimelineAgent | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs job ID + task code |
+| /job/{jobDisplayId}/tracking | GET | api.jobs.tracking.get | — | TrackingInfo | PASS | PASS | PASS | PASS | PASS | PASS | complete | Works but no fixture_file set in example |
+| /v3/job/{jobDisplayId}/tracking/{historyAmount} | GET | api.jobs.tracking.v3 | — | TrackingInfoV3 | PASS | PASS | PASS | PASS | PASS | PASS | complete | Works but no fixture_file set in example |
+| /job/{jobDisplayId}/payment | GET | api.jobs.payment.get | — | PaymentInfo | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | Works but no fixture_file set in example |
+| /job/{jobDisplayId}/payment/sources | GET | api.jobs.payment.get_sources | — | List[PaymentSource] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | Works but no fixture_file set in example |
+| /job/{jobDisplayId}/payment/ACHPaymentSession | POST | api.jobs.payment.create_ach_session | ACHSessionRequest | ACHSessionResponse | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | Needs ACH session params |
+| /job/{jobDisplayId}/note | GET | api.jobs.note.list | — | List[JobNote] | PASS | PASS | PASS | PASS | PASS | PASS | complete | Model bug — id field typed as str but API returns int |
+| /job/{jobDisplayId}/parcelitems | GET | api.jobs.parcel_items.list | — | List[ParcelItem] | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | Returns empty list — needs job with parcel items |
+| /job/{jobDisplayId}/parcel-items-with-materials | GET | api.jobs.parcel_items.list_with_materials | — | List[ParcelItemWithMaterials] | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | Returns empty list — needs job with packed items |
+| /job/{jobDisplayId}/packagingcontainers | GET | api.jobs.get_packaging_containers | — | List[PackagingContainer] | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | Model has warning fields — works but model incomplete |
+| /job/{jobDisplayId}/shipment/ratequotes | GET | api.jobs.shipment.get_rate_quotes | — | List[RateQuote] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /job/{jobDisplayId}/shipment/accessorials | GET | api.jobs.shipment.get_accessorials | — | List[Accessorial] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /job/{jobDisplayId}/shipment/origindestination | GET | api.jobs.shipment.get_origin_destination | — | ShipmentOriginDestination | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /job/{jobDisplayId}/shipment/ratesstate | GET | api.jobs.shipment.get_rates_state | — | RatesState | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /shipment | GET | api.shipments.get_shipment | — | ShipmentInfo | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /shipment/accessorials | GET | api.shipments.get_global_accessorials | — | List[GlobalAccessorial] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /job/{jobDisplayId}/form/shipments | GET | api.jobs.form.shipments | — | List[FormsShipmentPlan] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /autoprice/quickquote | POST | api.autoprice.quick_quote | QuoteRequestModel | QuickQuoteResponse | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | Request model validation error — field names don't match (originZip vs OriginZip) |
+| /AutoPrice/QuoteRequest | POST | — | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs items array with weight, class fields and valid origin/destination |
+| /rfq/{rfqId} | GET | api.rfq.get | — | QuoteRequestDisplayInfo | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — run examples/rfq.py |
+| /rfq/forjob/{jobId} | GET | api.rfq.get_for_job | — | List[QuoteRequestDisplayInfo] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /rfq/{rfqId}/accept | POST | api.rfq.accept | AcceptModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — mutating |
+| /rfq/{rfqId}/decline | POST | api.rfq.decline | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — mutating |
+| /rfq/{rfqId}/cancel | POST | api.rfq.cancel | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — mutating |
+| /rfq/{rfqId}/acceptwinner | POST | api.rfq.accept_winner | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — mutating |
+| /rfq/{rfqId}/comment | POST | api.rfq.add_comment | AcceptModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/rfq | GET | api.jobs.rfq.list | — | List[QuoteRequestDisplayInfo] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/rfq/statusof/{rfqServiceType}/forcompany/{companyId} | GET | api.jobs.rfq.status | — | int | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/onhold | GET | api.jobs.on_hold.list | — | List[ExtendedOnHoldInfo] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008; subgroup moved to api.jobs.on_hold |
+| /job/{jobDisplayId}/onhold | POST | api.jobs.on_hold.create | SaveOnHoldRequest | SaveOnHoldResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | model realigned to swagger (reasonId+responsiblePartyTypeId required); example covers create/assign/email/resolve chain |
+| /job/{jobDisplayId}/onhold | DELETE | api.jobs.on_hold.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — destructive |
+| /job/{jobDisplayId}/onhold/{id} | GET | api.jobs.on_hold.get | — | OnHoldDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | hand-seeded fixture matching real shape |
+| /job/{jobDisplayId}/onhold/{onHoldId} | PUT | api.jobs.on_hold.update | SaveOnHoldRequest | SaveOnHoldResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | shares SaveOnHoldRequest with create |
+| /job/{jobDisplayId}/onhold/followupuser/{contactId} | GET | api.jobs.on_hold.get_followup_user | — | OnHoldUser | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/onhold/followupusers | GET | api.jobs.on_hold.list_followup_users | — | List[OnHoldUser] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/onhold/{onHoldId}/comment | POST | api.jobs.on_hold.add_comment | OnHoldCommentRequest | OnHoldNoteDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | comment endpoint not yet exercised by example |
+| /job/{jobDisplayId}/onhold/{onHoldId}/dates | PUT | api.jobs.on_hold.update_dates | SaveOnHoldDatesModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/onhold/{onHoldId}/resolve | PUT | api.jobs.on_hold.resolve | SaveOnHoldRequest | ResolveJobOnHoldResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | swagger reuses SaveOnHoldRequest for resolve; ResolveOnHoldRequest is now an alias |
+| /reports/insurance | POST | api.reports.insurance | InsuranceReportRequest | List[InsuranceReport] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /reports/sales | POST | api.reports.sales | SalesForecastReportRequest | List[SalesForecastReport] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /reports/sales/summary | POST | api.reports.sales_summary | SalesForecastSummaryRequest | SalesForecastSummary | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /reports/salesDrilldown | POST | api.reports.sales_drilldown | Web2LeadRevenueFilter | List[RevenueCustomer] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /reports/topRevenueCustomers | POST | api.reports.top_revenue_customers | Web2LeadRevenueFilter | List[RevenueCustomer] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /reports/topRevenueSalesReps | POST | api.reports.top_revenue_sales_reps | Web2LeadRevenueFilter | List[RevenueCustomer] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /reports/referredBy | POST | api.reports.referred_by | ReferredByReportRequest | List[ReferredByReport] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /reports/web2Lead | POST | api.reports.web2lead | Web2LeadV2RequestModel | List[Web2LeadReport] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/email | POST | api.jobs.email.send | SendEmailRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — fire-and-forget |
+| /job/{jobDisplayId}/email/senddocument | POST | api.jobs.email.send_document | SendDocumentEmailModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/email/createtransactionalemail | POST | api.jobs.email.create_transactional | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/email/{emailTemplateGuid}/send | POST | api.jobs.email.send_template | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/sms | GET | api.jobs.sms.list | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/sms | POST | api.jobs.sms.send | SendSMSModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/sms/read | POST | api.jobs.sms.mark_read | MarkSmsAsReadModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/sms/templatebased/{templateId} | GET | api.jobs.sms.get_template | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/{masterConstantKey} | GET | api.lookup.get_by_key | — | List[LookupValue] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/{masterConstantKey}/{valueId} | GET | api.lookup.get_by_key_and_id | — | LookupValue | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/accessKeys | GET | api.lookup.get_access_keys | — | List[AccessKey] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/accessKey/{accessKey} | GET | api.lookup.get_access_key | — | AccessKeySetup | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/PPCCampaigns | GET | api.lookup.get_ppc_campaigns | — | List[PPCCampaign] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/parcelPackageTypes | GET | api.lookup.get_parcel_package_types | — | List[ParcelPackageType] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/documentTypes | GET | api.lookup.get_document_types | — | List[DocumentTypeBySource] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/comonInsurance | GET | api.lookup.get_common_insurance | — | List[CommonInsuranceSlab] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/densityClassMap | GET | api.lookup.get_density_class_map | — | List[DensityClassEntry] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/referCategory | GET | api.lookup.get_refer_categories | — | List[LookupValue] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/referCategoryHeirachy | GET | api.lookup.get_refer_category_hierarchy | — | List[ReferCategoryHierarchy] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /lookup/resetMasterConstantCache | GET | api.lookup.reset_cache | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — mutating |
+| /commodity/{id} | GET | api.commodities.get | — | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /commodity/{id} | PUT | api.commodities.update | CommodityUpdateRequest | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /commodity | POST | api.commodities.create | CommodityCreateRequest | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /commodity/search | POST | api.commodities.search | CommoditySearchRequest | List[Commodity] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /commodity/suggestions | POST | api.commodities.suggestions | CommoditySuggestionRequest | List[Commodity] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /commodity-map/{id} | GET | api.commodity_maps.get | — | CommodityMap | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /commodity-map/{id} | PUT | api.commodity_maps.update | CommodityMapUpdateRequest | CommodityMap | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /commodity-map/{id} | DELETE | api.commodity_maps.delete | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /commodity-map | POST | api.commodity_maps.create | CommodityMapCreateRequest | CommodityMap | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /commodity-map/search | POST | api.commodity_maps.search | CommodityMapSearchRequest | List[CommodityMap] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /dashboard | GET | api.dashboard.get | — | DashboardSummary | FAIL | PASS | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /dashboard/gridviews | GET | api.dashboard.get_grid_views | — | List[GridViewInfo] | PASS | PASS | PASS | PASS | PASS | PASS | complete | model realigned to swagger GridViewDetails (id/name/dataKey/isActive); fixture seeded with 6 representative rows |
+| /dashboard/gridviewstate/{id} | GET | api.dashboard.get_grid_view_state | — | GridViewState | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /dashboard/gridviewstate/{id} | POST | api.dashboard.save_grid_view_state | GridViewState | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /dashboard/inbound | POST | api.dashboard.inbound | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
+| /dashboard/inhouse | POST | api.dashboard.in_house | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
+| /dashboard/outbound | POST | api.dashboard.outbound | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
+| /dashboard/local-deliveries | POST | api.dashboard.local_deliveries | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
+| /dashboard/recentestimates | POST | api.dashboard.recent_estimates | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
+| /views/all | GET | api.views.list | — | List[GridViewDetails] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /views/{viewId} | GET | api.views.get | — | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /views | POST | api.views.create | GridViewCreateRequest | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /views/{viewId} | DELETE | api.views.delete | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /views/{viewId}/accessinfo | GET | api.views.get_access_info | — | List[GridViewAccessEntry] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /views/{viewId}/access | PUT | api.views.update_access | GridViewAccess | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /views/datasetsps | GET | api.views.get_dataset_sps | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /views/datasetsp/{spName} | GET | api.views.get_dataset_sp | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /companies/brands | GET | api.companies.get_brands | — | List[CompanyBrand] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /companies/brandstree | GET | api.companies.get_brands_tree | — | List[BrandTree] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /companies/geoAreaCompanies | GET | api.companies.get_geo_area_companies | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /companies/{companyId}/geosettings | GET | api.companies.get_geo_settings | — | GeoSettings | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /companies/{companyId}/geosettings | POST | api.companies.save_geo_settings | GeoSettingsSaveRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /companies/geosettings | GET | api.companies.get_global_geo_settings | — | GeoSettings | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /companies/search/carrier-accounts | GET | api.companies.search_carrier_accounts | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /companies/suggest-carriers | GET | api.companies.suggest_carriers | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /companies/{companyId}/carrierAcounts | GET | api.companies.get_carrier_accounts | — | List[CarrierAccount] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /companies/{companyId}/carrierAcounts | POST | api.companies.save_carrier_accounts | CarrierAccountSaveRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /companies/{companyId}/packagingsettings | GET | api.companies.get_packaging_settings | — | PackagingSettings | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /companies/{companyId}/packagingsettings | POST | api.companies.save_packaging_settings | PackagingSettingsSaveRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /companies/{companyId}/packaginglabor | GET | api.companies.get_packaging_labor | — | PackagingLabor | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /companies/{companyId}/packaginglabor | POST | api.companies.save_packaging_labor | PackagingLaborSaveRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /companies/{companyId}/inheritedPackagingTariffs | GET | api.companies.get_inherited_packaging_tariffs | — | List[PackagingTariff] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /companies/{companyId}/inheritedpackaginglabor | GET | api.companies.get_inherited_packaging_labor | — | PackagingLabor | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /contacts/{contactId}/history | POST | api.contacts.post_history | ContactHistoryCreateRequest | ContactHistory | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /contacts/{contactId}/history/aggregated | GET | api.contacts.get_history_aggregated | — | ContactHistoryAggregated | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /contacts/{contactId}/history/graphdata | GET | api.contacts.get_history_graph_data | — | ContactGraphData | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /contacts/{mergeToId}/merge/preview | POST | api.contacts.merge_preview | ContactMergeRequest | ContactMergePreview | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /contacts/{mergeToId}/merge | PUT | api.contacts.merge | ContactMergeRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — destructive |
+| /job/{jobDisplayId}/freightproviders | GET | api.jobs.freight_providers.list | — | List[PricedFreightProvider] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/freightproviders | POST | api.jobs.freight_providers.save | ShipmentPlanProvider | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/freightproviders/{optionIndex}/ratequote | POST | api.jobs.freight_providers.rate_quote | RateQuoteRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/freightitems | POST | api.jobs.add_freight_items | FreightItemsRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /note | GET | api.notes.list | — | List[GlobalNote] | PASS | PASS | PASS | PASS | PASS | PASS | complete | model realigned to swagger Notes; cli_format added; fixture seeded |
+| /note | POST | api.notes.create | NoteRequest | GlobalNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | shared NoteModel schema with PUT; comments+category required |
+| /note/{id} | PUT | api.notes.update | NoteRequest | GlobalNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | shared schema with POST; partial updates not supported by API |
+| /note/suggestUsers | GET | api.notes.suggest_users | — | List[SuggestedUser] | PASS | PASS | PASS | PASS | PASS | PASS | complete | model realigned to swagger SuggestedContactEntity (id:int, fullName) |
+| /partner | GET | api.partners.list | — | List[Partner] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /partner/{id} | GET | api.partners.get | — | Partner | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /partner/search | POST | api.partners.search | PartnerSearchRequest | List[Partner] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
+| /Seller/{id} | GET | api.sellers.get | — | SellerExpandedDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /Seller | GET | — | — | PaginatedList[SellerExpandedDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | 035 — typed filter params wired; needs fixture capture from staging |
+| /Catalog | GET | — | — | PaginatedList[CatalogWithLotsDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | 035 — typed filter params wired; needs fixture capture from staging |
+| /Catalog/{id} | GET | api.catalog.get | — | CatalogWithLotsDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid catalog ID |
+| /Lot | GET | — | — | PaginatedList[LotDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | 035 — typed filter params wired; needs fixture capture from staging |
+| /Lot/{id} | GET | api.lots.get | — | LotDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid lot ID |
+| /Web2Lead | GET | — | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
+| /Web2Lead/post | POST | api.web2lead.post | Web2LeadRequest | Web2LeadResponse | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | 020 |
+| /job | POST | api.jobs.create | JobCreateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/update | POST | api.jobs.update | JobUpdateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/save | PUT | api.jobs.save | JobSaveRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/transfer/{jobDisplayId} | POST | api.jobs.transfer | TransferModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/status/quote | POST | api.jobs.status.set_quote | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/shipment/ratequotes | POST | api.jobs.shipment.request_rate_quotes | ShipmentRateQuoteRequest | List[RateQuote] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/shipment/book | POST | api.jobs.shipment.book | ShipmentBookRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/shipment | DELETE | api.jobs.shipment.delete | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/shipment/accessorial | POST | api.jobs.shipment.add_accessorial | AccessorialAddRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/shipment/accessorial/{addOnId} | DELETE | api.jobs.shipment.remove_accessorial | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/shipment/exportdata | POST | api.jobs.shipment.post_export_data | ShipmentExportRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/payment/bysource | POST | api.jobs.payment.pay_by_source | PayBySourceRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/payment/ACHCreditTransfer | POST | api.jobs.payment.ach_credit_transfer | ACHCreditTransferRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/payment/attachCustomerBank | POST | api.jobs.payment.attach_customer_bank | AttachBankRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/payment/verifyJobACHSource | POST | api.jobs.payment.verify_ach_source | VerifyACHRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/payment/banksource | POST | api.jobs.payment.set_bank_source | BankSourceRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /job/{jobDisplayId}/payment/cancelJobACHVerification | POST | api.jobs.payment.cancel_ach_verification | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /contacts/editdetails | POST | api.contacts.create | ContactEditRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /contacts/{contactId}/editdetails | PUT | api.contacts.update_details | ContactEditRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /documents | POST | api.documents.upload | DocumentUploadRequest | DocumentUploadResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /documents/update/{docId} | PUT | api.documents.update | DocumentUpdateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /users/user | POST | api.users.create | UserCreateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /users/user | PUT | api.users.update | UserUpdateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /autoprice/v2/quoterequest | POST | api.autoprice.quote_request | QuoteRequestModel | QuoteRequestResponse | FAIL | FAIL | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /Catalog/{id} | DELETE | api.catalog.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /Catalog/{id} | PUT | api.catalog.update | UpdateCatalogRequest | CatalogExpandedDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /Seller | POST | api.sellers.create | AddSellerRequest | SellerDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /Seller/{id} | PUT | api.sellers.update | UpdateSellerRequest | SellerDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /Seller/{id} | DELETE | api.sellers.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /Lot | POST | api.lots.create | AddLotRequest | LotDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /Lot/{id} | PUT | api.lots.update | UpdateLotRequest | LotDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /Lot/{id} | DELETE | api.lots.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /Catalog | POST | api.catalog.create | AddCatalogRequest | CatalogExpandedDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /contacts/{id} | GET | api.contacts.get | — | ContactSimple | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /documents/get/{docPath} | GET | api.documents.get | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /documents/list | GET | api.documents.list | — | List[Document] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/address-label | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/bill-of-lading | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/credit-card-authorization | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/customer-quote | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/invoice | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/invoice/editable | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/item-labels | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/operations | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/packaging-labels | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/packaging-specification | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/packing-slip | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/quick-sale | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/usar | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/usar/editable | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/parcelitems/{parcelItemId} | DELETE | api.jobs.parcel_items.delete | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/timeline/{timelineTaskId} | DELETE | api.jobs.timeline.delete_task | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/note/{id} | GET | api.jobs.note.get | — | JobNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/timeline/{timelineTaskIdentifier} | GET | api.jobs.timeline.get_task | — | TimelineTask | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/timeline/incrementjobstatus | POST | api.jobs.timeline.increment_status | IncrementStatusRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/timeline/{timelineTaskId} | PATCH | api.jobs.timeline.update_task | TimelineTaskUpdateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/item/notes | POST | api.jobs.add_item_notes | ItemNotesRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/note | POST | api.jobs.note.create | JobNoteCreateRequest | JobNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/parcelitems | POST | api.jobs.parcel_items.create | ParcelItemCreateRequest | ParcelItem | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/timeline | POST | api.jobs.timeline.create_task | — | TimelineSaveResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/item/{itemId} | PUT | api.jobs.update_item | ItemUpdateRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/note/{id} | PUT | api.jobs.note.update | JobNoteUpdateRequest | JobNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/searchByDetails | POST | api.jobs.search_by_details | JobSearchRequest | List[JobSearchResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/timeline/undoincrementjobstatus | POST | api.jobs.timeline.undo_increment_status | IncrementStatusRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/payment/create | GET | api.jobs.payment.get_create | — | PaymentInfo | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/shipment/exportdata | GET | api.jobs.shipment.get_export_data | — | ShipmentExportData | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /shipment/document/{docId} | GET | api.shipments.get_shipment_document | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Web2Lead/get | GET | api.web2lead.get | — | Web2LeadResponse | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/changeAgent | POST | api.jobs.change_agent | ChangeJobAgentRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /account/profile | GET | api.account.get_profile | — | AccountProfile | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /documents/get/thumbnail/{docPath} | GET | api.documents.get_thumbnail | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /documents/hide/{docId} | PUT | api.documents.hide | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/book | POST | api.jobs.book | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/tracking/shipment/{proNumber} | GET | api.jobs.tracking.shipment | — | ShipmentTrackingDetails | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/feedback/{jobDisplayId} | GET | api.jobs.get_feedback | — | FeedbackSaveModel | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/feedback/{jobDisplayId} | POST | api.jobs.save_feedback | FeedbackSaveModel | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Bulk/upsert | POST | api.catalog.bulk_upsert | BulkUpsertRequest | List[CatalogWithLotsDto] | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /Catalog/{targetId}/merge/{sourceId} | POST | api.catalog.merge | — | CatalogWithLotsDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Lot/{id}/ClientItemData | POST | api.lots.create_client_item_data | AddLotClientItemDataRequest | LotClientItemDataDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Lot/{lotId}/ClientItemData/{clientItemDataId} | DELETE | api.lots.delete_client_item_data | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Lot/{id}/ClientItemData | GET | — | — | PaginatedList[LotClientItemDataDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /Lot/ItemData | POST | api.lots.item_data | GetLotsItemDataQuery | List[LotItemDataDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /Lot/{targetId}/merge/{sourceId} | POST | api.lots.merge | — | LotDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Platform | POST | api.platforms.create | AddPlatformRequest | PlatformDto | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /Platform/{id} | DELETE | api.platforms.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Platform/{id} | GET | api.platforms.get | — | PlatformDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Platform | GET | — | — | PaginatedList[PlatformDto] | FAIL | FAIL | FAIL | PASS | FAIL | PASS | incomplete | auto-discovered |
+| /Platform/{id} | PUT | api.platforms.update | UpdatePlatformRequest | PlatformDto | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
 
 ## Model Warning Summary
 
@@ -265,7 +282,4 @@ Models with `__pydantic_extra__` fields when validated against their fixtures:
 
 | Model | Issue |
 |-------|-------|
-| List[ParcelItem] | 2 undeclared field(s): jobModifiedDate, parcelItems |
-| ParcelItem | 2 undeclared field(s): jobModifiedDate, parcelItems |
-| TrackingInfo | 3 undeclared field(s): errorMessage, statuses, success |
-| TrackingInfoV3 | 2 undeclared field(s): carriers, statuses |
+| DashboardSummary | 31 undeclared field(s): actual, agent, basis, carrier, created, custRef, customer, dims, expedite, fullAge, held, item_Count, jobDisplayID, jobPrice, labels, labor, location, netAge, next, next_Status, note, opsForm, packer, pause, pickup, priority, rep, requestor, shipBy, status, step |

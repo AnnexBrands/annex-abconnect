@@ -1,0 +1,43 @@
+{
+  "id": 1,
+  "initialData": {
+    "Qty": 0,
+    "L": 0.0,
+    "W": 0.0,
+    "H": 0.0,
+    "Wgt": 0.0,
+    "Cpack": "string",
+    "description": "string",
+    "forceCrate": true,
+    "ItemID": "string",
+    "Notes": "string",
+    "notedConditions": "string",
+    "doNotTip": true,
+    "commodityId": "string"
+  },
+  "itemData": [
+    {
+      "Qty": 0,
+      "L": 0.0,
+      "W": 0.0,
+      "H": 0.0,
+      "Wgt": 0.0,
+      "Cpack": "string",
+      "description": "string",
+      "forceCrate": true,
+      "ItemID": "string",
+      "Notes": "string",
+      "notedConditions": "string",
+      "doNotTip": false,
+      "commodityId": null
+    }
+  ],
+  "catalogs": [
+    {
+      "catalogId": 1,
+      "lotNumber": "string"
+    }
+  ],
+  "platforms": [],
+  "imageLinks": []
+}

@@ -30,10 +30,10 @@ Returns `LotDto`.
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `id` | `int` | yes | Lot ID |
-| `customerItemId` | `Optional[str]` | no | Customer item ID |
 | `initialData` | `Optional[LotDataDto]` | no | Initial lot data |
-| `overridenData` | `Optional[list[LotDataDto]]` | no | Override entries |
+| `itemData` | `Optional[list[LotDataDto]]` | no | Item data entries (formerly ``overridenData``) |
 | `catalogs` | `Optional[list[LotCatalogDto]]` | no | Catalog associations (each entry is a LotCatalogDto) |
+| `platforms` | `Optional[list[LotPlatformDto]]` | no | Platform associations carrying the lot's external IDs |
 | `imageLinks` | `Optional[list[ImageLinkDto]]` | no | Attached image links |
 
 ---

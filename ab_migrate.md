@@ -59,7 +59,7 @@ in `ab` — import models from their real module.
 | `from ABConnect.api.models.catalog import UpdateLotRequest` | `from ab.api.models.lots import UpdateLotRequest` |
 | `from ABConnect.api.models.catalog import LotDataDto` | `from ab.api.models.lots import LotDataDto` |
 | `from ABConnect.api.models.catalog import LotCatalogDto` | _not ported — see [Known gaps](#gaps)_ |
-| `from ABConnect.api.models.catalog import BulkInsertRequest` | `from ab.api.models.catalog import BulkInsertRequest` — **shape differs, see below** |
+| `from ABConnect.api.models.catalog import BulkInsertRequest` | `from ab.api.models.catalog import BulkUpsertRequest` — **renamed and reshaped in 0.2.0; `/Bulk/insert` became `/Bulk/upsert`** |
 | `from ABConnect.api.models.catalog import BulkInsertCatalogRequest` | _not ported — see [Known gaps](#gaps)_ |
 | `from ABConnect.api.models.catalog import BulkInsertSellerRequest` | _not ported — see [Known gaps](#gaps)_ |
 | `from ABConnect.api.models.catalog import BulkInsertLotRequest` | _not ported — see [Known gaps](#gaps)_ |
@@ -258,13 +258,13 @@ rewrite. Tracked under [Known gaps](#gaps).
 | `UpdateLotRequest` | `ABConnect.api.models.catalog` | `ab.api.models.lots` |
 | `LotDataDto` | `ABConnect.api.models.catalog` | `ab.api.models.lots` |
 | `LotDto` | `ABConnect.api.models.catalog` | `ab.api.models.lots` |
-| `LotOverrideDto` | `ABConnect.api.models.catalog` | `ab.api.models.lots` |
+| `LotOverrideDto` | `ABConnect.api.models.catalog` | `ab.api.models.lots.LotItemDataDto` — **renamed in 0.2.0; `/Lot/get-overrides` became `/Lot/ItemData`** |
 | `LotListParams` | `ABConnect.api.models.catalog` | `ab.api.models.lots` |
 | `CatalogExpandedDto` | `ABConnect.api.models.catalog` | `ab.api.models.catalog` |
 | `AddCatalogRequest` | `ABConnect.api.models.catalog` | `ab.api.models.catalog` |
 | `UpdateCatalogRequest` | `ABConnect.api.models.catalog` | `ab.api.models.catalog` |
 | `CatalogListParams` | `ABConnect.api.models.catalog` | `ab.api.models.catalog` |
-| `BulkInsertRequest` | `ABConnect.api.models.catalog` | `ab.api.models.catalog` — **simplified; see [Known gaps](#gaps)** |
+| `BulkInsertRequest` | `ABConnect.api.models.catalog` | `ab.api.models.catalog.BulkUpsertRequest` — **renamed in 0.2.0** |
 | `BulkInsertCatalogRequest` | `ABConnect.api.models.catalog` | **not ported** |
 | `BulkInsertSellerRequest` | `ABConnect.api.models.catalog` | **not ported** |
 | `BulkInsertLotRequest` | `ABConnect.api.models.catalog` | **not ported** |

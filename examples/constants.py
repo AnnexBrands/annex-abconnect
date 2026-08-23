@@ -17,7 +17,10 @@ TEST_SELLER_ID = 2
 TEST_CATALOG_ID = 1
 TEST_LOT_ID = 1
 CATALOG_CUSTOMER_SELLER_ID = 1103
-CATALOG_CUSTOMER_CATALOG_ID = 398425
+# Platform a catalog/lot is published to. The migrated schema keeps a catalog's
+# external identity here (PlatformCatalogs.PlatformCatalogId) rather than in the
+# retired Catalogs.CustomerCatalogId column.
+TEST_PLATFORM_PARTNER_ID = 77
 TEST_LOT_NUMBER = "1"
 
 # Company code (staging - sourced from CompanySimple fixture)

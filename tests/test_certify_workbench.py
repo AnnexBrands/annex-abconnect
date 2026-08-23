@@ -38,7 +38,7 @@ def test_endpoint_list_is_the_public_denominator() -> None:
     from ab.progress.inventory import public_endpoint_keys
 
     assert list_endpoints() == list(public_endpoint_keys())
-    assert len(list_endpoints()) == 218
+    assert len(list_endpoints()) == 226
 
 
 def test_endpoint_filter_narrows() -> None:

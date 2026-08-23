@@ -1,7 +1,7 @@
 {
   "Id": null,
-  "CustomerItemId": null,
   "LotNumber": null,
+  "PlatformItemId": null,
   "PageSize": null,
   "PageNumber": null
 }

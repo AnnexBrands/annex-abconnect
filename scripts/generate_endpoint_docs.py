@@ -69,6 +69,7 @@ TOP_GROUPS = [
     "lots",
     "notes",
     "partners",
+    "platforms",
     "reports",
     "rfq",
     "sellers",

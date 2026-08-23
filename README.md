@@ -90,9 +90,10 @@ file-backed service-account mode. Django request sessions and explicit
 | `api.address` | validate, get_property_type | ACPortal |
 | `api.lookup` | get_contact_types, get_countries, get_job_statuses, get_items | ACPortal |
 | `api.users` | list, get_roles, create, update | ACPortal |
-| `api.catalog` | list, get, create, update, delete, bulk_insert | Catalog |
-| `api.lots` | list, get, create, update, delete, get_overrides | Catalog |
-| `api.sellers` | list, get, create, update, delete | Catalog |
+| `api.catalog` | list, get, create, update, delete, merge, bulk_upsert | Catalog (staging schema) |
+| `api.lots` | list, get, create, update, delete, merge, item_data, client item data | Catalog (staging schema) |
+| `api.sellers` | list, get, create, update, delete | Catalog (staging schema) |
+| `api.platforms` | list, get, create, update, delete | Catalog (staging schema) |
 | `api.jobs.agent` | oa, da, change | ACPortal |
 | `api.jobs.timeline` | schedule, received, pack_start, pack_finish, storage_begin, storage_end, carrier_schedule, carrier_pickup, carrier_delivery, delete, delete_all | ACPortal |
 | `api.autoprice` | quick_quote, quote_request | ABC |

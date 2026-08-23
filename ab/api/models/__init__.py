@@ -20,14 +20,14 @@ from ab.api.models.base import ABConnectBaseModel, RequestModel, ResponseModel
 # Domain models
 from ab.api.models.catalog import (
     AddCatalogRequest,
-    BulkInsertCatalogRequest,
-    BulkInsertLotRequest,
-    BulkInsertRequest,
-    BulkInsertSellerRequest,
+    BulkUpsertCatalogRequest,
+    BulkUpsertLotRequest,
+    BulkUpsertRequest,
+    BulkUpsertSellerRequest,
     CatalogDto,
     CatalogExpandedDto,
     CatalogListParams,
-    CatalogWithSellersDto,
+    CatalogWithLotsDto,
     UpdateCatalogRequest,
 )
 from ab.api.models.commodities import (
@@ -240,14 +240,18 @@ from ab.api.models.lookup import (
     ReferCategoryHierarchy,
 )
 from ab.api.models.lots import (
+    AddLotClientItemDataRequest,
     AddLotRequest,
+    GetLotsItemDataQuery,
     ImageLinkDto,
     LotCatalogDto,
     LotCatalogInformationDto,
+    LotClientItemDataDto,
+    LotClientItemDataListParams,
     LotDataDto,
     LotDto,
+    LotItemDataDto,
     LotListParams,
-    LotOverrideDto,
     UpdateLotRequest,
 )
 from ab.api.models.mixins import (
@@ -285,6 +289,14 @@ from ab.api.models.payments import (
     PaymentParams,
     PaymentSource,
     VerifyACHRequest,
+)
+from ab.api.models.platforms import (
+    AddPlatformRequest,
+    CatalogPlatformDto,
+    LotPlatformDto,
+    PlatformDto,
+    PlatformListParams,
+    UpdatePlatformRequest,
 )
 from ab.api.models.reports import (
     InsuranceReport,
@@ -369,14 +381,19 @@ __all__ = [
     "DocumentType", "CarrierAPI", "MasterConstantKey",
     # Catalog
     "CatalogListParams",
-    "CatalogDto", "CatalogWithSellersDto", "CatalogExpandedDto",
+    "CatalogDto", "CatalogExpandedDto", "CatalogWithLotsDto",
     "AddCatalogRequest", "UpdateCatalogRequest",
-    "BulkInsertRequest", "BulkInsertCatalogRequest",
-    "BulkInsertLotRequest", "BulkInsertSellerRequest",
+    "BulkUpsertRequest", "BulkUpsertCatalogRequest",
+    "BulkUpsertLotRequest", "BulkUpsertSellerRequest",
     # Lots
-    "LotListParams",
-    "LotDto", "LotDataDto", "LotOverrideDto", "AddLotRequest", "UpdateLotRequest",
+    "LotListParams", "LotClientItemDataListParams",
+    "LotDto", "LotDataDto", "LotItemDataDto", "AddLotRequest", "UpdateLotRequest",
+    "LotClientItemDataDto", "AddLotClientItemDataRequest", "GetLotsItemDataQuery",
     "LotCatalogDto", "LotCatalogInformationDto", "ImageLinkDto",
+    # Platforms
+    "PlatformListParams",
+    "PlatformDto", "AddPlatformRequest", "UpdatePlatformRequest",
+    "CatalogPlatformDto", "LotPlatformDto",
     # Sellers
     "SellerListParams",
     "SellerDto", "SellerExpandedDto", "AddSellerRequest", "UpdateSellerRequest",

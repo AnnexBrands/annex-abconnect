@@ -19,11 +19,10 @@ PUT /Lot/{id}.
 
 Args:
     lot_id: Lot identifier.
-    data: Lot update payload with ``customer_item_id``,
-        ``image_links``, ``overriden_data``, and ``catalogs``.
-        (``initial_data`` is create-only — it cannot be updated
-        via PUT.) Accepts an :class:`UpdateLotRequest` instance
-        or a dict.
+    data: Lot update payload with ``image_links``, ``item_data``,
+        ``catalogs``, and ``platforms``. (``initial_data`` is
+        create-only — it cannot be updated via PUT.) Accepts an
+        :class:`UpdateLotRequest` instance or a dict.
 
 Request model: :class:`UpdateLotRequest`
 
@@ -31,10 +30,10 @@ Request model: :class:`UpdateLotRequest`
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `customerItemId` | `Optional[str]` | no | Customer item ID |
 | `imageLinks` | `Optional[list[str]]` | no | Image URLs attached to the lot |
-| `overridenData` | `Optional[list[LotDataDto]]` | no | Per-catalog override data entries |
+| `itemData` | `Optional[list[LotDataDto]]` | no | Item data entries (formerly ``overridenData``) |
 | `catalogs` | `Optional[list[LotCatalogDto]]` | no | Catalogs this lot belongs to |
+| `platforms` | `Optional[list[LotPlatformDto]]` | no | Platforms this lot is published to, with its external ID on each |
 
 ## Response
 
@@ -43,10 +42,10 @@ Returns `LotDto`.
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `id` | `int` | yes | Lot ID |
-| `customerItemId` | `Optional[str]` | no | Customer item ID |
 | `initialData` | `Optional[LotDataDto]` | no | Initial lot data |
-| `overridenData` | `Optional[list[LotDataDto]]` | no | Override entries |
+| `itemData` | `Optional[list[LotDataDto]]` | no | Item data entries (formerly ``overridenData``) |
 | `catalogs` | `Optional[list[LotCatalogDto]]` | no | Catalog associations (each entry is a LotCatalogDto) |
+| `platforms` | `Optional[list[LotPlatformDto]]` | no | Platform associations carrying the lot's external IDs |
 | `imageLinks` | `Optional[list[ImageLinkDto]]` | no | Attached image links |
 
 ---

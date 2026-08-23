@@ -3,7 +3,7 @@
   "results": {
     "api.address.validate": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -13,17 +13,17 @@
     },
     "api.catalog.get": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
-      "fixture": "CatalogExpandedDto.json",
+      "fixture": "CatalogWithLotsDto.json",
       "detail": null,
-      "fixture_sha256": "afabc66309e5f84cbe57719264da475c28231f1f66e03b24b81ff99f17655ea5"
+      "fixture_sha256": "a32f325a93bb6ea6f564dc310cc8b4e170612e7b7c0199a8551dd05cde5e201d"
     },
     "api.companies.get_by_id": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -33,7 +33,7 @@
     },
     "api.companies.get_details": {
       "status": "failing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -42,7 +42,7 @@
     },
     "api.contacts.get": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -52,7 +52,7 @@
     },
     "api.contacts.get_details": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -62,7 +62,7 @@
     },
     "api.contacts.get_primary_details": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -72,7 +72,7 @@
     },
     "api.dashboard.get": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -82,7 +82,7 @@
     },
     "api.dashboard.get_grid_views": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -92,7 +92,7 @@
     },
     "api.documents.list": {
       "status": "failing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -101,7 +101,7 @@
     },
     "api.jobs.form.shipments": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -111,7 +111,7 @@
     },
     "api.jobs.get": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -119,9 +119,49 @@
       "detail": null,
       "fixture_sha256": "146e06456a8c76e996fed59a6b73f85629c9a5401007d114abda9831ca1d21a0"
     },
+    "api.jobs.get_calendar_items": {
+      "status": "passing",
+      "checked": "2026-08-23",
+      "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
+      "fixture": "CalendarItem.json",
+      "detail": null,
+      "fixture_sha256": "deec48e16e6396412e2fca5f0774d16cf866191e2d60a45efc0169f73771b6bf"
+    },
+    "api.jobs.get_packaging_containers": {
+      "status": "passing",
+      "checked": "2026-08-23",
+      "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
+      "fixture": "PackagingContainer.json",
+      "detail": null,
+      "fixture_sha256": "0b2ce3902070d81dcd235254a7c1b6323680572caccb905df939e929655bc2e4"
+    },
+    "api.jobs.get_price": {
+      "status": "passing",
+      "checked": "2026-08-23",
+      "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
+      "fixture": "JobPrice.json",
+      "detail": null,
+      "fixture_sha256": "1572a94d5eeadd2a37711b8fe8939b17c530547c25bc63cbe1d8bfcaf3a278db"
+    },
+    "api.jobs.get_update_page_config": {
+      "status": "passing",
+      "checked": "2026-08-23",
+      "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
+      "fixture": "JobUpdatePageConfig.json",
+      "detail": null,
+      "fixture_sha256": "955788efabd639931cdc5914faaa4f498538309757ff47dcad6c086f4701f06f"
+    },
     "api.jobs.note.get": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -131,13 +171,23 @@
     },
     "api.jobs.on_hold.list": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "ExtendedOnHoldInfo.json",
       "detail": null,
       "fixture_sha256": "528561b2bfd6f2bc7ba9cdf8b7b33342ac7e92912eb7731a446f30f83aa8ff79"
+    },
+    "api.jobs.search": {
+      "status": "passing",
+      "checked": "2026-08-23",
+      "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
+      "fixture": "JobSearchResult.json",
+      "detail": null,
+      "fixture_sha256": "985b93a5de6c675cde1f9c52650a491c12bad450b27181124a634f450f1a9e1f"
     },
     "api.jobs.timeline.create_task": {
       "status": "passing",
@@ -163,7 +213,7 @@
     },
     "api.jobs.timeline.response": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -195,7 +245,7 @@
     },
     "api.jobs.tracking.get": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -205,7 +255,7 @@
     },
     "api.jobs.tracking.v3": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -215,7 +265,7 @@
     },
     "api.lookup.get_access_key": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -225,7 +275,7 @@
     },
     "api.lookup.get_access_keys": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -235,7 +285,7 @@
     },
     "api.lookup.get_by_key": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -245,7 +295,7 @@
     },
     "api.lookup.get_common_insurance": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -255,7 +305,7 @@
     },
     "api.lookup.get_contact_types": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -265,7 +315,7 @@
     },
     "api.lookup.get_countries": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -275,7 +325,7 @@
     },
     "api.lookup.get_density_class_map": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -285,7 +335,7 @@
     },
     "api.lookup.get_document_types": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -295,7 +345,7 @@
     },
     "api.lookup.get_items": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -305,7 +355,7 @@
     },
     "api.lookup.get_job_statuses": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -315,7 +365,7 @@
     },
     "api.lookup.get_parcel_package_types": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -325,7 +375,7 @@
     },
     "api.lookup.get_ppc_campaigns": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -335,16 +385,26 @@
     },
     "api.lookup.get_refer_categories": {
       "status": "failing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "LookupValue.json",
       "detail": "- [].id: in fixture, absent live\n- [].key: in fixture, absent live\n- [].name: in fixture, absent live\n- [].value: in fixture, absent live\n+ [].actionType: live only, fixture stale\n+ [].companyID: live only, fixture stale\n+ [].contactID: live only, fixture stale\n+ [].createBy: live only, fixture stale\n+ [].directEmail: live only, fixture stale\n+ [].industryTypeID: live only, fixture stale\n+ [].industryTypes: live only, fixture stale\n+ [].isActive: live only, fixture stale\n+ [].isPaid: live only, fixture stale\n+ [].jobID: live only, fixture stale\n+ [].landingUrl: live only, fixture stale\n+ [].modifiedDdate: live only, fixture stale\n+ [].modifyBy: live only, fixture stale\n+ [].referCategoryID: live only, fixture stale\n+ [].referCategoryName: live only, fixture stale\n+ [].referSubCategoryID: live only, fixture stale\n+ [].referSubCategoryName: live only, fixture stale\n+ [].referUrl: live only, fixture stale\n+ [].referedInternetId: live only, fixture stale\n+ [].submissionUrl: live only, fixture stale"
     },
+    "api.lots.get": {
+      "status": "passing",
+      "checked": "2026-08-23",
+      "source": "live",
+      "environment": "staging",
+      "mutation_class": "read_only",
+      "fixture": "LotDto.json",
+      "detail": null,
+      "fixture_sha256": "fa3be6ae9e90f776e93aa26526ee4f8b958dd94f3a4aa7e37cbe515ef6a53a5f"
+    },
     "api.notes.list": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -354,7 +414,7 @@
     },
     "api.notes.suggest_users": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -364,17 +424,17 @@
     },
     "api.sellers.get": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
       "fixture": "SellerExpandedDto.json",
       "detail": null,
-      "fixture_sha256": "d20a0a21f8abc94871111befae6ff4e567834ca3c1d9870b994cfdd926ca9893"
+      "fixture_sha256": "35fb5d9e8393fabdc4e4ac1b3d5032890d0562cab3fdb5db5cffde31d895645c"
     },
     "api.shipments.get_global_accessorials": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -384,7 +444,7 @@
     },
     "api.shipments.get_shipment": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -394,7 +454,7 @@
     },
     "api.views.get_access_info": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",
@@ -404,7 +464,7 @@
     },
     "api.web2lead.get": {
       "status": "passing",
-      "checked": "2026-07-27",
+      "checked": "2026-08-23",
       "source": "live",
       "environment": "staging",
       "mutation_class": "read_only",

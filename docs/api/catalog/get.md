@@ -6,7 +6,7 @@
 **Python**
 
 ```python
-api.catalog.get(catalog_id: int) -> CatalogExpandedDto
+api.catalog.get(catalog_id: int) -> CatalogWithLotsDto
 ```
 
 **CLI**
@@ -21,22 +21,22 @@ Args:
     catalog_id: Catalog identifier.
 
 Returns:
-    CatalogExpandedDto: Catalog details with seller/lot counts.
+    CatalogWithLotsDto: Catalog details with seller, platforms and lots.
 
 ## Response
 
-Returns `CatalogExpandedDto`.
+Returns `CatalogWithLotsDto`.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `id` | `int` | yes | Catalog ID |
-| `customerCatalogId` | `Optional[str]` | no | Customer-facing catalog ID |
-| `agent` | `Optional[str]` | no | Assigned agent code |
+| `agentCompanyIds` | `Optional[list[str]]` | no | Agent company IDs assigned to the catalog |
 | `title` | `Optional[str]` | no | Catalog title |
 | `startDate` | `datetime` | yes | Catalog start date-time |
 | `endDate` | `datetime` | yes | Catalog end date-time |
 | `isCompleted` | `bool` | yes | Whether the catalog is completed |
-| `sellers` | `Optional[list[SellerDto]]` | no | Attached sellers |
+| `seller` | `Optional[SellerDto]` | no | Owning seller |
+| `platforms` | `Optional[list[CatalogPlatformDto]]` | no | Platform associations carrying the catalog's external IDs |
 | `lots` | `Optional[list[LotCatalogInformationDto]]` | no | Lot summaries belonging to the catalog |
 
 ---

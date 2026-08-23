@@ -6,7 +6,7 @@
 **Python**
 
 ```python
-api.catalog.create(*, data: AddCatalogRequest | dict) -> CatalogWithSellersDto
+api.catalog.create(*, data: AddCatalogRequest | dict) -> CatalogExpandedDto
 ```
 
 **CLI**
@@ -18,9 +18,10 @@ ab catalog create [--data ...]
 POST /Catalog.
 
 Args:
-    data: Catalog creation payload with ``customer_catalog_id``,
-        ``agent``, ``title``, ``start_date`` (required datetime),
-        ``end_date`` (required datetime), and ``seller_ids``.
+    data: Catalog creation payload with ``title``, ``start_date``
+        and ``end_date`` (required datetimes), ``is_completed``,
+        ``seller_id`` (required — a catalog belongs to exactly one
+        seller), ``agent_company_ids``, and ``platforms``.
         Accepts an :class:`AddCatalogRequest` instance or a dict.
 
 Request model: :class:`AddCatalogRequest`
@@ -29,27 +30,28 @@ Request model: :class:`AddCatalogRequest`
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `customerCatalogId` | `Optional[str]` | no | Customer-facing catalog ID |
-| `agent` | `Optional[str]` | no | Assigned agent code |
-| `title` | `Optional[str]` | no | Catalog title |
-| `startDate` | `datetime` | yes | Catalog start date-time |
-| `endDate` | `datetime` | yes | Catalog end date-time |
-| `sellerIds` | `Optional[list[int]]` | no | Seller IDs to attach |
-
-## Response
-
-Returns `CatalogWithSellersDto`.
-
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `id` | `int` | yes | Catalog ID |
-| `customerCatalogId` | `Optional[str]` | no | Customer-facing catalog ID |
-| `agent` | `Optional[str]` | no | Assigned agent code |
+| `agentCompanyIds` | `Optional[list[str]]` | no | Agent company IDs to assign |
 | `title` | `Optional[str]` | no | Catalog title |
 | `startDate` | `datetime` | yes | Catalog start date-time |
 | `endDate` | `datetime` | yes | Catalog end date-time |
 | `isCompleted` | `bool` | yes | Whether the catalog is completed |
-| `sellers` | `Optional[list[SellerDto]]` | no | Attached sellers |
+| `sellerId` | `int` | yes | Owning seller ID |
+| `platforms` | `Optional[list[CatalogPlatformDto]]` | no | Platforms this catalog is published to, with its external ID on each |
+
+## Response
+
+Returns `CatalogExpandedDto`.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `id` | `int` | yes | Catalog ID |
+| `agentCompanyIds` | `Optional[list[str]]` | no | Agent company IDs assigned to the catalog |
+| `title` | `Optional[str]` | no | Catalog title |
+| `startDate` | `datetime` | yes | Catalog start date-time |
+| `endDate` | `datetime` | yes | Catalog end date-time |
+| `isCompleted` | `bool` | yes | Whether the catalog is completed |
+| `seller` | `Optional[SellerDto]` | no | Owning seller |
+| `platforms` | `Optional[list[CatalogPlatformDto]]` | no | Platform associations carrying the catalog's external IDs |
 
 ---
 

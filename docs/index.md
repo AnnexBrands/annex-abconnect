@@ -57,6 +57,7 @@ api/users
 api/catalog
 api/lots
 api/sellers
+api/platforms
 api/autoprice
 api/web2lead
 api/commodities
@@ -88,6 +89,7 @@ models/users
 models/catalog
 models/lots
 models/sellers
+models/platforms
 models/autoprice
 models/web2lead
 models/commodities

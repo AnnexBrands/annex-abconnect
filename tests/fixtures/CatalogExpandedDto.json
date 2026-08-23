@@ -1,24 +1,16 @@
 {
   "id": 1,
-  "customerCatalogId": "FALL-2026",
-  "agent": "AGT01",
-  "title": "Fall 2026 Auction",
-  "startDate": "2026-09-01T00:00:00",
-  "endDate": "2026-09-30T23:59:59",
+  "agentCompanyIds": [],
+  "title": "test",
+  "startDate": "2026-02-18T09:34:16.856000",
+  "endDate": "2026-02-18T11:35:16.856000",
   "isCompleted": false,
-  "sellers": [
-    {
-      "id": 1,
-      "name": "Estate Co",
-      "customerDisplayId": 1001,
-      "isActive": true,
-      "displayId": null
-    }
-  ],
-  "lots": [
-    {
-      "id": 101,
-      "lotNumber": "A-1"
-    }
-  ]
+  "seller": {
+    "id": 3,
+    "name": "string",
+    "customerDisplayId": 1,
+    "isActive": true,
+    "displayId": null
+  },
+  "platforms": []
 }

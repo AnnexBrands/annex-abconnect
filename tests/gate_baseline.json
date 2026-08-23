@@ -7,7 +7,7 @@
     "G5",
     "G6"
   ],
-  "/Bulk/insert POST": [
+  "/Bulk/upsert POST": [
     "G1",
     "G2",
     "G3",
@@ -20,6 +20,8 @@
     "G6"
   ],
   "/Catalog POST": [
+    "G1",
+    "G2",
     "G3",
     "G4",
     "G5",
@@ -42,6 +44,16 @@
     "G6"
   ],
   "/Catalog/{_} PUT": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/Catalog/{_}/merge/{_} POST": [
+    "G1",
+    "G2",
     "G3",
     "G4",
     "G5",
@@ -53,21 +65,14 @@
     "G6"
   ],
   "/Lot POST": [
-    "G3",
-    "G4",
-    "G5",
-    "G6"
-  ],
-  "/Lot/get-overrides POST": [
-    "G3",
-    "G4",
-    "G5",
-    "G6"
-  ],
-  "/Lot/overrides POST": [
     "G1",
     "G2",
     "G3",
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/Lot/ItemData POST": [
     "G4",
     "G5",
     "G6"
@@ -81,16 +86,83 @@
     "G6"
   ],
   "/Lot/{_} GET": [
+    "G1",
+    "G2",
     "G3",
     "G4",
     "G5",
     "G6"
   ],
   "/Lot/{_} PUT": [
+    "G1",
+    "G2",
     "G3",
     "G4",
     "G5",
     "G6"
+  ],
+  "/Lot/{_}/ClientItemData GET": [
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/Lot/{_}/ClientItemData POST": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/Lot/{_}/ClientItemData/{_} DELETE": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/Lot/{_}/merge/{_} POST": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/Platform GET": [
+    "G4",
+    "G6"
+  ],
+  "/Platform POST": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "/Platform/{_} DELETE": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/Platform/{_} GET": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/Platform/{_} PUT": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
   ],
   "/Seller GET": [
     "G4",
@@ -629,6 +701,19 @@
     "G6"
   ],
   "/job POST": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/job/feedback/{_} GET": [
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "/job/feedback/{_} POST": [
     "G1",
     "G2",
     "G3",
@@ -1772,6 +1857,8 @@
     "G6"
   ],
   "/views/{_}/accessinfo GET": [
+    "G1",
+    "G2",
     "G3",
     "G4",
     "G5",

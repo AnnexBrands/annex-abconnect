@@ -8,14 +8,14 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 
 ## Summary
 
-- **Total endpoints**: 239
-- **Complete (all gates pass)**: 174
-- **G1 Model Fidelity**: 188/239 pass
-- **G2 Fixture Status**: 189/239 pass
-- **G3 Test Quality**: 227/239 pass
-- **G4 Doc Accuracy**: 238/239 pass
-- **G5 Param Routing**: 233/239 pass
-- **G6 Request Quality**: 235/239 pass
+- **Total endpoints**: 251
+- **Complete (all gates pass)**: 187
+- **G1 Model Fidelity**: 202/251 pass
+- **G2 Fixture Status**: 203/251 pass
+- **G3 Test Quality**: 237/251 pass
+- **G4 Doc Accuracy**: 249/251 pass
+- **G5 Param Routing**: 244/251 pass
+- **G6 Request Quality**: 244/251 pass
 
 ## Status Legend
 
@@ -118,7 +118,7 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /lookup/comonInsurance | GET | api.lookup.get_common_insurance | — | List[CommonInsuranceSlab] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /lookup/densityClassMap | GET | api.lookup.get_density_class_map | — | List[DensityClassEntry] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /lookup/referCategory | GET | api.lookup.get_refer_categories | — | List[LookupValue] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
-| /lookup/referCategoryHeirachy | GET | api.lookup.get_refer_category_hierarchy | — | List[ReferCategoryHierarchy] | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 008 |
+| /lookup/referCategoryHeirachy | GET | api.lookup.get_refer_category_hierarchy | — | List[ReferCategoryHierarchy] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /lookup/resetMasterConstantCache | GET | api.lookup.reset_cache | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — mutating |
 | /commodity/{id} | GET | api.commodities.get | — | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /commodity/{id} | PUT | api.commodities.update | CommodityUpdateRequest | Commodity | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
@@ -143,7 +143,7 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /views/{viewId} | GET | api.views.get | — | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views | POST | api.views.create | GridViewCreateRequest | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views/{viewId} | DELETE | api.views.delete | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
-| /views/{viewId}/accessinfo | GET | api.views.get_access_info | — | List[GridViewAccessEntry] | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | 008 |
+| /views/{viewId}/accessinfo | GET | api.views.get_access_info | — | List[GridViewAccessEntry] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /views/{viewId}/access | PUT | api.views.update_access | GridViewAccess | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /views/datasetsps | GET | api.views.get_dataset_sps | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views/datasetsp/{spName} | GET | api.views.get_dataset_sp | — | List[StoredProcedureColumn] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
@@ -181,11 +181,10 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /partner/search | POST | api.partners.search | PartnerSearchRequest | List[Partner] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /Seller/{id} | GET | api.sellers.get | — | SellerExpandedDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
 | /Seller | GET | — | — | PaginatedList[SellerExpandedDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | 035 — typed filter params wired; needs fixture capture from staging |
-| /Catalog | GET | — | — | PaginatedList[CatalogExpandedDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | 035 — typed filter params wired; needs fixture capture from staging |
-| /Catalog/{id} | GET | api.catalog.get | — | CatalogExpandedDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid catalog ID |
+| /Catalog | GET | — | — | PaginatedList[CatalogWithLotsDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | 035 — typed filter params wired; needs fixture capture from staging |
+| /Catalog/{id} | GET | api.catalog.get | — | CatalogWithLotsDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid catalog ID |
 | /Lot | GET | — | — | PaginatedList[LotDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | 035 — typed filter params wired; needs fixture capture from staging |
-| /Lot/{id} | GET | api.lots.get | — | LotDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | Needs valid lot ID |
-| /Lot/overrides | POST | — | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs lot override params |
+| /Lot/{id} | GET | api.lots.get | — | LotDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs valid lot ID |
 | /Web2Lead | GET | — | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-13, staging |
 | /Web2Lead/post | POST | api.web2lead.post | Web2LeadRequest | Web2LeadResponse | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | 020 |
 | /job | POST | api.jobs.create | JobCreateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
@@ -213,16 +212,14 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /users/user | PUT | api.users.update | UserUpdateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
 | /autoprice/v2/quoterequest | POST | api.autoprice.quote_request | QuoteRequestModel | QuoteRequestResponse | FAIL | FAIL | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
 | /Catalog/{id} | DELETE | api.catalog.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
-| /Catalog/{id} | PUT | api.catalog.update | UpdateCatalogRequest | CatalogWithSellersDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 020 |
-| /Bulk/insert | POST | api.catalog.bulk_insert | BulkInsertRequest | — | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | 020 |
+| /Catalog/{id} | PUT | api.catalog.update | UpdateCatalogRequest | CatalogExpandedDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
 | /Seller | POST | api.sellers.create | AddSellerRequest | SellerDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
 | /Seller/{id} | PUT | api.sellers.update | UpdateSellerRequest | SellerDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
 | /Seller/{id} | DELETE | api.sellers.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
-| /Lot | POST | api.lots.create | AddLotRequest | LotDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 020 |
-| /Lot/{id} | PUT | api.lots.update | UpdateLotRequest | LotDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 020 |
+| /Lot | POST | api.lots.create | AddLotRequest | LotDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
+| /Lot/{id} | PUT | api.lots.update | UpdateLotRequest | LotDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
 | /Lot/{id} | DELETE | api.lots.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 020 |
-| /Lot/get-overrides | POST | api.lots.get_overrides | — | List[LotOverrideDto] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 020 |
-| /Catalog | POST | api.catalog.create | AddCatalogRequest | CatalogWithSellersDto | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | auto-discovered |
+| /Catalog | POST | api.catalog.create | AddCatalogRequest | CatalogExpandedDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /contacts/{id} | GET | api.contacts.get | — | ContactSimple | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /documents/get/{docPath} | GET | api.documents.get | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /documents/list | GET | api.documents.list | — | List[Document] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
@@ -245,7 +242,7 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /job/{jobDisplayId}/note/{id} | GET | api.jobs.note.get | — | JobNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/timeline/{timelineTaskIdentifier} | GET | api.jobs.timeline.get_task | — | TimelineTask | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/timeline/incrementjobstatus | POST | api.jobs.timeline.increment_status | IncrementStatusRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/timeline/{timelineTaskId} | PATCH | api.jobs.timeline.update_task | TimelineTaskUpdateRequest | TimelineTask | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/timeline/{timelineTaskId} | PATCH | api.jobs.timeline.update_task | TimelineTaskUpdateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/item/notes | POST | api.jobs.add_item_notes | ItemNotesRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/note | POST | api.jobs.note.create | JobNoteCreateRequest | JobNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/parcelitems | POST | api.jobs.parcel_items.create | ParcelItemCreateRequest | ParcelItem | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
@@ -266,6 +263,18 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 | /job/{jobDisplayId}/tracking/shipment/{proNumber} | GET | api.jobs.tracking.shipment | — | ShipmentTrackingDetails | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
 | /job/feedback/{jobDisplayId} | GET | api.jobs.get_feedback | — | FeedbackSaveModel | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
 | /job/feedback/{jobDisplayId} | POST | api.jobs.save_feedback | FeedbackSaveModel | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Bulk/upsert | POST | api.catalog.bulk_upsert | BulkUpsertRequest | List[CatalogWithLotsDto] | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /Catalog/{targetId}/merge/{sourceId} | POST | api.catalog.merge | — | CatalogWithLotsDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Lot/{id}/ClientItemData | POST | api.lots.create_client_item_data | AddLotClientItemDataRequest | LotClientItemDataDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Lot/{lotId}/ClientItemData/{clientItemDataId} | DELETE | api.lots.delete_client_item_data | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Lot/{id}/ClientItemData | GET | — | — | PaginatedList[LotClientItemDataDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /Lot/ItemData | POST | api.lots.item_data | GetLotsItemDataQuery | List[LotItemDataDto] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /Lot/{targetId}/merge/{sourceId} | POST | api.lots.merge | — | LotDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Platform | POST | api.platforms.create | AddPlatformRequest | PlatformDto | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /Platform/{id} | DELETE | api.platforms.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Platform/{id} | GET | api.platforms.get | — | PlatformDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /Platform | GET | — | — | PaginatedList[PlatformDto] | FAIL | FAIL | FAIL | PASS | FAIL | PASS | incomplete | auto-discovered |
+| /Platform/{id} | PUT | api.platforms.update | UpdatePlatformRequest | PlatformDto | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
 
 ## Model Warning Summary
 

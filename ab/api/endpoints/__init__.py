@@ -17,6 +17,7 @@ from ab.api.endpoints.lots import LotsEndpoint
 from ab.api.endpoints.notes import NotesEndpoint
 from ab.api.endpoints.partners import PartnersEndpoint
 from ab.api.endpoints.payments import PaymentsEndpoint
+from ab.api.endpoints.platforms import PlatformsEndpoint
 from ab.api.endpoints.reports import ReportsEndpoint
 from ab.api.endpoints.rfq import RFQEndpoint
 from ab.api.endpoints.schema_stubs import (
@@ -58,6 +59,7 @@ __all__ = [
     "NotificationsEndpoint",
     "PartnersEndpoint",
     "PaymentsEndpoint",
+    "PlatformsEndpoint",
     "ReportsEndpoint",
     "RFQEndpoint",
     "SellersEndpoint",

@@ -7,11 +7,11 @@
 ```
 
 ```{note}
-The catalog surface targets the **migrated Catalog schema**, which is deployed
-to staging only. A catalog carries `agent_company_ids`, exactly one `seller`,
-and per-platform external IDs in `platforms`; the old `customer_catalog_id`,
-`agent` and `sellers` list are gone. Calling these methods against production
-raises {class}`~ab.exceptions.CatalogSchemaMismatchError`.
+The catalog surface targets the **migrated Catalog schema**. A catalog carries
+`agent_company_ids`, exactly one `seller`, and per-platform external IDs in
+`platforms`; the old `customer_catalog_id`, `agent` and `sellers` list are gone.
+Production had not migrated as of this release, so these calls fail against it —
+`annex-abconnect==0.1.15` is the last release modelling the pre-migration schema.
 ```
 
 ## Per-endpoint reference

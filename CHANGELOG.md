@@ -4,6 +4,38 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
+## [0.2.2] - 2026-08-25
+
+Completes the Catalog schema cutover. The SDK now models the migrated schema
+unconditionally; environment skew is handled by pinning, not by a runtime guard.
+
+### Breaking
+
+- **`CatalogSchemaMismatchError` is removed, along with the guard that raised
+  it.** 0.2.0 and 0.2.1 refused every `catalog`, `lots`, `sellers` and
+  `platforms` call when the client targeted production, because the migrated
+  Catalog schema was deployed to staging only. That guard is gone: catalog-surface
+  calls now go out against whatever environment the client targets.
+
+  Production had not migrated as of this release, so those calls fail against it
+  — with the API's own 400/404 rather than a guard message. **Pin
+  `annex-abconnect==0.1.15` for production catalog access** until the Catalog API
+  migrates there; 0.1.15 is the last release modelling the pre-migration schema.
+  Code that caught `CatalogSchemaMismatchError` must drop the handler; the name
+  no longer exists in `ab.exceptions`.
+
+### Notes
+
+- `_DEFAULT_SCOPES` is deliberately unchanged. `login.abconnect.co` still does
+  not advertise the `catalog` scope, and one unavailable scope fails the whole
+  grant with `invalid_scope`, so adding it to the production default would break
+  every production login.
+  `tests/integration/test_oauth_scopes.py::test_catalog_scope_is_staging_only`
+  fails when production gains the scope — that is the signal to make the change.
+- The two gaps 0.2.0 certified as unverified are still unverified: `POST
+  /Bulk/upsert` answers `404` on staging for any non-empty `catalogs` list, and
+  `POST /Lot/ItemData` answers `200 []` for every query shape tried.
+
 ## [0.2.1] - 2026-08-23
 
 OAuth scopes are configurable, and the requested set now matches what each

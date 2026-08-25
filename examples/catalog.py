@@ -3,10 +3,10 @@
 Live SDK example — real call, real printed pydantic response. Migrated from the
 deprecated runner (examples/_catalog.py) to the plain-script form.
 
-Targets the migrated Catalog schema (staging only): a catalog carries
-``agentCompanyIds``, exactly one ``seller``, and per-platform external IDs in
-``platforms``. Against production these calls raise
-:class:`~ab.exceptions.CatalogSchemaMismatchError`.
+Targets the migrated Catalog schema: a catalog carries ``agentCompanyIds``,
+exactly one ``seller``, and per-platform external IDs in ``platforms``.
+Production had not migrated as of this release, so this example runs against
+staging.
 
 The read-only calls (``get``, ``list``) run by default. The state-changing calls
 (create / update / merge / bulk_upsert / delete) mutate staging, so they are

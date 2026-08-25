@@ -3,10 +3,10 @@
 Live SDK example — real call, real printed pydantic response. Migrated from the
 deprecated runner (examples/_lots.py) to the plain-script form.
 
-Targets the migrated Catalog schema (staging only): a lot no longer carries
-``customerItemId`` — its external identity lives per-platform in ``platforms``
-— and ``overridenData`` is now ``itemData``. Against production these calls
-raise :class:`~ab.exceptions.CatalogSchemaMismatchError`.
+Targets the migrated Catalog schema: a lot no longer carries ``customerItemId``
+— its external identity lives per-platform in ``platforms`` — and
+``overridenData`` is now ``itemData``. Production had not migrated as of this
+release, so this example runs against staging.
 
 See also: https://ab-sdk.readthedocs.io/en/latest/api/lots.html
 """

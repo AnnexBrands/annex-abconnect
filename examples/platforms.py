@@ -2,11 +2,11 @@
 
 Live SDK example — real call, real printed pydantic response.
 
-Platforms are new in the migrated Catalog schema (staging only). A platform is
-an external marketplace a catalog or lot is published to; the platform ID plus
-an external ID is what replaced the retired ``customerCatalogId`` /
-``customerItemId`` columns. Against production these calls raise
-:class:`~ab.exceptions.CatalogSchemaMismatchError`.
+Platforms are new in the migrated Catalog schema. A platform is an external
+marketplace a catalog or lot is published to; the platform ID plus an external
+ID is what replaced the retired ``customerCatalogId`` / ``customerItemId``
+columns. Production had not migrated as of this release, so this example runs
+against staging.
 
 The read-only ``list`` call runs by default. Everything else mutates staging and
 is guarded behind ``AB_RUN_MUTATIONS=1``; ``get``/``update``/``delete`` operate

@@ -1,21 +1,22 @@
-"""The catalog surface is guarded against the environment it does not model.
+"""The catalog surface is not environment-guarded.
 
-The migrated Catalog schema (``agentCompanyIds``, a singular ``seller``,
-per-platform external IDs, ``/Platform``, ``/Bulk/upsert``) is deployed to
-staging only; production still serves the pre-migration schema. Calling the
-catalog surface against production must fail with an explanation rather than
-sending a body the old API rejects or silently dropping fields it returns.
+0.2.0 and 0.2.1 refused catalog-surface calls against production with
+``CatalogSchemaMismatchError``, because the migrated Catalog schema was
+deployed to staging only. 0.2.2 completes the cutover: the SDK models the
+migrated schema unconditionally and environment skew is handled by pinning
+(the sole consumer pins 0.2.1 for production until its Catalog API migrates),
+not by a runtime guard.
+
+These tests keep the guard from coming back by accident.
 """
 
 from __future__ import annotations
 
-import pytest
-
+import ab.exceptions
 from ab.api.endpoints.catalog import CatalogEndpoint
 from ab.api.endpoints.lots import LotsEndpoint
 from ab.api.endpoints.platforms import PlatformsEndpoint
 from ab.api.endpoints.sellers import SellersEndpoint
-from ab.exceptions import CatalogSchemaMismatchError
 
 
 class _StubClient:
@@ -27,7 +28,7 @@ class _StubClient:
         self.calls: list[tuple[str, str]] = []
 
     #: Superset payload that satisfies every model on the catalog surface, so
-    #: the unguarded cases exercise the guard rather than response validation.
+    #: the cases exercise routing rather than response validation.
     RESPONSE = {
         "id": 1,
         "lotId": 1,
@@ -61,32 +62,21 @@ def _endpoints(environment):
     ]
 
 
-def test_production_calls_raise_before_any_request_goes_out():
+def test_production_calls_go_out_unguarded():
     client, cases = _endpoints("production")
-    for name, call in cases:
-        with pytest.raises(CatalogSchemaMismatchError):
-            call()
-    assert client.calls == [], f"guard let requests through: {client.calls}"
+    for _name, call in cases:
+        call()
+    assert len(client.calls) == len(cases)
 
 
-def test_error_names_the_environment_and_the_route():
-    client = _StubClient("production")
-    with pytest.raises(CatalogSchemaMismatchError) as exc:
-        CatalogEndpoint(client).get(1)
-    message = str(exc.value)
-    assert "'production'" in message
-    assert "/Catalog/1" in message
-    assert "staging" in message
-
-
-def test_staging_calls_are_not_guarded():
+def test_staging_calls_go_out_unguarded():
     client, cases = _endpoints("staging")
     for _name, call in cases:
         call()
     assert len(client.calls) == len(cases)
 
 
-def test_client_without_environment_is_not_guarded():
+def test_client_without_environment_is_unguarded():
     """Test doubles that expose no ``environment`` must keep working."""
     client, cases = _endpoints(None)
     for _name, call in cases:
@@ -94,9 +84,7 @@ def test_client_without_environment_is_not_guarded():
     assert len(client.calls) == len(cases)
 
 
-def test_non_catalog_surfaces_are_unaffected():
-    from ab.api.endpoints.account import AccountEndpoint
-
-    client = _StubClient("production")
-    AccountEndpoint(client).get_profile()
-    assert client.calls, "acportal surface must not be guarded"
+def test_catalog_schema_mismatch_error_is_gone():
+    """The exception was the guard's only reason to exist — it must not linger
+    as dead API surface that callers could still try to catch."""
+    assert not hasattr(ab.exceptions, "CatalogSchemaMismatchError")

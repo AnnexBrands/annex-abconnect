@@ -7,11 +7,11 @@
 ```
 
 ```{note}
-The lots surface targets the **migrated Catalog schema**, which is deployed to
-staging only. A lot no longer carries `customer_item_id` — its external
-identity lives per-platform in `platforms` — and `overriden_data` is now
-`item_data`. Calling these methods against production raises
-{class}`~ab.exceptions.CatalogSchemaMismatchError`.
+The lots surface targets the **migrated Catalog schema**. A lot no longer
+carries `customer_item_id` — its external identity lives per-platform in
+`platforms` — and `overriden_data` is now `item_data`. Production had not
+migrated as of this release, so these calls fail against it —
+`annex-abconnect==0.1.15` is the last release modelling the pre-migration schema.
 ```
 
 ## Per-endpoint reference

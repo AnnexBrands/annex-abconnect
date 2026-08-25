@@ -7,9 +7,9 @@
 ```
 
 ```{note}
-Platforms are new in the **migrated Catalog schema**, which is deployed to
-staging only. Calling these methods against production raises
-{class}`~ab.exceptions.CatalogSchemaMismatchError`.
+Platforms are new in the **migrated Catalog schema**. Production had not
+migrated as of this release, so these calls fail against it — the platform
+surface does not exist on the pre-migration API.
 ```
 
 A platform is an external marketplace a catalog or lot is published to. The

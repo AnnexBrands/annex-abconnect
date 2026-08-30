@@ -30,13 +30,13 @@ Request model: :class:`AddCatalogRequest`
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `agentCompanyIds` | `Optional[list[str]]` | no | Agent company IDs to assign |
-| `title` | `Optional[str]` | no | Catalog title |
+| `agentCompanyIds` | `list[str]` | no | Agent company IDs to assign |
+| `title` | `str` | yes | Catalog title |
 | `startDate` | `datetime` | yes | Catalog start date-time |
 | `endDate` | `datetime` | yes | Catalog end date-time |
 | `isCompleted` | `bool` | yes | Whether the catalog is completed |
 | `sellerId` | `int` | yes | Owning seller ID |
-| `platforms` | `Optional[list[CatalogPlatformDto]]` | no | Platforms this catalog is published to, with its external ID on each |
+| `platforms` | `list[CatalogPlatformDto]` | no | Platforms this catalog is published to, with its external ID on each |
 
 ## Response
 

@@ -30,8 +30,21 @@ Args:
         ``customer_item_id``, so re-sending a payload updates the
         existing records instead of duplicating them.
 
+        Every catalog must name its ``platform_id``. Corporate
+        callers (``CorporateAdmin``, ``CorporateAccounting``) have no
+        ``partnerIds`` claim for the API to resolve a platform from,
+        and requiring it of everyone keeps a payload's meaning
+        independent of who sends it. To derive it from your own
+        token, read ``partner_ids`` off
+        :meth:`~ab.http.HttpClient.bearer_claims` and map it with
+        ``api.platforms.list(partner_id=...)``.
+
 Returns:
     list[CatalogWithLotsDto]: The upserted catalogs.
+
+Raises:
+    pydantic.ValidationError: When any catalog omits ``platform_id``.
+        Reported at ``catalogs.<i>.platformId``, before any HTTP call.
 
 Request model: :class:`BulkUpsertRequest`
 
@@ -39,7 +52,7 @@ Request model: :class:`BulkUpsertRequest`
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `catalogs` | `Optional[list[BulkUpsertCatalogRequest]]` | no | Catalogs to upsert, each with nested lots and seller |
+| `catalogs` | `list[BulkUpsertCatalogRequest]` | no | Catalogs to upsert, each with nested lots and seller |
 
 ## Response
 

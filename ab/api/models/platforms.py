@@ -43,12 +43,14 @@ class CatalogPlatformDto(ResponseModel):
 
     ``platform_catalog_id`` is the catalog's external ID *on that
     platform* — the replacement for the retired top-level
-    ``customerCatalogId``.
+    ``customerCatalogId``. It is **required**: the association exists to
+    carry that ID, so supplying a platform entry without one associates a
+    catalog to a platform under no external identity at all.
     """
 
     platform_id: int = Field(..., alias="platformId", description="Platform ID")
-    platform_catalog_id: Optional[str] = Field(
-        None, alias="platformCatalogId", description="Catalog's external ID on this platform",
+    platform_catalog_id: str = Field(
+        ..., alias="platformCatalogId", description="Catalog's external ID on this platform",
     )
 
 

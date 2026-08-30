@@ -183,6 +183,7 @@ class TestCatalogModels:
                     "title": "Auction",
                     "startDate": "2026-05-19T00:00:00Z",
                     "endDate": "2026-05-20T00:00:00Z",
+                    "platformId": 11,
                     "lots": [
                         {
                             "customerItemId": "ITEM-001",
@@ -209,6 +210,9 @@ class TestCatalogModels:
         # bulk still matches incoming rows on the caller's own identifiers.
         assert catalog_payload["customerCatalogId"] == "CAT-001"
         assert catalog_payload["lots"][0]["customerItemId"] == "ITEM-001"
+        # Every catalog names the platform it lands on — see
+        # tests/unit/test_bulk_upsert_platform_id.py for the full rule.
+        assert catalog_payload["platformId"] == 11
 
     def test_seller_dto(self):
         data = require_fixture("SellerDto", "GET", "/Seller/{id}", required=True)

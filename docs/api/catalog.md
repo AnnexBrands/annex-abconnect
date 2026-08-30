@@ -133,6 +133,7 @@ re-sending a payload updates the existing records rather than duplicating them.
 
 ```python
 api.catalog.bulk_upsert(data={"catalogs": [{
+    "platformId": 11,
     "customerCatalogId": "FALL-2026",
     "title": "Fall Auction",
     "startDate": "2026-09-01T00:00:00Z",
@@ -143,8 +144,60 @@ api.catalog.bulk_upsert(data={"catalogs": [{
 }]})
 ```
 
+#### `platformId` is required on every catalog
+
+Every bulk catalog entry belongs to a platform, and the SDK makes you say which:
+a payload missing `platformId` raises a `pydantic.ValidationError` located at
+`catalogs.<i>.platformId` before any request goes out.
+
+This is stricter than the API, deliberately:
+
+- **Corporate users** (`CorporateAdmin`, `CorporateAccounting`) have no choice.
+  Their tokens carry no `partnerIds` claim by design, so the API has nothing to
+  resolve a platform from and answers `404` without one.
+- **Non-corporate users** *could* omit it — the API resolves their platform from
+  `partnerIds`. Requiring it anyway means one payload shape works for every
+  caller and records the intended platform in the body instead of leaving it
+  implicit in whoever held the token.
+
+```{warning}
+The API does not *check* the value for non-corporate callers — it ignores it.
+A platform user on partner 1 who names platform 15 is silently given platform
+11, their own, with a `200` and no error (verified against staging on
+2026-08-28). `platformId` is authoritative only for corporate bearers. If it
+matters that a catalog lands where you said, confirm it from the
+`platforms` association on the response.
+```
+
+Catalogs in one payload may name different platforms:
+
+```python
+api.catalog.bulk_upsert(data={"catalogs": [
+    {"platformId": 11, "customerCatalogId": "FALL-2026", ...},
+    {"platformId": 15, "customerCatalogId": "FALL-2026-RG", ...},
+]})
+```
+
+If you do not know your platform ID, derive it from your own token — the
+`partnerIds` claim maps to the platforms that partner owns:
+
+```python
+claims = api._catalog.bearer_claims()          # ab.auth.claims.BearerClaims
+mine = [p for p in api.platforms.list(page_size=50).items
+        if p.partner_id in claims.partner_ids]
+```
+
+`partnerIds` is a *claim*, never a body field — do not add it to a catalog.
+
 ```{note}
-`seller` is required on every bulk catalog entry, though swagger declares it
-nullable. Staging additionally answers `404` for any non-empty `catalogs` list —
-see `FIXTURES.md` for the current certification status of this route.
+`platformId` does not appear in swagger: the property carries `[SwaggerIgnore]`,
+which hides it from the generated document without changing how the API binds
+it.
+
+`seller`, `customerCatalogId` and `title` are likewise required on every bulk
+catalog entry though swagger declares them nullable. The `404` that staging used
+to answer for any non-empty `catalogs` list was this rule: the certification runs
+used a corporate account and sent no `platformId`. With one supplied, the route
+answers `200` and returns the catalogs with their platform associations —
+verified against staging on 2026-08-27.
 ```

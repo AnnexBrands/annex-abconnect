@@ -14,6 +14,7 @@ from typing import Any, Callable, Dict, Mapping, Optional, Union
 import requests
 
 from ab.auth.base import Token, TokenStorage
+from ab.auth.claims import BearerClaims
 from ab.config import ABConnectSettings
 from ab.exceptions import AuthenticationError, RequestError
 
@@ -46,6 +47,7 @@ class HttpClient:
         self._session = requests.Session()
         self._allow_password_fallback = allow_password_fallback
         self._extra_headers = extra_headers
+        self._claims_cache: Optional[tuple[str, BearerClaims]] = None
 
     @property
     def environment(self) -> str:
@@ -160,6 +162,28 @@ class HttpClient:
         )
         self._token_storage.save_token(token)
         return token
+
+    def bearer_claims(self) -> Optional[BearerClaims]:
+        """Return the claims carried by the bearer this client would send.
+
+        Obtains a token exactly the way :meth:`request` does — so calling this
+        before a request only moves the grant a few milliseconds earlier — and
+        decodes it. The result is cached against the access token itself, so a
+        refresh or a re-login invalidates it without any extra bookkeeping.
+
+        Returns ``None`` when no token can be obtained (an ``anonymous``
+        client, or storage with nothing in it and no password fallback).
+        Callers must read that as *unknown*, not as any particular role.
+        """
+        try:
+            token = self._ensure_token()
+        except AuthenticationError:
+            return None
+        if self._claims_cache is not None and self._claims_cache[0] == token.access_token:
+            return self._claims_cache[1]
+        claims = BearerClaims.from_token(token.access_token)
+        self._claims_cache = (token.access_token, claims)
+        return claims
 
     # ------------------------------------------------------------------
     # Request helpers

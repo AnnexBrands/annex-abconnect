@@ -4,6 +4,90 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
+## [0.2.3] - 2026-08-28
+
+Every bulk-upserted catalog now states the platform it belongs to, and the SDK
+can read the bearer token's own claims to help a caller work out which that is.
+
+### Added
+
+- **`BulkUpsertCatalogRequest.platform_id`** (`platformId`), **required on
+  every catalog**. The property is real but absent from swagger — the API
+  declares it `[SwaggerIgnore]`, which hides it from the generated document and
+  changes nothing about the binder.
+
+  Requiring it of everyone is stricter than the API, deliberately:
+
+  - **corporate users** (`CorporateAdmin`, `CorporateAccounting`) have no
+    choice — those roles intentionally carry no `partnerIds` claim, so the API
+    has nothing to resolve a platform from and answers `404` without one;
+  - **non-corporate users** *could* omit it and be resolved through their own
+    `partnerIds`. It is required anyway so one payload shape works for every
+    caller and the intended platform is recorded in the body rather than left
+    implicit in whoever held the token.
+
+  Caveat, verified on staging 2026-08-28: the API **ignores** the value for
+  non-corporate bearers rather than validating it. A platform user on partner 1
+  who names platform 15 is silently given platform 11 — their own — with a
+  `200`. The value is authoritative only for corporate callers. Confirm the
+  landing platform from the `platforms` association on the response when it
+  matters.
+
+  A caller who does not know their platform ID can derive it from their token:
+  `bearer_claims().partner_ids` maps to platforms via
+  `api.platforms.list(partner_id=...)`. `partnerIds` stays a claim and never
+  becomes a body field.
+
+- **`ab.auth.claims`** — `BearerClaims`, `decode_jwt_payload`,
+  `is_corporate_role`, `CORPORATE_ROLES`, and `HttpClient.bearer_claims()`.
+  Reads `role` and `partnerIds` off the access token, normalising each whether
+  the token carries a scalar or an array. No signature verification: nothing
+  security-bearing is decided here, and the API validates the request again for
+  real. Corporate status is decided from the **role** and never from an absent
+  `partnerIds` — a claim can be missing for reasons that have nothing to do
+  with being corporate.
+
+- `api.catalog.bulk_upsert` rejects a payload missing `platformId` with a
+  `pydantic.ValidationError` located at `catalogs.<i>.platformId`, listing every
+  offending index at once, before any HTTP request goes out. The rule is
+  unconditional, so it needs no knowledge of the bearer and holds for clients
+  that cannot report claims at all.
+
+### Fixed
+
+- **The `404` from `POST /Bulk/upsert` is explained and gone.** 0.2.0 through
+  0.2.2 recorded the route as answering `404` for any non-empty `catalogs`
+  list, certified as an unverified gap. The cause was the missing `platformId`:
+  the certification runs used a corporate account. With one supplied the route
+  answers `200` and returns each catalog with its platform association —
+  verified against staging on 2026-08-27 with a corporate account and two
+  platform accounts, and re-verified on 2026-08-28 once `platformId` became
+  required of every caller.
+
+### Breaking
+
+Request models now match what the API source requires, rather than what swagger
+declares. Payloads that were accepted locally and rejected over the wire now
+fail at construction:
+
+- `BulkUpsertCatalogRequest`: `customer_catalog_id`, `title` and `platform_id`
+  are required (joining `start_date`, `end_date` and `seller`).
+- `BulkUpsertLotRequest`: `customer_item_id`, `lot_number` and `data` are
+  required.
+- `BulkUpsertSellerRequest`: `name` is required (joining `customer_display_id`
+  and `is_active`).
+- `AddCatalogRequest.title` — and so `UpdateCatalogRequest.title` — is required.
+- `CatalogPlatformDto.platform_catalog_id` is required. The association exists
+  to carry that external ID; a platform entry without one associates a catalog
+  under no external identity at all.
+- Collections default to `[]` instead of `None`, so "none of them" has exactly
+  one representation: `BulkUpsertRequest.catalogs`,
+  `BulkUpsertCatalogRequest.lots`, `BulkUpsertLotRequest.image_links`,
+  `AddCatalogRequest.agent_company_ids` and `AddCatalogRequest.platforms`.
+  Passing an explicit `None` for any of these is now an error. Serialization is
+  unchanged: `check()` excludes unset fields, so an untouched default still
+  adds nothing to the body.
+
 ## [0.2.2] - 2026-08-25
 
 Completes the Catalog schema cutover. The SDK now models the migrated schema

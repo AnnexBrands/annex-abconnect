@@ -1,3 +1,27 @@
 {
-  "catalogs": null
+  "catalogs": [
+    {
+      "customerCatalogId": "SDK-FIXTURE-CATALOG",
+      "title": "SDK fixture catalog",
+      "startDate": "1970-01-01T00:00:00Z",
+      "endDate": "1970-01-02T00:00:00Z",
+      "platformId": 11,
+      "lots": [
+        {
+          "customerItemId": "SDK-FIXTURE-ITEM",
+          "lotNumber": "1",
+          "imageLinks": [],
+          "data": {
+            "Qty": 1,
+            "Description": "SDK fixture lot"
+          }
+        }
+      ],
+      "seller": {
+        "name": "SDK fixture seller",
+        "customerDisplayId": 1,
+        "isActive": true
+      }
+    }
+  ]
 }

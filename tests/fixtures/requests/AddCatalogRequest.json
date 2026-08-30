@@ -1,9 +1,9 @@
 {
-  "agentCompanyIds": null,
-  "title": null,
+  "agentCompanyIds": [],
+  "title": "SDK fixture catalog",
   "startDate": "1970-01-01T00:00:00Z",
   "endDate": "1970-01-01T00:00:00Z",
   "isCompleted": false,
   "sellerId": 2,
-  "platforms": null
+  "platforms": []
 }

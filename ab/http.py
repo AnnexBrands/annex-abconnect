@@ -79,6 +79,21 @@ class HttpClient:
         # Fall back to password grant
         return self._password_grant()
 
+    def refresh(self) -> Token:
+        """Force a new access token, even if the stored one is still valid.
+
+        Exchanges the stored refresh token; if there is none or the exchange
+        fails, falls back to a password grant (when this client allows it).
+        """
+        token = self._token_storage.get_token()
+        if token and token.refresh_token:
+            refreshed = self._refresh_token(token.refresh_token)
+            if refreshed:
+                return refreshed
+        if not self._allow_password_fallback:
+            raise AuthenticationError("No refresh token is available for this session")
+        return self._password_grant()
+
     def _password_grant(self) -> Token:
         return self._password_grant_with(
             username=self._settings.username,

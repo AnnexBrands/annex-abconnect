@@ -204,6 +204,14 @@ class ABConnectAPI:
         """
         return self._acportal._password_grant_with(username=username, password=password)
 
+    def refresh_token(self) -> Token:
+        """Force a token refresh and return the new token.
+
+        Uses the stored refresh token, falling back to a password grant when
+        no refresh token is stored or the exchange is rejected.
+        """
+        return self._acportal.refresh()
+
     def groups(self) -> list[str]:
         """Return the endpoint group names available as ``api.<name>``.
 

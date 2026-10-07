@@ -8,6 +8,7 @@ Calls ABConnect API endpoints directly from the terminal::
     ab addr.validate --line1="123 Main"  # dot syntax
     ab addr --list                       # list methods in endpoint
     ab addr validate --help              # show method parameters
+    ab token                             # refresh and print the access token
 """
 
 from __future__ import annotations
@@ -181,6 +182,17 @@ def _create_api(env: str | None) -> Any:
         sys.exit(2)
 
 
+def _print_token(env: str | None) -> None:
+    """Refresh the stored token and print the access token to stdout."""
+    api = _create_api(env)
+    try:
+        token = api.refresh_token()
+    except Exception as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(2)
+    print(token.access_token)
+
+
 # ------------------------------------------------------------------
 # Main dispatch
 # ------------------------------------------------------------------
@@ -203,6 +215,10 @@ def main(env: str | None = None) -> None:
     if not args or args == ["--list"] or (len(args) == 1 and is_help_token(args[0])):
         registry = discover_endpoints_from_class()
         _list_all(registry)
+        sys.exit(0)
+
+    if args == ["token"]:
+        _print_token(env)
         sys.exit(0)
 
     raw = args[0]

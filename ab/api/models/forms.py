@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Optional
+from uuid import UUID
 
 from pydantic import Field
 
@@ -34,6 +35,12 @@ class PackagingLabelsParams(RequestModel):
     """Query parameters for GET packaging labels."""
 
     shipment_plan_id: Optional[str] = Field(None, alias="shipmentPlanId", description="Shipment plan identifier")
+
+
+class FormQuoteParams(RequestModel):
+    """Optional quote selection for packing slips and packaging specifications."""
+
+    quote_id: Optional[UUID] = Field(None, alias="quoteId", description="Quote UUID selecting the shipment's form")
 
 
 class FormsShipmentPlan(ResponseModel):

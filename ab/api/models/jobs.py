@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Any, List, Optional
+from uuid import UUID
 
 from pydantic import Field, model_validator
 
@@ -525,6 +526,12 @@ class TrackingV3Params(RequestModel):
     history_amount: Optional[int] = Field(
         None, alias="historyAmount", description="Number of tracking history entries to return"
     )
+
+
+class ShipmentTrackingParams(RequestModel):
+    """Quote selection for GET /job/{jobDisplayId}/tracking/shipment/{proNumber}."""
+
+    quote_id: Optional[UUID] = Field(None, alias="QuoteId", description="Quote UUID selecting the shipment to track")
 
 
 class JobNoteListParams(RequestModel):

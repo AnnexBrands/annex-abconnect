@@ -34,6 +34,7 @@ _SHIPMENT = Route(
     "GET",
     "/job/{jobDisplayId}/tracking/shipment/{proNumber}",
     response_model="ShipmentTrackingDetails",
+    params_model="ShipmentTrackingParams",
 )
 
 
@@ -59,7 +60,9 @@ class JobTrackingEndpoint(BaseEndpoint):
             _GET_V3.bind(jobDisplayId=job_display_id, historyAmount=history_amount),
         )
 
-    def shipment(self, job_display_id: int, pro_number: str) -> ShipmentTrackingDetails:
+    def shipment(
+        self, job_display_id: int, pro_number: str, *, quote_id: str | None = None,
+    ) -> ShipmentTrackingDetails:
         """``GET /job/{jobDisplayId}/tracking/shipment/{proNumber}``
 
         Tracking detail for ONE shipment of the job, looked up by its
@@ -69,12 +72,16 @@ class JobTrackingEndpoint(BaseEndpoint):
         Args:
             job_display_id: Job display ID the shipment belongs to.
             pro_number: Carrier PRO number of the shipment.
+            quote_id: Quote UUID identifying the shipment on 8_01. Omit to
+                retain the existing PRO-based lookup.
 
         Response model: ShipmentTrackingDetails
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/tracking.shipment.html
+        Query params: ShipmentTrackingParams
         Response model: ShipmentTrackingDetails
         """
         return self._request(
             _SHIPMENT.bind(jobDisplayId=job_display_id, proNumber=pro_number),
+            params=dict(quote_id=quote_id),
         )

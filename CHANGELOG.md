@@ -13,6 +13,13 @@ branch's CLI token-refresh addition.
 
 ### Prepared
 
+- Reconciled the refreshed schema with 183 discoverable unimplemented route
+  stubs, retaining three older placeholders for compatibility. Added optional
+  quote selectors to packing slips, packaging specifications, and shipment
+  tracking with UUID validation and the server's exact query aliases.
+- Regenerated progress and endpoint documentation after the schema refresh;
+  kept the gate regression baseline intact. Made notebook generation relative
+  to the checkout so local and CI validation target the same artifact.
 - Refreshed the bundled ACPortal Swagger from staging: 363 operations and 527
   component schemas. This updates discovery evidence, not endpoint compatibility.
 - Added What's New, an 8_01 migration preview, troubleshooting, and measurable

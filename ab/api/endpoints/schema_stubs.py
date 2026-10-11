@@ -89,12 +89,7 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
         SchemaStubSpec("get_admin_advancedsettings_id", "GET", "/admin/advancedsettings/{id}", "acportal"),
         SchemaStubSpec("delete_admin_advancedsettings_id", "DELETE", "/admin/advancedsettings/{id}", "acportal"),
         SchemaStubSpec("post_admin_advancedsettings", "POST", "/admin/advancedsettings", "acportal"),
-        SchemaStubSpec(
-            "get_admin_carriererrormessage_all",
-            "GET",
-            "/admin/carriererrormessage/all",
-            "acportal",
-        ),
+        SchemaStubSpec("get_admin_carriererrormessage_all", "GET", "/admin/carriererrormessage/all", "acportal"),
         SchemaStubSpec("post_admin_carriererrormessage", "POST", "/admin/carriererrormessage", "acportal"),
         SchemaStubSpec(
             "get_admin_globalsettings_companyhierarchy",
@@ -214,18 +209,8 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
             "acportal",
         ),
         SchemaStubSpec("get_company_company_id_setupdata", "GET", "/company/{companyId}/setupdata", "acportal"),
-        SchemaStubSpec(
-            "get_company_company_id_gridsettings",
-            "GET",
-            "/company/{companyId}/gridsettings",
-            "acportal",
-        ),
-        SchemaStubSpec(
-            "post_company_company_id_gridsettings",
-            "POST",
-            "/company/{companyId}/gridsettings",
-            "acportal",
-        ),
+        SchemaStubSpec("get_company_company_id_gridsettings", "GET", "/company/{companyId}/gridsettings", "acportal"),
+        SchemaStubSpec("post_company_company_id_gridsettings", "POST", "/company/{companyId}/gridsettings", "acportal"),
         SchemaStubSpec(
             "get_company_company_id_containerthicknessinches",
             "GET",
@@ -273,6 +258,123 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
             "/company/{companyId}/truck/{truckId}",
             "acportal",
         ),
+        SchemaStubSpec(
+            "delete_company_company_id_email_templates_template_id",
+            "DELETE",
+            "/company/{companyId}/email-templates/{templateId}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "delete_company_company_id_inventory_id",
+            "DELETE",
+            "/company/{companyId}/inventory/{id}",
+            "acportal",
+        ),
+        SchemaStubSpec("get_companies_bill_to", "GET", "/companies/bill-to", "acportal"),
+        SchemaStubSpec("get_companies_carriers", "GET", "/companies/carriers", "acportal"),
+        SchemaStubSpec("get_companies_geosettings_id", "GET", "/companies/geosettings/{id}", "acportal"),
+        SchemaStubSpec("get_companies_company_id_carrierapis", "GET", "/companies/{companyId}/carrierapis", "acportal"),
+        SchemaStubSpec(
+            "get_company_company_id_email_templates",
+            "GET",
+            "/company/{companyId}/email-templates",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "get_company_company_id_email_templates_shared",
+            "GET",
+            "/company/{companyId}/email-templates/shared",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "get_company_company_id_email_templates_template_id",
+            "GET",
+            "/company/{companyId}/email-templates/{templateId}",
+            "acportal",
+        ),
+        SchemaStubSpec("get_company_company_id_inventory", "GET", "/company/{companyId}/inventory", "acportal"),
+        SchemaStubSpec("get_company_company_id_materials", "GET", "/company/{companyId}/materials", "acportal"),
+        SchemaStubSpec(
+            "get_company_company_id_materials_d_containers",
+            "GET",
+            "/company/{companyId}/materials/d-containers",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "get_company_company_id_materials_default_pallet",
+            "GET",
+            "/company/{companyId}/materials/default-pallet",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "get_company_company_id_materials_stock_boxes",
+            "GET",
+            "/company/{companyId}/materials/stock-boxes",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_company_company_id_email_templates",
+            "POST",
+            "/company/{companyId}/email-templates",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_company_company_id_gridsettings_reset",
+            "POST",
+            "/company/{companyId}/gridsettings/reset",
+            "acportal",
+        ),
+        SchemaStubSpec("post_company_company_id_inventory", "POST", "/company/{companyId}/inventory", "acportal"),
+        SchemaStubSpec(
+            "post_company_company_id_pack_handling_units",
+            "POST",
+            "/company/{companyId}/pack/handling-units",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_company_company_id_pack_handlingunit_materials",
+            "POST",
+            "/company/{companyId}/pack/handlingunit/materials",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_company_company_id_pack_hierarchy",
+            "POST",
+            "/company/{companyId}/pack/hierarchy",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_company_company_id_pack_inventories",
+            "POST",
+            "/company/{companyId}/pack/inventories",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_company_company_id_pack_inventory",
+            "POST",
+            "/company/{companyId}/pack/inventory",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_company_company_id_pack_validate",
+            "POST",
+            "/company/{companyId}/pack/validate",
+            "acportal",
+        ),
+        SchemaStubSpec("post_company_company_id_rates", "POST", "/company/{companyId}/rates", "acportal"),
+        SchemaStubSpec(
+            "post_company_company_id_rates_select_quote",
+            "POST",
+            "/company/{companyId}/rates/select-quote",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "put_company_company_id_email_templates_set_exclusion",
+            "PUT",
+            "/company/{companyId}/email-templates/set-exclusion",
+            "acportal",
+        ),
+        SchemaStubSpec("put_company_company_id_inventory_id", "PUT", "/company/{companyId}/inventory/{id}", "acportal"),
     ),
     "contacts": (
         SchemaStubSpec("post_contacts_search", "POST", "/contacts/search", "acportal"),
@@ -282,7 +384,43 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
         SchemaStubSpec(
             "post_email_job_display_id_labelrequest",
             "POST",
-            "/email/{jobDisplayId}/labelrequest",
+            "/email/{jobDisplayId}/labelRequest",
+            "acportal",
+        ),
+        SchemaStubSpec("delete_job_job_display_id_email_id", "DELETE", "/job/{jobDisplayId}/email/{id}", "acportal"),
+        SchemaStubSpec("get_job_job_display_id_email", "GET", "/job/{jobDisplayId}/email", "acportal"),
+        SchemaStubSpec(
+            "get_job_job_display_id_email_allowed_templates",
+            "GET",
+            "/job/{jobDisplayId}/email/allowed-templates",
+            "acportal",
+        ),
+        SchemaStubSpec("get_job_job_display_id_email_list", "GET", "/job/{jobDisplayId}/email/list", "acportal"),
+        SchemaStubSpec(
+            "get_job_job_display_id_email_sending_info",
+            "GET",
+            "/job/{jobDisplayId}/email/sending-info",
+            "acportal",
+        ),
+        SchemaStubSpec("post_job_job_display_id_email_attach", "POST", "/job/{jobDisplayId}/email/attach", "acportal"),
+        SchemaStubSpec("post_job_job_display_id_email_clone", "POST", "/job/{jobDisplayId}/email/clone", "acportal"),
+        SchemaStubSpec(
+            "post_job_job_display_id_email_full_send",
+            "POST",
+            "/job/{jobDisplayId}/email/full-send",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_email_labelrequest",
+            "POST",
+            "/job/{jobDisplayId}/email/labelrequest",
+            "acportal",
+        ),
+        SchemaStubSpec("put_job_job_display_id_email", "PUT", "/job/{jobDisplayId}/email", "acportal"),
+        SchemaStubSpec(
+            "put_job_job_display_id_email_set_confirmation",
+            "PUT",
+            "/job/{jobDisplayId}/email/set-confirmation",
             "acportal",
         ),
     ),
@@ -303,12 +441,7 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
         ),
         SchemaStubSpec("get_jobintacct_job_display_id", "GET", "/jobintacct/{jobDisplayId}", "acportal"),
         SchemaStubSpec("post_jobintacct_job_display_id", "POST", "/jobintacct/{jobDisplayId}", "acportal"),
-        SchemaStubSpec(
-            "post_jobintacct_job_display_id_draft",
-            "POST",
-            "/jobintacct/{jobDisplayId}/draft",
-            "acportal",
-        ),
+        SchemaStubSpec("post_jobintacct_job_display_id_draft", "POST", "/jobintacct/{jobDisplayId}/draft", "acportal"),
         SchemaStubSpec(
             "delete_jobintacct_job_display_id_franchisee_id",
             "DELETE",
@@ -328,14 +461,134 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
             "acportal",
         ),
         SchemaStubSpec("get_e_sign_result", "GET", "/e-sign/result", "acportal"),
-    ),
-    "sms_templates": (
         SchemaStubSpec(
-            "get_sms_template_notification_tokens",
-            "GET",
-            "/SmsTemplate/notificationTokens",
+            "delete_job_job_display_id_add_ons_addon_id",
+            "DELETE",
+            "/job/{jobDisplayId}/addOns/{addonId}",
             "acportal",
         ),
+        SchemaStubSpec(
+            "delete_job_job_display_id_handling_unit_id",
+            "DELETE",
+            "/job/{jobDisplayId}/handlingUnit/{id}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "delete_job_job_display_id_handling_unit_id_content_unit_content_unit_id",
+            "DELETE",
+            "/job/{jobDisplayId}/handlingUnit/{id}/contentUnit/{contentUnitId}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "delete_job_job_display_id_handling_unit_id_inventory_inventory_item_id",
+            "DELETE",
+            "/job/{jobDisplayId}/handlingUnit/{id}/inventory/{inventoryItemId}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "delete_job_job_display_id_handling_unit_id_materials_material_id",
+            "DELETE",
+            "/job/{jobDisplayId}/handlingUnit/{id}/materials/{materialId}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "delete_job_job_display_id_inventory_id",
+            "DELETE",
+            "/job/{jobDisplayId}/inventory/{id}",
+            "acportal",
+        ),
+        SchemaStubSpec("get_job_job_display_id_add_ons", "GET", "/job/{jobDisplayId}/addOns", "acportal"),
+        SchemaStubSpec("get_job_job_display_id_handling_unit", "GET", "/job/{jobDisplayId}/handlingUnit", "acportal"),
+        SchemaStubSpec(
+            "get_job_job_display_id_handling_unit_id_materials",
+            "GET",
+            "/job/{jobDisplayId}/handlingUnit/{id}/materials",
+            "acportal",
+        ),
+        SchemaStubSpec("get_job_job_display_id_inventory", "GET", "/job/{jobDisplayId}/inventory", "acportal"),
+        SchemaStubSpec("get_job_job_display_id_owner", "GET", "/job/{jobDisplayId}/owner", "acportal"),
+        SchemaStubSpec("get_job_job_display_id_shippings", "GET", "/job/{jobDisplayId}/shippings", "acportal"),
+        SchemaStubSpec("get_v2_job_job_display_id", "GET", "/v2/job/{jobDisplayId}", "acportal"),
+        SchemaStubSpec(
+            "patch_job_job_display_id_handling_unit_id_materials_material_id",
+            "PATCH",
+            "/job/{jobDisplayId}/handlingUnit/{id}/materials/{materialId}",
+            "acportal",
+        ),
+        SchemaStubSpec("post_job_job_display_id_add_ons", "POST", "/job/{jobDisplayId}/addOns", "acportal"),
+        SchemaStubSpec("post_job_job_display_id_handling_unit", "POST", "/job/{jobDisplayId}/handlingUnit", "acportal"),
+        SchemaStubSpec(
+            "post_job_job_display_id_handling_unit_manage",
+            "POST",
+            "/job/{jobDisplayId}/handlingUnit/manage",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_handling_unit_id_content_unit",
+            "POST",
+            "/job/{jobDisplayId}/handlingUnit/{id}/contentUnit",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_handling_unit_id_inventory",
+            "POST",
+            "/job/{jobDisplayId}/handlingUnit/{id}/inventory",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_handling_unit_id_materials",
+            "POST",
+            "/job/{jobDisplayId}/handlingUnit/{id}/materials",
+            "acportal",
+        ),
+        SchemaStubSpec("post_job_job_display_id_inventory", "POST", "/job/{jobDisplayId}/inventory", "acportal"),
+        SchemaStubSpec("post_job_job_display_id_is_modified", "POST", "/job/{jobDisplayId}/is-modified", "acportal"),
+        SchemaStubSpec("post_job_job_display_id_rates", "POST", "/job/{jobDisplayId}/rates", "acportal"),
+        SchemaStubSpec(
+            "post_job_job_display_id_rates_select_quote",
+            "POST",
+            "/job/{jobDisplayId}/rates/select-quote",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "put_job_job_display_id_handling_unit_id",
+            "PUT",
+            "/job/{jobDisplayId}/handlingUnit/{id}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "put_job_job_display_id_handling_unit_id_container_material",
+            "PUT",
+            "/job/{jobDisplayId}/handlingUnit/{id}/container-material",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "put_job_job_display_id_handling_unit_id_content_unit_content_unit_id",
+            "PUT",
+            "/job/{jobDisplayId}/handlingUnit/{id}/contentUnit/{contentUnitId}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "put_job_job_display_id_handling_unit_id_inventory_inventory_item_id",
+            "PUT",
+            "/job/{jobDisplayId}/handlingUnit/{id}/inventory/{inventoryItemId}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "put_job_job_display_id_handling_unit_id_materials",
+            "PUT",
+            "/job/{jobDisplayId}/handlingUnit/{id}/materials",
+            "acportal",
+        ),
+        SchemaStubSpec("put_job_job_display_id_inventory_id", "PUT", "/job/{jobDisplayId}/inventory/{id}", "acportal"),
+        SchemaStubSpec(
+            "put_job_job_display_id_item_inventory_item_id",
+            "PUT",
+            "/job/{jobDisplayId}/item/{inventoryItemId}",
+            "acportal",
+        ),
+    ),
+    "sms_templates": (
         SchemaStubSpec("get_sms_template_list", "GET", "/SmsTemplate/list", "acportal"),
         SchemaStubSpec("get_sms_template_template_id", "GET", "/SmsTemplate/{templateId}", "acportal"),
         SchemaStubSpec("delete_sms_template_template_id", "DELETE", "/SmsTemplate/{templateId}", "acportal"),
@@ -348,24 +601,25 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
             "/v2/job/{jobDisplayId}/tracking/{historyAmount}",
             "acportal",
         ),
+        SchemaStubSpec(
+            "get_job_job_display_id_tracking_shipment_documents_pro_number",
+            "GET",
+            "/job/{jobDisplayId}/tracking/shipment-documents/{proNumber}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "get_job_job_display_id_tracking_shipment_history_pro_number",
+            "GET",
+            "/job/{jobDisplayId}/tracking/shipment-history/{proNumber}",
+            "acportal",
+        ),
     ),
     "notifications": (
         SchemaStubSpec("get_notifications", "GET", "/notifications", "acportal"),
     ),
     "webhooks": (
         SchemaStubSpec("post_webhooks_stripe_handle", "POST", "/webhooks/stripe/handle", "acportal"),
-        SchemaStubSpec(
-            "post_webhooks_stripe_connect_handle",
-            "POST",
-            "/webhooks/stripe/connect/handle",
-            "acportal",
-        ),
-        SchemaStubSpec(
-            "post_webhooks_stripe_checkout_session_completed",
-            "POST",
-            "/webhooks/stripe/checkout.session.completed",
-            "acportal",
-        ),
+        SchemaStubSpec("post_webhooks_stripe_connect_handle", "POST", "/webhooks/stripe/connect/handle", "acportal"),
         SchemaStubSpec(
             "post_webhooks_twilio_sms_status_callback",
             "POST",
@@ -388,9 +642,6 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
     "users": (
         SchemaStubSpec("get_users_pocusers", "GET", "/users/pocusers", "acportal"),
     ),
-    "values": (
-        SchemaStubSpec("get_values", "GET", "/Values", "acportal"),
-    ),
     "autoprice": (
         SchemaStubSpec("post_autoprice_quoterequest", "POST", "/autoprice/quoterequest", "abc"),
     ),
@@ -408,6 +659,127 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
     "web2lead": (
         SchemaStubSpec("post_web2_lead_postv2", "POST", "/Web2Lead/postv2", "abc"),
     ),
+    "partners": (
+        SchemaStubSpec("delete_partner_id", "DELETE", "/partner/{id}", "acportal"),
+        SchemaStubSpec("post_partner", "POST", "/partner", "acportal"),
+        SchemaStubSpec("put_partner_id", "PUT", "/partner/{id}", "acportal"),
+    ),
+    "jobs.payment": (
+        SchemaStubSpec(
+            "get_job_job_display_id_payment_job_sub_key_job_sub_key_exchange",
+            "GET",
+            "/job/{jobDisplayId}/payment/jobSubKey/{jobSubKey}/exchange",
+            "acportal",
+        ),
+    ),
+    "jobs.shipment": (
+        SchemaStubSpec(
+            "get_job_job_display_id_shipment_exportdata_shipping_id",
+            "GET",
+            "/job/{jobDisplayId}/shipment/exportdata/{shippingId}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_shipment_exportdata_shipping_id",
+            "POST",
+            "/job/{jobDisplayId}/shipment/exportdata/{shippingId}",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_shipment_v2_book",
+            "POST",
+            "/job/{jobDisplayId}/shipment/v2/book",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_shipment_validate",
+            "POST",
+            "/job/{jobDisplayId}/shipment/validate",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "put_job_job_display_id_shipment_cancel_quote_id",
+            "PUT",
+            "/job/{jobDisplayId}/shipment/cancel/{quoteId}",
+            "acportal",
+        ),
+    ),
+    "lookup": (
+        SchemaStubSpec("get_lookup_add_ons", "GET", "/lookup/addOns", "acportal"),
+        SchemaStubSpec("get_lookup_c_packs", "GET", "/lookup/cPacks", "acportal"),
+        SchemaStubSpec("get_lookup_containerfill", "GET", "/lookup/containerfill", "acportal"),
+        SchemaStubSpec(
+            "get_lookup_handling_unit_container_types",
+            "GET",
+            "/lookup/handlingUnitContainerTypes",
+            "acportal",
+        ),
+        SchemaStubSpec("get_lookup_jobhandlingunits", "GET", "/lookup/jobhandlingunits", "acportal"),
+        SchemaStubSpec("get_lookup_jobinventoryitems", "GET", "/lookup/jobinventoryitems", "acportal"),
+        SchemaStubSpec(
+            "get_lookup_notification_tokens_token_type",
+            "GET",
+            "/lookup/notificationTokens/{tokenType}",
+            "acportal",
+        ),
+    ),
+    "shipments": (
+        SchemaStubSpec("get_shipment_document_by_query", "GET", "/shipment/document", "acportal"),
+    ),
+    "jobs.form": (
+        SchemaStubSpec(
+            "post_job_job_display_id_form_invoice_edited_pdf",
+            "POST",
+            "/job/{jobDisplayId}/form/invoice/edited-pdf",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_form_usar_edited_pdf",
+            "POST",
+            "/job/{jobDisplayId}/form/usar/edited-pdf",
+            "acportal",
+        ),
+    ),
+    "jobs.freight_providers": (
+        SchemaStubSpec(
+            "post_job_job_display_id_freightproviders_final",
+            "POST",
+            "/job/{jobDisplayId}/freightproviders/final",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_freightproviders_finaloverride",
+            "POST",
+            "/job/{jobDisplayId}/freightproviders/finaloverride",
+            "acportal",
+        ),
+        SchemaStubSpec(
+            "post_job_job_display_id_freightproviders_ratequote",
+            "POST",
+            "/job/{jobDisplayId}/freightproviders/ratequote",
+            "acportal",
+        ),
+    ),
+}
+
+
+# Preserve previously discoverable placeholders absent from the 8_01 snapshot.
+# These still raise NotImplementedError; they are not current-schema coverage.
+LEGACY_SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
+    "sms_templates": (
+        SchemaStubSpec("get_sms_template_notification_tokens", "GET", "/SmsTemplate/notificationTokens", "acportal"),
+    ),
+    "webhooks": (
+        SchemaStubSpec(
+            "post_webhooks_stripe_checkout_session_completed",
+            "POST",
+            "/webhooks/stripe/checkout.session.completed",
+            "acportal",
+        ),
+    ),
+    "values": (
+        SchemaStubSpec("get_values", "GET", "/Values", "acportal"),
+    ),
 }
 
 
@@ -420,8 +792,15 @@ def install_schema_stubs() -> None:
     from ab.api.endpoints.contacts import ContactsEndpoint
     from ab.api.endpoints.jobs import JobsEndpoint
     from ab.api.endpoints.jobs.email import JobEmailEndpoint
+    from ab.api.endpoints.jobs.form import JobFormEndpoint
+    from ab.api.endpoints.jobs.freight_providers import JobFreightProvidersEndpoint
+    from ab.api.endpoints.jobs.payment import JobPaymentEndpoint
+    from ab.api.endpoints.jobs.shipment import JobShipmentEndpoint
     from ab.api.endpoints.jobs.tracking import JobTrackingEndpoint
+    from ab.api.endpoints.lookup import LookupEndpoint
+    from ab.api.endpoints.partners import PartnersEndpoint
     from ab.api.endpoints.reports import ReportsEndpoint
+    from ab.api.endpoints.shipments import ShipmentsEndpoint
     from ab.api.endpoints.users import UsersEndpoint
     from ab.api.endpoints.web2lead import Web2LeadEndpoint
 
@@ -434,10 +813,17 @@ def install_schema_stubs() -> None:
         "contacts": ContactsEndpoint,
         "jobs": JobsEndpoint,
         "jobs.email": JobEmailEndpoint,
+        "jobs.form": JobFormEndpoint,
+        "jobs.freight_providers": JobFreightProvidersEndpoint,
+        "jobs.payment": JobPaymentEndpoint,
+        "jobs.shipment": JobShipmentEndpoint,
         "jobs.tracking": JobTrackingEndpoint,
         "log_buffer": LogBufferEndpoint,
+        "lookup": LookupEndpoint,
         "notifications": NotificationsEndpoint,
+        "partners": PartnersEndpoint,
         "reports": ReportsEndpoint,
+        "shipments": ShipmentsEndpoint,
         "sms_templates": SmsTemplatesEndpoint,
         "test": TestEndpoint,
         "users": UsersEndpoint,
@@ -446,10 +832,11 @@ def install_schema_stubs() -> None:
         "webhooks": WebhooksEndpoint,
     }
 
-    for group, specs in SCHEMA_STUBS.items():
-        cls = target_classes[group]
-        for spec in specs:
-            _install_stub(cls, spec)
+    for registry in (SCHEMA_STUBS, LEGACY_SCHEMA_STUBS):
+        for group, specs in registry.items():
+            cls = target_classes[group]
+            for spec in specs:
+                _install_stub(cls, spec)
 
 
 def _install_stub(cls: type[BaseEndpoint], spec: SchemaStubSpec) -> None:

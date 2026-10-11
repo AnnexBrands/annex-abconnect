@@ -146,16 +146,17 @@ removed from Swagger need not mean the old call is gone. Removed writes need
 service/DTO investigation before promising an adapter. The deployed staging
 commit has not been matched to the inspected server commit.
 
-The targeted local regression run after the refresh reports 108 passed, 7 skipped,
-5 expected failures, and one failing schema-stub coverage test:
-`test_schema_stub_registry_matches_current_route_gaps`. The new Swagger routes
-and existing stub registry differ. Reconcile those as FR-007; the snapshot refresh
-is not a release-ready implementation, and the coverage check must not be bypassed.
+The initial refresh exposed schema-stub, query-parameter, and generated-report
+drift. The CI repair reconciles 183 current-schema placeholders, preserves three
+older placeholders, adds the three missing quote selectors, and regenerates the
+report. The full local deterministic suite now passes; see [validation.md](validation.md).
+These discovery/selector fixes are not the complete 8_01 implementation.
 
 ## Release gates
 
 - [x] Establish the correct SDK repository and update to current main containing v0.2.3.
 - [x] Refresh the ACPortal schema; validate JSON and its 1,960 internal references.
+- [x] Reconcile current schema-stub coverage, quote-selector routing, and generated progress for CI.
 - [ ] Complete the compatibility matrix and resolve ambiguous or lossy mappings.
 - [ ] Implement typed inventory/handling-unit and multiple-shipment workflows.
 - [ ] Implement and verify compatibility warnings and adapters.

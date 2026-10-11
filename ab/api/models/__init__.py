@@ -140,6 +140,7 @@ from ab.api.models.documents import (
 from ab.api.models.enums import CarrierAPI, DocumentType, MasterConstantKey
 from ab.api.models.forms import (
     BillOfLadingParams,
+    FormQuoteParams,
     FormsShipmentPlan,
     FormTypeParams,
     OperationsFormParams,
@@ -202,6 +203,7 @@ from ab.api.models.jobs import (
     ShipmentPlanProvider,
     ShipmentTrackingDetails,
     ShipmentTrackingDocument,
+    ShipmentTrackingParams,
     SimpleTaskRequest,
     SortByModel,
     TaskTruckInfoRequest,
@@ -434,7 +436,7 @@ __all__ = [
     "TimeLogRequest", "TimeLogPauseRequest", "WorkTimeLogRequest", "InitialNoteRequest", "TaskTruckInfoRequest",
     "TimelineTaskUpdateRequest", "UpdateDateValue", "UpdateTruckValue", "IncrementStatusRequest",
     "TrackingInfo", "TrackingInfoV3",
-    "ShipmentTrackingDetails", "ShipmentDetails", "ShipmentTrackingDocument",
+    "ShipmentTrackingDetails", "ShipmentDetails", "ShipmentTrackingDocument", "ShipmentTrackingParams",
     "JobNote", "JobNoteCreateRequest", "JobNoteUpdateRequest",
     "ParcelItem", "ParcelItemWithMaterials", "JobParcelItemMaterial", "PackagingContainer",
     "ParcelItemCreateRequest", "ParcelItemsRequest", "ParcelItemsResponse", "ParcelItemSave",
@@ -476,6 +478,7 @@ __all__ = [
     "AttachBankRequest", "VerifyACHRequest", "BankSourceRequest",
     # Forms
     "BillOfLadingParams", "OperationsFormParams", "FormTypeParams", "PackagingLabelsParams", "FormsShipmentPlan",
+    "FormQuoteParams",
     # Web2Lead
     "Web2LeadGetParams", "Web2LeadResponse", "Web2LeadGETResult", "Web2LeadRequest",
     # RFQ

@@ -13,7 +13,7 @@ import pytest
 
 import ab.api.endpoints as endpoints_pkg
 from ab.api.endpoints.account import AccountEndpoint
-from ab.api.endpoints.schema_stubs import SCHEMA_STUBS
+from ab.api.endpoints.schema_stubs import LEGACY_SCHEMA_STUBS, SCHEMA_STUBS, ValuesEndpoint
 from ab.api.route import Route
 from ab.cli.discovery import discover_endpoints_from_class
 
@@ -38,7 +38,7 @@ def test_all_schema_stubs_are_discoverable_and_unrouted():
             assert methods[spec.method_name].route is None
             discovered_total += 1
 
-    assert discovered_total == expected_total == 93
+    assert discovered_total == expected_total == 183
 
 
 def test_schema_stub_registry_matches_current_route_gaps():
@@ -61,6 +61,33 @@ def test_schema_stub_raises_not_implemented_with_route_context():
         endpoint.post_account_register(data={})
 
     assert "POST /account/register (acportal)" in str(exc.value)
+
+
+def test_legacy_placeholders_remain_discoverable_without_counting_as_current_coverage():
+    registry = discover_endpoints_from_class()
+    schema_routes = _schema_routes()
+    assert sum(map(len, LEGACY_SCHEMA_STUBS.values())) == 3
+    for group, specs in LEGACY_SCHEMA_STUBS.items():
+        methods = {method.name: method for method in registry[group].methods}
+        for spec in specs:
+            assert methods[spec.method_name].route is None
+            assert (spec.api_surface, spec.http_method, spec.path) not in schema_routes
+    client = MagicMock()
+    with pytest.raises(NotImplementedError, match="GET /Values"):
+        ValuesEndpoint(client).get_values()
+    client.request.assert_not_called()
+
+
+def test_current_schema_stubs_have_unique_routes_and_public_names():
+    routes = [(s.api_surface, s.http_method, s.path) for specs in SCHEMA_STUBS.values() for s in specs]
+    assert len(routes) == len(set(routes))
+    names = [
+        (group, s.method_name)
+        for registry in (SCHEMA_STUBS, LEGACY_SCHEMA_STUBS)
+        for group, specs in registry.items()
+        for s in specs
+    ]
+    assert len(names) == len(set(names))
 
 
 def _implemented_routes() -> set[tuple[str, str, str]]:

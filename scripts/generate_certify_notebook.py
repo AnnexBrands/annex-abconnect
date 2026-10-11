@@ -289,7 +289,7 @@ nb = {
     "nbformat_minor": 5,
 }
 
-out = pathlib.Path("/opt/packages/ab/notebooks/certify_endpoint.ipynb")
+out = pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "certify_endpoint.ipynb"
 out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text(json.dumps(nb, indent=1) + "\n", encoding="utf-8")
 print("wrote", out, f"({len(C)} cells)")

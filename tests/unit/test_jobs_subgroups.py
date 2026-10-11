@@ -225,5 +225,5 @@ class TestCliDiscovery:
         reg = discover_endpoints_from_class()
         assert len(reg["jobs.note"].methods) == 4
         assert len(reg["jobs.on_hold"].methods) == 10
-        # form has 15 swagger routes + 5 convenience helpers (ops/bol/hbl/pbl/dbl)
-        assert len(reg["jobs.form"].methods) == 20
+        # 15 existing form methods + 5 helpers + 2 unimplemented 8_01 PDF-edit routes.
+        assert len(reg["jobs.form"].methods) == 22

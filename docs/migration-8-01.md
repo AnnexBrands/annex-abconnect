@@ -18,6 +18,12 @@ must preserve that meaning and unrelated records during an update.
 
 ## Multiple active shipments
 
+The development SDK now accepts the optional `quote_id` keyword on
+`api.jobs.form.packing_slip`, `api.jobs.form.packaging_specification`, and
+`api.jobs.tracking.shipment`. These read-only selectors are validated locally
+against the server contract; quote-selected live captures are still pending.
+The larger booking and inventory migration remains planned.
+
 A job can have more than one active shipment. Keep its shipping records as a
 collection and retain the identifiers needed by each operation.
 

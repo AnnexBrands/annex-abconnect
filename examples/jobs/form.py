@@ -13,6 +13,8 @@ See also: https://ab-sdk.readthedocs.io/en/latest/api/jobs.html
 
 from __future__ import annotations
 
+import os
+
 from ab import ABConnectAPI
 from ab.cli.formatter import format_result
 from examples._capture import save
@@ -27,6 +29,14 @@ def main() -> None:
     result = api.jobs.form.shipments(TEST_JOB_DISPLAY_ID)
     print(format_result(result))
     save("FormsShipmentPlan.json", result)
+
+    # On 8_01, use a quote belonging to this job to select shipment-specific PDFs.
+    quote_id = os.getenv("AB_TEST_QUOTE_ID")
+    if quote_id:
+        packing_slip = api.jobs.form.packing_slip(TEST_JOB_DISPLAY_ID, quote_id=quote_id)
+        print({name: len(content) for name, content in packing_slip.items()})
+        specification = api.jobs.form.packaging_specification(TEST_JOB_DISPLAY_ID, quote_id=quote_id)
+        print({name: len(content) for name, content in specification.items()})
 
 
 if __name__ == "__main__":

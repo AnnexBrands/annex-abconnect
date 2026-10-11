@@ -43,3 +43,27 @@ reconciling this during 8_01 implementation. The test remains intact.
 - The RTD project uses `AnnexBrands/annex-abconnect`. Synchronize reviewed commits
   and release tags to that upstream and verify the actual build commit and version
   URLs before release completion. PyPI upload runs only in the origin repository.
+
+## CI repair after the preparation commit
+
+Both repositories failed on commit `7c8b5d4` with the same four checks: two stale
+progress-report assertions, the schema-stub inventory, and the parameter-routing
+regression gate. The latter found missing quote parameters on packing-slip,
+packaging-specification, and shipment-tracking GETs.
+
+The repair keeps the gate baseline and schema equality check intact:
+
+- Register 183 current-schema placeholders, retaining three removed-from-schema
+  placeholders without counting them as current coverage. They all still raise
+  `NotImplementedError`; no route is presented as implemented by adding a stub.
+- Add validated optional quote parameters using `quoteId` for the forms and
+  `QuoteId` for tracking, as confirmed in the 8_01 controllers and DTOs.
+- Regenerate endpoint docs and the progress report.
+- Remove the notebook generator's hard-coded checkout path so the existing
+  generator consistency test validates this repository on local machines too.
+
+Local deterministic suite after repair: **1,331 passed, 39 skipped, 68 deselected,
+5 xfailed**. New tests cover correct query aliases, omitted selectors, rejection
+before HTTP, legacy-placeholder preservation, and unique stub names/routes.
+The three new read-only live tests are opt-in and were not executed; quote-selected
+capture status remains pending in `FIXTURES.md`.

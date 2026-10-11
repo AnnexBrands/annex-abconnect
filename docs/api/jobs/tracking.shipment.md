@@ -6,13 +6,13 @@
 **Python**
 
 ```python
-api.jobs.tracking.shipment(job_display_id: int, pro_number: str) -> ShipmentTrackingDetails
+api.jobs.tracking.shipment(job_display_id: int, pro_number: str, *, quote_id: str | None = None) -> ShipmentTrackingDetails
 ```
 
 **CLI**
 
 ```bash
-ab jobs tracking shipment <job_display_id> <pro_number>
+ab jobs tracking shipment <job_display_id> <pro_number> [--quote-id ...]
 ```
 
 ``GET /job/{jobDisplayId}/tracking/shipment/{proNumber}``
@@ -24,8 +24,16 @@ attached tracking documents.
 Args:
     job_display_id: Job display ID the shipment belongs to.
     pro_number: Carrier PRO number of the shipment.
+    quote_id: Quote UUID identifying the shipment on 8_01. Omit to
+        retain the existing PRO-based lookup.
 
 Response model: ShipmentTrackingDetails
+
+## Query parameters — `ShipmentTrackingParams`
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `QuoteId` | `Optional[UUID]` | no | Quote UUID selecting the shipment to track |
 
 ## Response
 

@@ -6,6 +6,18 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 **Quality Gates**: G1 (Model Fidelity), G2 (Fixture Status), G3 (Test Quality), G4 (Doc Accuracy), G5 (Param Routing), G6 (Request Quality)
 **Rule**: Status is "complete" only when ALL applicable gates pass.
 
+## 8_01 quote-selector validation
+
+Packing-slip and packaging-specification GETs now accept `FormQuoteParams`
+(`quoteId`); shipment tracking accepts `ShipmentTrackingParams` (`QuoteId`).
+Aliases and UUID shape were checked against the 8_01 controllers/DTOs and the
+staging Swagger. Deterministic transport tests cover selection, omission, and
+invalid IDs. New quote-selected live captures are **pending**; existing fixture
+and binary-response statuses below are not evidence of quote-selector validation.
+The opt-in read-only integration tests use `AB_TEST_SHIPMENT_JOB_ID`,
+`AB_TEST_QUOTE_ID`, and (for tracking) `AB_TEST_PRO_NUMBER` from provisioned staging
+data. No fabricated captured fixture was added.
+
 ## Summary
 
 - **Total endpoints**: 251

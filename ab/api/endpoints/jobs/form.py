@@ -42,7 +42,9 @@ _INVOICE_EDITABLE = Route("GET", "/job/{jobDisplayId}/form/invoice/editable", re
 _BOL = Route(
     "GET", "/job/{jobDisplayId}/form/bill-of-lading", params_model="BillOfLadingParams", response_model="bytes"
 )
-_PACKING_SLIP = Route("GET", "/job/{jobDisplayId}/form/packing-slip", response_model="bytes")
+_PACKING_SLIP = Route(
+    "GET", "/job/{jobDisplayId}/form/packing-slip", params_model="FormQuoteParams", response_model="bytes"
+)
 _CUSTOMER_QUOTE = Route("GET", "/job/{jobDisplayId}/form/customer-quote", response_model="bytes")
 _QUICK_SALE = Route("GET", "/job/{jobDisplayId}/form/quick-sale", response_model="bytes")
 _OPERATIONS = Route(
@@ -54,7 +56,9 @@ _ITEM_LABELS = Route("GET", "/job/{jobDisplayId}/form/item-labels", response_mod
 _PACKAGING_LABELS = Route(
     "GET", "/job/{jobDisplayId}/form/packaging-labels", params_model="PackagingLabelsParams", response_model="bytes"
 )
-_PACKAGING_SPEC = Route("GET", "/job/{jobDisplayId}/form/packaging-specification", response_model="bytes")
+_PACKAGING_SPEC = Route(
+    "GET", "/job/{jobDisplayId}/form/packaging-specification", params_model="FormQuoteParams", response_model="bytes"
+)
 _CC_AUTH = Route("GET", "/job/{jobDisplayId}/form/credit-card-authorization", response_model="bytes")
 _USAR = Route("GET", "/job/{jobDisplayId}/form/usar", params_model="FormTypeParams", response_model="bytes")
 _USAR_EDITABLE = Route("GET", "/job/{jobDisplayId}/form/usar/editable", response_model="bytes")
@@ -111,9 +115,15 @@ class JobFormEndpoint(BaseEndpoint):
             params=dict(shipment_plan_id=shipment_plan_id, provider_option_index=provider_option_index),
         )
 
-    def packing_slip(self, job_display_id: int) -> dict[str, bytes]:
-        """``GET /job/{jobDisplayId}/form/packing-slip``"""
-        return self._pdf(_PACKING_SLIP, job_display_id, "packing_slip")
+    def packing_slip(self, job_display_id: int, *, quote_id: Optional[str] = None) -> dict[str, bytes]:
+        """``GET /job/{jobDisplayId}/form/packing-slip``
+
+        Set ``quote_id`` to select a shipment's quote on 8_01. Omitting it
+        preserves the server's job-level behavior.
+
+        Query params: FormQuoteParams
+        """
+        return self._pdf(_PACKING_SLIP, job_display_id, "packing_slip", params=dict(quote_id=quote_id))
 
     def customer_quote(self, job_display_id: int) -> dict[str, bytes]:
         """``GET /job/{jobDisplayId}/form/customer-quote``"""
@@ -147,9 +157,15 @@ class JobFormEndpoint(BaseEndpoint):
             params=dict(shipment_plan_id=shipment_plan_id),
         )
 
-    def packaging_specification(self, job_display_id: int) -> dict[str, bytes]:
-        """``GET /job/{jobDisplayId}/form/packaging-specification``"""
-        return self._pdf(_PACKAGING_SPEC, job_display_id, "packaging_spec")
+    def packaging_specification(self, job_display_id: int, *, quote_id: Optional[str] = None) -> dict[str, bytes]:
+        """``GET /job/{jobDisplayId}/form/packaging-specification``
+
+        Set ``quote_id`` to select a shipment's quote on 8_01. Omitting it
+        preserves the server's job-level behavior.
+
+        Query params: FormQuoteParams
+        """
+        return self._pdf(_PACKAGING_SPEC, job_display_id, "packaging_spec", params=dict(quote_id=quote_id))
 
     def credit_card_authorization(self, job_display_id: int) -> dict[str, bytes]:
         """``GET /job/{jobDisplayId}/form/credit-card-authorization``"""

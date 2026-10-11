@@ -21,6 +21,11 @@ prepared now and what depends on the new SDK implementation. The updated portal
 schema contains 363 operations and 527 schemas; those counts describe the API,
 not completed SDK coverage.
 
+The development SDK now exposes optional quote selection on packing slips,
+packaging specifications, and shipment tracking. These selectors pass local
+transport checks; live quote-selected validation is pending. The remaining new
+routes are discoverable placeholders, not implemented endpoint wrappers.
+
 The current development branch also adds `ab token` / `abs token` to refresh and
 print the access token. This is after the 0.2.3 tag; do not expect it in an
 installed 0.2.3 package. Its output is a credential, not diagnostic log data.

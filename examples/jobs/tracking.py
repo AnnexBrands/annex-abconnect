@@ -13,6 +13,8 @@ See also: https://ab-sdk.readthedocs.io/en/latest/api/jobs.html
 
 from __future__ import annotations
 
+import os
+
 from ab import ABConnectAPI
 from ab.cli.formatter import format_result
 from examples._capture import save
@@ -39,7 +41,10 @@ def main() -> None:
     pro_number = tracking_info.pro_number
     if pro_number:
         print(f"\n# api.jobs.tracking.shipment({TEST_JOB_DISPLAY_ID}, {pro_number!r})")
-        result = api.jobs.tracking.shipment(TEST_JOB_DISPLAY_ID, pro_number)
+        # Optional 8_01 quote selector must belong to this job and shipment.
+        result = api.jobs.tracking.shipment(
+            TEST_JOB_DISPLAY_ID, pro_number, quote_id=os.getenv("AB_TEST_QUOTE_ID"),
+        )
         print(format_result(result))
         save("ShipmentTrackingDetails.json", result)
     else:

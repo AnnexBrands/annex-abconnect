@@ -2,44 +2,49 @@
 
 Python SDK for the ABConnect API ecosystem — ACPortal, Catalog, and ABC APIs.
 
-## Installation
+Start with a read-only request, then use the task guides and typed API reference
+to build your integration. Requires Python 3.11 or newer.
 
-```bash
-pip install -e .
+## Start here
+
+```{toctree}
+:maxdepth: 1
+
+quickstart
+whats-new
+migration-8-01
+troubleshooting
 ```
 
-## Quick Start
+| I want to… | Start here |
+|---|---|
+| Install, authenticate, and make my first request | [Quickstart](quickstart.md) |
+| Understand the current and upcoming releases | [What's New](whats-new.md) |
+| Prepare for inventory, handling units, and multiple shipments | [8_01 migration](migration-8-01.md) |
+| Fix a configuration, validation, or API error | [Troubleshooting](troubleshooting.md) |
+| Work with catalogs and lots | [Catalog](api/catalog.md), [Lots](api/lots.md) |
+| Inspect jobs and shipping operations | [Jobs](api/jobs.md), [Shipments](api/shipments.md) |
+
+## Install and make a first request
+
+```bash
+python -m pip install annex-abconnect
+```
+
+Configure credentials using the [quickstart](quickstart.md), then:
 
 ```python
 from ab import ABConnectAPI
 
 api = ABConnectAPI(env="staging")
 
-# Get a company
-company = api.companies.get_by_id("93179b52-3da9-e311-b6f8-000c298b59ee")
-print(company.name)
-
-# List catalogs
-catalogs = api.catalog.list()
-
-# Get current user's contact info
 me = api.contacts.get_current_user()
 print(me.full_name)
 ```
 
-## Configuration
-
-Set credentials via environment variables with the `ABCONNECT_` prefix:
-
-```bash
-export ABCONNECT_USERNAME=myuser
-export ABCONNECT_PASSWORD=mypass
-export ABCONNECT_CLIENT_ID=myapp
-export ABCONNECT_CLIENT_SECRET=my-secret-uuid
-export ABCONNECT_ENVIRONMENT=staging
-```
-
-Or use a `.env.staging` / `.env.production` file.
+**Release status:** the current tagged SDK is 0.2.3. SDK 0.3.0 targets ABConnect
+8_01 and is planned; its new inventory/handling-unit and multiple-shipment SDK
+workflows are not implemented yet. See [What's New](whats-new.md) before upgrading.
 
 ## API Reference
 
@@ -102,12 +107,13 @@ models/forms
 models/notes
 ```
 
-## Guides
+## Maintainer and validation guides
 
 ```{toctree}
 :maxdepth: 1
 
-quickstart
+release-runbook
+dx-roadmap
 certification-evidence
 known-model-defects
 mutation-batch-1-proposal
@@ -116,4 +122,4 @@ evidence/timeline-update-task-investigation
 FIXTURES
 ```
 
-See also: [Mock Tracking (MOCKS.md)](https://github.com/AnnexBrands/ABConnnect/blob/main/MOCKS.md)
+Source: [bmonson-annex/annex-abconnect](https://github.com/bmonson-annex/annex-abconnect).

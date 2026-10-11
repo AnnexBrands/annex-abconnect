@@ -53,6 +53,9 @@ myst_enable_extensions = [
     "fieldlist",
 ]
 
+# Stable section links for task guides and troubleshooting across Markdown pages.
+myst_heading_anchors = 3
+
 source_suffix = {
     ".rst": "restructuredtext",
     ".md": "markdown",

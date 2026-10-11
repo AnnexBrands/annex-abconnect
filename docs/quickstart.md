@@ -1,10 +1,21 @@
 # Quickstart Guide
 
+This guide takes you from a fresh Python environment to a read-only staging
+request. You need Python 3.11+ and an ABConnect client and user provisioned for
+the target environment. See [What's New](whats-new.md) for release status.
+
 ## Installation
 
 ```bash
-pip install -e .
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install annex-abconnect
+python -c "from importlib.metadata import version; print(version('annex-abconnect'))"
 ```
+
+On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1` instead.
+For reproducible deployments, pin the version you have validated, such as
+`annex-abconnect==0.2.3`. Editable installation is for SDK contributors.
 
 ## Configuration
 
@@ -17,6 +28,8 @@ ABCONNECT_CLIENT_ID=myapp
 ABCONNECT_CLIENT_SECRET=my-secret-uuid
 ABCONNECT_ENVIRONMENT=staging
 ```
+
+Use your provisioned values in this local file and keep it out of version control.
 
 ### OAuth scopes (optional)
 
@@ -44,14 +57,34 @@ under `~/.cache/ab/` to apply it immediately.
 
 ## Basic Usage
 
+Save this as `first_request.py` beside `.env.staging`:
+
 ```python
 from ab import ABConnectAPI
 
-# Initialize — authenticates automatically
 api = ABConnectAPI(env="staging")
+me = api.contacts.get_current_user()
+print(me.full_name)
 ```
 
+Run `python first_request.py`. A successful call prints the current user's full
+name. If it fails, start with [Troubleshooting](troubleshooting.md).
+
+To discover endpoint groups and signatures without API credentials:
+
+```bash
+ab --help
+abs contacts get_current_user --help
+```
+
+`abs` targets staging; `ab` targets production. In Python, choose explicitly with
+`ABConnectAPI(env="staging")` or `ABConnectAPI(env="production")`. Editor completion
+and `api.groups()` also expose the endpoint groups.
+
 ## Common Operations
+
+The snippets below continue from `api` above. Use identifiers accessible to your
+account; a sample identifier is not a provisioned test record.
 
 ### Get a Company
 
@@ -73,7 +106,7 @@ print(me.full_name)
 ### Search Companies
 
 ```python
-results = api.companies.search({"searchText": "Navis"})
+results = api.companies.search(data={"searchText": "Navis"})
 for r in results:
     print(r.id, r.name)
 ```
@@ -85,7 +118,9 @@ for r in results:
 catalogs = api.catalog.list()
 
 # With filter parameters
-catalogs = api.catalog.list(agent="Smith", is_completed=False, page_size=10)
+catalogs = api.catalog.list(title="Auction", is_completed=False, page_size=10)
+for catalog in catalogs.items:
+    print(catalog.id, catalog.title)
 ```
 
 ### Paginate Through All Results
@@ -110,7 +145,7 @@ contact_types = api.lookup.get_contact_types()
 ### List Users and Roles
 
 ```python
-users = api.users.list({"page": 1, "pageSize": 10})
+users = api.users.list(data={"page": 1, "pageSize": 10})
 roles = api.users.get_roles()
 ```
 
@@ -118,6 +153,7 @@ roles = api.users.get_roles()
 
 ```python
 from ab import ABConnectAPI
+from django.shortcuts import render
 
 def my_view(request):
     api = ABConnectAPI(request=request)
@@ -150,3 +186,7 @@ except RequestError as e:
 except AuthenticationError:
     print("Invalid credentials")
 ```
+
+Request-model validation raises `pydantic.ValidationError` before the HTTP call;
+handle it separately from an API `RequestError`. The troubleshooting guide
+explains configuration, scope, validation, and server failures.

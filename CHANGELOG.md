@@ -4,6 +4,37 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
+## [0.3.0] - Unreleased — targeting ABConnect 8_01
+
+Release scope is defined in [specs/038-abconnect-8-01/spec.md](specs/038-abconnect-8-01/spec.md).
+The implementation and certification are pending; these are release requirements,
+not claims of shipped SDK support. The baseline is v0.2.3 plus the current main
+branch's CLI token-refresh addition.
+
+### Prepared
+
+- Refreshed the bundled ACPortal Swagger from staging: 363 operations and 527
+  component schemas. This updates discovery evidence, not endpoint compatibility.
+- Added What's New, an 8_01 migration preview, troubleshooting, and measurable
+  developer-experience goals. Reworked the docs home and quickstart around package
+  installation and a first read-only call; corrected outdated example arguments.
+- Added a release runbook requiring verified publication on both PyPI and Read
+  the Docs. Read the Docs now fails on build warnings, and the PyPI workflow
+  checks distribution metadata and description rendering before upload.
+- Corrected the package repository link to `bmonson-annex/annex-abconnect`.
+
+### Planned
+
+- Unified inventory and handling-unit operations replace the parcel-item versus
+  freight-item split as the primary SDK workflow.
+- Multiple active shipments per job, with explicit selection of the appropriate
+  shipping record, quote, and carrier shipment for each operation.
+- Preserve supported legacy requests through verified server compatibility or
+  explicit SDK adapters. Emit actionable compatibility warnings; do not remove
+  public methods or announce a removal deadline in this release.
+- Updated typed models, runnable examples, real fixtures, migration guidance,
+  and certification evidence for the 8_01 core-app changes.
+
 ## [0.2.3] - 2026-08-28
 
 Every bulk-upserted catalog now states the platform it belongs to, and the SDK

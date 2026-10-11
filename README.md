@@ -2,6 +2,11 @@
 
 Python SDK for the ABConnect API ecosystem.
 
+[Quickstart](https://ab-sdk.readthedocs.io/en/latest/quickstart.html) ·
+[What's New](https://ab-sdk.readthedocs.io/en/latest/whats-new.html) ·
+[8_01 migration](docs/migration-8-01.md) ·
+[Release runbook](docs/release-runbook.md)
+
 ## API Surfaces
 
 | Surface | Base URL | Auth |
@@ -11,6 +16,14 @@ Python SDK for the ABConnect API ecosystem.
 | ABC | `api.{env}.abconnect.co/api/` | Bearer JWT + accessKey |
 
 ## Installation
+
+For an application using the SDK (Python 3.11+):
+
+```bash
+python -m pip install annex-abconnect
+```
+
+For SDK development, clone this repository and install its tools:
 
 ```bash
 uv sync
@@ -141,7 +154,10 @@ ex co.get_d          # matches companies.get_details
 ex addr.val          # matches address.validate
 ```
 
-Each example authenticates against the configured environment, calls the endpoint, displays the result, and saves response fixtures to `tests/fixtures/`.
+Examples run from the source checkout; they are not included in the installed
+package. Each example calls the configured API and displays the result. Captures
+are sanitized and written to `tests/captures/`; committed fixtures are updated
+through the certification workbench's review and approval flow.
 
 ## Documentation
 

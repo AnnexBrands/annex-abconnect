@@ -53,7 +53,8 @@ jobs:
   publish:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref_type == 'tag'
+    # The organization upstream mirrors tags for Read the Docs; publish only once.
+    if: github.ref_type == 'tag' && github.repository == 'bmonson-annex/annex-abconnect'
 
     steps:
       - name: Checkout Code
@@ -82,6 +83,9 @@ jobs:
 
       - name: Build Package
         run: python -m build
+
+      - name: Validate package metadata and rendered description
+        run: python -m twine check --strict dist/*
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

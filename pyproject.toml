@@ -34,7 +34,7 @@ ab = "ab.cli:main_prod"
 abs = "ab.cli:main_staging"
 
 [project.urls]
-"Repository" = "https://github.com/AnnexBrands/annex-abconnect"
+"Repository" = "https://github.com/bmonson-annex/annex-abconnect"
 "Documentation" = "https://ab-sdk.readthedocs.io/"
 
 [dependency-groups]

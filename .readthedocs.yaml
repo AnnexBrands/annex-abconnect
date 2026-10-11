@@ -14,13 +14,13 @@ build:
       - pip install --upgrade pip
     post_install:
       # Install the package itself so sphinx.ext.autodoc can import `ab.*`
-      # plus the docs toolchain pinned in pyproject.toml's [dependency-groups.docs].
+      # plus the docs toolchain declared in pyproject.toml's [dependency-groups.docs].
       - pip install -e .
       - pip install "sphinx>=7.0" "sphinx-rtd-theme>=2.0" "myst-parser>=3.0"
 
 sphinx:
   configuration: docs/conf.py
-  fail_on_warning: false
+  fail_on_warning: true
 
 formats:
   - htmlzip

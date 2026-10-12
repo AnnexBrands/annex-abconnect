@@ -3,6 +3,9 @@
 
 > `GET /shipment/accessorials` — ACPortal
 
+**Unsupported on 8_01:** The 8_01 server does not implement global shipment accessorials. Use lookup.get_addons.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

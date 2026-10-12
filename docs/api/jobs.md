@@ -34,6 +34,10 @@ tags). Each subgroup is a `BaseEndpoint` instance attached to
 
 | Attribute | Swagger tag | Class | Methods |
 |---|---|---|---|
+| `api.jobs.inventory` | Job Inventory | `JobInventoryEndpoint` | 4 |
+| `api.jobs.handling_units` | Job Handling Unit | `JobHandlingUnitsEndpoint` | 17 |
+| `api.jobs.shippings` | Job Shipping | `JobShippingsEndpoint` | 1 |
+| `api.jobs.rates` | Job Rates | `JobRatesEndpoint` | 2 |
 | `api.jobs.note` | `JobNote` | {class}`ab.api.endpoints.jobs.note.JobNoteEndpoint` | 4 |
 | `api.jobs.on_hold` | `JobOnHold` | {class}`ab.api.endpoints.jobs.on_hold.JobOnHoldEndpoint` | 10 |
 | | | Example: [`examples/jobs/on_hold.py`](https://github.com/AnnexBrands/ab/blob/main/examples/jobs/on_hold.py) — create / assign-to-user / email / resolve chain. | |

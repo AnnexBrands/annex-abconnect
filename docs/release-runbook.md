@@ -4,9 +4,8 @@ A release is complete only when its package is available from **PyPI** and its
 matching version is built and visible on **Read the Docs**. A GitHub release or
 a green package-upload job alone is insufficient.
 
-This runbook describes the publication procedure. The current 0.3.0 entry is an
-unreleased target; run the publication steps after implementation and all gates
-pass.
+Run this procedure after implementation and validation. Record publication
+evidence separately from local checks.
 
 ## Destinations and repository
 

@@ -65,8 +65,27 @@ class TestGateRegression:
         baseline = json.loads(BASELINE_FILE.read_text())
         current = _evaluate_current()
 
+        from ab.cli.discovery import discover_endpoints_from_class
+        from ab.progress.route_index import normalize_path
+        unsupported = {
+            f"{normalize_path(m.route.path)} {m.route.method}"
+            for info in discover_endpoints_from_class().values() for m in info.methods
+            if m.route is not None and m.route.unsupported_reason
+        }
+        # 8_01 moved the document ID from the path into a required query DTO.
+        # Do not keep a phantom FIXTURES row to make the retired binary route pass.
+        # The new typed route is measured separately; its query/required context
+        # behavior is covered by test_shipment_document_requires_franchisee_and_uses_query.
+        from ab.api.endpoints.shipments import _GET_SHIPMENT_DOCUMENT
+
+        assert _GET_SHIPMENT_DOCUMENT.path == "/shipment/document"
+        assert _GET_SHIPMENT_DOCUMENT.params_model == "CurrentShipmentDocumentParams"
+        assert _GET_SHIPMENT_DOCUMENT.response_model == "CarrierShippingDocument"
+        unsupported.add("/shipment/document/{_} GET")
         regressions: list[str] = []
         for key, expected_gates in baseline.items():
+            if key in unsupported:
+                continue  # Covered by pre-transport UnsupportedOperationError regression tests.
             actual_gates = set(current.get(key, []))
             for gate in expected_gates:
                 if gate not in actual_gates:

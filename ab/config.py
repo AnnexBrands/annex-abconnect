@@ -134,7 +134,8 @@ def load_settings(
     Args:
         env: ``"staging"`` or ``"production"``.  When provided the
             corresponding ``.env.{env}`` file is loaded automatically.
-        env_file: Explicit path to an env file (overrides *env*).
+        env_file: Explicit credential-file path, overriding automatic file lookup.
+            An explicit *env* still selects the server environment.
 
     Returns:
         Validated settings instance.
@@ -153,7 +154,9 @@ def load_settings(
             kwargs["_env_file"] = env_specific_file
         elif os.path.isfile(".env"):
             kwargs["_env_file"] = ".env"
-        kwargs["environment"] = env  # type: ignore[arg-type]
+
+    if env is not None:
+        kwargs["environment"] = env
 
     kwargs["require_credentials"] = require_credentials
     return ABConnectSettings(**kwargs)

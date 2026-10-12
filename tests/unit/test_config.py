@@ -96,10 +96,7 @@ class TestABConnectSettings:
     def test_load_settings_uses_dotenv_by_default(self, tmp_path, monkeypatch):
         env_file = tmp_path / ".env"
         env_file.write_text(
-            "ABCONNECT_USERNAME=u\n"
-            "ABCONNECT_PASSWORD=p\n"
-            "ABCONNECT_CLIENT_ID=c\n"
-            "ABCONNECT_CLIENT_SECRET=s\n"
+            "ABCONNECT_USERNAME=u\nABCONNECT_PASSWORD=p\nABCONNECT_CLIENT_ID=c\nABCONNECT_CLIENT_SECRET=s\n"
         )
         monkeypatch.chdir(tmp_path)
         with patch.dict(os.environ, {}, clear=True):
@@ -110,13 +107,20 @@ class TestABConnectSettings:
     def test_load_settings_falls_back_to_dotenv_for_named_env(self, tmp_path, monkeypatch):
         env_file = tmp_path / ".env"
         env_file.write_text(
-            "ABCONNECT_USERNAME=u\n"
-            "ABCONNECT_PASSWORD=p\n"
-            "ABCONNECT_CLIENT_ID=c\n"
-            "ABCONNECT_CLIENT_SECRET=s\n"
+            "ABCONNECT_USERNAME=u\nABCONNECT_PASSWORD=p\nABCONNECT_CLIENT_ID=c\nABCONNECT_CLIENT_SECRET=s\n"
         )
         monkeypatch.chdir(tmp_path)
         with patch.dict(os.environ, {}, clear=True):
             settings = load_settings(env="staging")
         assert settings.username == "u"
         assert settings.environment == "staging"
+
+
+def test_explicit_environment_wins_with_explicit_env_file(tmp_path, monkeypatch):
+    """Selecting a file must not silently turn an explicit staging client into production."""
+    env_file = tmp_path / "credentials.env"
+    env_file.write_text("\n".join(f"{k}={v}" for k, v in {**_VALID_ENV, "ABCONNECT_ENVIRONMENT": "production"}.items()))
+    with patch.dict(os.environ, {}, clear=True):
+        settings = load_settings(env="staging", env_file=str(env_file))
+    assert settings.environment == "staging"
+    assert "staging" in settings.acportal_base_url

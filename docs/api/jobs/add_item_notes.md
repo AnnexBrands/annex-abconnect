@@ -3,6 +3,9 @@
 
 > `POST /job/{jobDisplayId}/item/notes` — ACPortal
 
+**Unsupported on 8_01:** 8_01 rejects legacy item notes. Use jobs.update_inventory_info with an integer inventory ID.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

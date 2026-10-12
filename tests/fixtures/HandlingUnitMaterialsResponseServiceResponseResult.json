@@ -1,0 +1,40 @@
+{
+  "success": true,
+  "errorMessage": null,
+  "data": {
+    "containerInformation": {
+      "length": 12.0,
+      "width": 12.0,
+      "height": 12.0,
+      "weight": 1.09
+    },
+    "materials": [
+      {
+        "materialId": 4004,
+        "quantityPlanned": 1.0,
+        "unitCost": 49.99,
+        "wasteQuantity": 0.0,
+        "description": "",
+        "materialName": "",
+        "materialWeight": null,
+        "materialCost": 49.99,
+        "materialPrice": 10.0
+      },
+      {
+        "materialId": 7007,
+        "quantityPlanned": 0.0,
+        "unitCost": 499.95,
+        "wasteQuantity": 0.0,
+        "description": "",
+        "materialName": "Surface Wrap",
+        "materialWeight": null,
+        "materialCost": 499.95,
+        "materialPrice": 100.0
+      }
+    ],
+    "validationResult": {
+      "containerValid": true,
+      "cFillValid": true
+    }
+  }
+}

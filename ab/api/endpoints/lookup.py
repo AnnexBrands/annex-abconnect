@@ -2,7 +2,17 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Literal, Optional
+
+from ab.api.base import BaseEndpoint
+from ab.api.models.enums import MasterConstantKey
+from ab.api.models.release_support import (
+    CPackEntityResult,
+    HandlingUnitContainerTypeGroupResult,
+    LookupFillResult,
+    ServiceAddOnEntityResult,
+)
+from ab.api.route import Route
 
 if TYPE_CHECKING:
     from ab.api.models.lookup import (
@@ -21,9 +31,6 @@ if TYPE_CHECKING:
         ReferCategoryHierarchy,
     )
 
-from ab.api.base import BaseEndpoint
-from ab.api.models.enums import MasterConstantKey
-from ab.api.route import Route
 
 _CONTACT_TYPES = Route("GET", "/lookup/contactTypes", response_model="List[ContactTypeEntity]")
 _COUNTRIES = Route("GET", "/lookup/countries", response_model="List[CountryCodeDto]")
@@ -38,20 +45,36 @@ _ACCESS_KEY = Route("GET", "/lookup/accessKey/{accessKey}", response_model="Acce
 _PPC_CAMPAIGNS = Route("GET", "/lookup/PPCCampaigns", response_model="List[PPCCampaign]")
 _PARCEL_PACKAGE_TYPES = Route("GET", "/lookup/parcelPackageTypes", response_model="List[ParcelPackageType]")
 _DOCUMENT_TYPES = Route(
-    "GET", "/lookup/documentTypes",
-    params_model="LookupDocumentTypesParams", response_model="List[DocumentTypeBySource]",
+    "GET",
+    "/lookup/documentTypes",
+    params_model="LookupDocumentTypesParams",
+    response_model="List[DocumentTypeBySource]",
 )
 _COMMON_INSURANCE = Route("GET", "/lookup/comonInsurance", response_model="List[CommonInsuranceSlab]")
 _DENSITY_CLASS_MAP = Route(
-    "GET", "/lookup/densityClassMap",
+    "GET",
+    "/lookup/densityClassMap",
     params_model="LookupDensityClassMapParams",
     response_model="List[DensityClassEntry]",
 )
 _REFER_CATEGORIES = Route("GET", "/lookup/referCategory", response_model="List[LookupValue]")
-_REFER_CATEGORY_HIERARCHY = Route(
-    "GET", "/lookup/referCategoryHeirachy", response_model="List[ReferCategoryHierarchy]"
-)
+_REFER_CATEGORY_HIERARCHY = Route("GET", "/lookup/referCategoryHeirachy", response_model="List[ReferCategoryHierarchy]")
 _RESET_CACHE = Route("GET", "/lookup/resetMasterConstantCache")
+
+
+_CURRENT_GET_ADDONS = Route(
+    "GET", "/lookup/addOns", response_model="List[ServiceAddOnEntityResult]", params_model="GetAddonsParams"
+)
+
+
+_GET_CONTAINER_TYPES = Route(
+    "GET",
+    "/lookup/handlingUnitContainerTypes",
+    response_model="List[HandlingUnitContainerTypeGroupResult]",
+    params_model="ContainerTypesParams",
+)
+_GET_CPACKS = Route("GET", "/lookup/cPacks", response_model="List[CPackEntityResult]")
+_GET_CONTAINER_FILLS = Route("GET", "/lookup/containerfill", response_model="List[LookupFillResult]")
 
 
 class LookupEndpoint(BaseEndpoint):
@@ -228,3 +251,41 @@ class LookupEndpoint(BaseEndpoint):
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/lookup/reset_cache.html
         """
         return self._request(_RESET_CACHE)
+
+    def get_addons(
+        self, *, carrier_apis: list[Literal[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 14, 15, 20]] | None = None
+    ) -> list[ServiceAddOnEntityResult]:
+        """GET /lookup/addOns.
+
+        Uses explicit 8_01 identifiers and validates the complete request.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/lookup/get_addons.html
+        Query params: GetAddonsParams
+        Response model: List[ServiceAddOnEntityResult]
+        """
+        return self._request(_CURRENT_GET_ADDONS, params=dict(carrier_apis=carrier_apis))
+
+    def get_container_types(self, *, company_id: str | None = None) -> list[HandlingUnitContainerTypeGroupResult]:
+        """Discover valid 8_01 packing identifiers from the server.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/lookup/get_container_types.html
+        Query params: ContainerTypesParams
+        Response model: List[HandlingUnitContainerTypeGroupResult]
+        """
+        return self._request(_GET_CONTAINER_TYPES, params=dict(company_id=company_id))
+
+    def get_cpacks(self) -> list[CPackEntityResult]:
+        """Discover valid 8_01 packing identifiers from the server.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/lookup/get_cpacks.html
+        Response model: List[CPackEntityResult]
+        """
+        return self._request(_GET_CPACKS)
+
+    def get_container_fills(self) -> list[LookupFillResult]:
+        """Discover valid 8_01 packing identifiers from the server.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/lookup/get_container_fills.html
+        Response model: List[LookupFillResult]
+        """
+        return self._request(_GET_CONTAINER_FILLS)

@@ -1,0 +1,66 @@
+{
+  "success": true,
+  "errorMessage": null,
+  "data": [
+    {
+      "quantity": 1,
+      "sequenceNo": 1,
+      "name": null,
+      "fillId": null,
+      "fillRate": null,
+      "containerTypeId": 5,
+      "length": 12.5,
+      "width": 12.5,
+      "height": 12.5,
+      "weight": 5.16,
+      "inchesToAdd": 0.0,
+      "containerThickness": 0.5,
+      "materials": [
+        {
+          "materialId": 4004,
+          "quantityPlanned": 1.0,
+          "unitCost": 49.99,
+          "wasteQuantity": 0.0,
+          "description": "",
+          "materialName": "SB 12x12x12",
+          "materialWeight": null,
+          "materialCost": 49.99,
+          "materialPrice": 499.95
+        },
+        {
+          "materialId": 7007,
+          "quantityPlanned": 3.29,
+          "unitCost": 499.95,
+          "wasteQuantity": 0.0,
+          "description": "",
+          "materialName": "Surface Wrap",
+          "materialWeight": null,
+          "materialCost": 499.95,
+          "materialPrice": 100.0
+        }
+      ],
+      "materialTotalCost": 2500.0,
+      "fillWeight": 0.0,
+      "containerWeight": 1.16,
+      "materialWeight": 1.16,
+      "containerMaterialId": 4004,
+      "freightClassId": "883125af-293c-a216-b0db-4f454d6c6f1b",
+      "id": 1,
+      "inventoryItems": [
+        {
+          "sequenceNo": 1,
+          "length": 12.0,
+          "width": 10.0,
+          "height": 8.0,
+          "weight": 4.0,
+          "forceCrate": false,
+          "value": 125.0,
+          "cPackName": "1",
+          "name": null,
+          "quantity": 1
+        }
+      ],
+      "contentHandlingUnits": []
+    }
+  ]
+}

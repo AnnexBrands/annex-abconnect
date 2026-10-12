@@ -6,28 +6,16 @@ Tracks capture status and quality gates for all endpoint fixtures in `tests/fixt
 **Quality Gates**: G1 (Model Fidelity), G2 (Fixture Status), G3 (Test Quality), G4 (Doc Accuracy), G5 (Param Routing), G6 (Request Quality)
 **Rule**: Status is "complete" only when ALL applicable gates pass.
 
-## 8_01 quote-selector validation
-
-Packing-slip and packaging-specification GETs now accept `FormQuoteParams`
-(`quoteId`); shipment tracking accepts `ShipmentTrackingParams` (`QuoteId`).
-Aliases and UUID shape were checked against the 8_01 controllers/DTOs and the
-staging Swagger. Deterministic transport tests cover selection, omission, and
-invalid IDs. New quote-selected live captures are **pending**; existing fixture
-and binary-response statuses below are not evidence of quote-selector validation.
-The opt-in read-only integration tests use `AB_TEST_SHIPMENT_JOB_ID`,
-`AB_TEST_QUOTE_ID`, and (for tracking) `AB_TEST_PRO_NUMBER` from provisioned staging
-data. No fabricated captured fixture was added.
-
 ## Summary
 
-- **Total endpoints**: 251
-- **Complete (all gates pass)**: 187
-- **G1 Model Fidelity**: 202/251 pass
-- **G2 Fixture Status**: 203/251 pass
-- **G3 Test Quality**: 237/251 pass
-- **G4 Doc Accuracy**: 249/251 pass
-- **G5 Param Routing**: 244/251 pass
-- **G6 Request Quality**: 244/251 pass
+- **Total endpoints**: 304
+- **Complete (all gates pass)**: 227
+- **G1 Model Fidelity**: 242/304 pass
+- **G2 Fixture Status**: 246/304 pass
+- **G3 Test Quality**: 281/304 pass
+- **G4 Doc Accuracy**: 303/304 pass
+- **G5 Param Routing**: 301/304 pass
+- **G6 Request Quality**: 290/304 pass
 
 ## Status Legend
 
@@ -80,9 +68,9 @@ data. No fabricated captured fixture was added.
 | /job/{jobDisplayId}/shipment/accessorials | GET | api.jobs.shipment.get_accessorials | — | List[Accessorial] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
 | /job/{jobDisplayId}/shipment/origindestination | GET | api.jobs.shipment.get_origin_destination | — | ShipmentOriginDestination | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
 | /job/{jobDisplayId}/shipment/ratesstate | GET | api.jobs.shipment.get_rates_state | — | RatesState | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
-| /shipment | GET | api.shipments.get_shipment | — | ShipmentInfo | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /shipment | GET | api.shipments.get_shipment | — | CarrierShipmentDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
 | /shipment/accessorials | GET | api.shipments.get_global_accessorials | — | List[GlobalAccessorial] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
-| /job/{jobDisplayId}/form/shipments | GET | api.jobs.form.shipments | — | List[FormsShipmentPlan] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
+| /job/{jobDisplayId}/form/shipments | GET | api.jobs.form.shipments | — | List[ShipmentFormPlan] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 2026-02-14, staging |
 | /autoprice/quickquote | POST | api.autoprice.quick_quote | QuoteRequestModel | QuickQuoteResponse | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | Request model validation error — field names don't match (originZip vs OriginZip) |
 | /AutoPrice/QuoteRequest | POST | — | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | Needs items array with weight, class fields and valid origin/destination |
 | /rfq/{rfqId} | GET | api.rfq.get | — | QuoteRequestDisplayInfo | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — run examples/rfq.py |
@@ -146,11 +134,11 @@ data. No fabricated captured fixture was added.
 | /dashboard/gridviews | GET | api.dashboard.get_grid_views | — | List[GridViewInfo] | PASS | PASS | PASS | PASS | PASS | PASS | complete | model realigned to swagger GridViewDetails (id/name/dataKey/isActive); fixture seeded with 6 representative rows |
 | /dashboard/gridviewstate/{id} | GET | api.dashboard.get_grid_view_state | — | GridViewState | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /dashboard/gridviewstate/{id} | POST | api.dashboard.save_grid_view_state | GridViewState | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
-| /dashboard/inbound | POST | api.dashboard.inbound | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
-| /dashboard/inhouse | POST | api.dashboard.in_house | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
-| /dashboard/outbound | POST | api.dashboard.outbound | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
-| /dashboard/local-deliveries | POST | api.dashboard.local_deliveries | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
-| /dashboard/recentestimates | POST | api.dashboard.recent_estimates | DashboardCompanyRequest | — | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | 008 |
+| /dashboard/inbound | POST | api.dashboard.inbound | DashboardGridOptions | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /dashboard/inhouse | POST | api.dashboard.in_house | DashboardGridOptions | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /dashboard/outbound | POST | api.dashboard.outbound | DashboardGridOptions | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /dashboard/local-deliveries | POST | api.dashboard.local_deliveries | DashboardGridOptions | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /dashboard/recentestimates | POST | api.dashboard.recent_estimates | DashboardGridOptions | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /views/all | GET | api.views.list | — | List[GridViewDetails] | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views/{viewId} | GET | api.views.get | — | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /views | POST | api.views.create | GridViewCreateRequest | GridViewDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
@@ -180,7 +168,7 @@ data. No fabricated captured fixture was added.
 | /contacts/{contactId}/history/graphdata | GET | api.contacts.get_history_graph_data | — | ContactGraphData | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /contacts/{mergeToId}/merge/preview | POST | api.contacts.merge_preview | ContactMergeRequest | ContactMergePreview | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | 008 |
 | /contacts/{mergeToId}/merge | PUT | api.contacts.merge | ContactMergeRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 — destructive |
-| /job/{jobDisplayId}/freightproviders | GET | api.jobs.freight_providers.list | — | List[PricedFreightProvider] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
+| /job/{jobDisplayId}/freightproviders | GET | api.jobs.freight_providers.get_quotes | — | List[TransportationQuoteResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /job/{jobDisplayId}/freightproviders | POST | api.jobs.freight_providers.save | ShipmentPlanProvider | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /job/{jobDisplayId}/freightproviders/{optionIndex}/ratequote | POST | api.jobs.freight_providers.rate_quote | RateQuoteRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
 | /job/{jobDisplayId}/freightitems | POST | api.jobs.add_freight_items | FreightItemsRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | 008 |
@@ -240,7 +228,7 @@ data. No fabricated captured fixture was added.
 | /job/{jobDisplayId}/form/credit-card-authorization | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/form/customer-quote | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/form/invoice | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/form/invoice/editable | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/invoice/editable | GET | api.jobs.form.invoice_editable | — | EditableFormContent | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/form/item-labels | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/form/operations | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/form/packaging-labels | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
@@ -248,7 +236,7 @@ data. No fabricated captured fixture was added.
 | /job/{jobDisplayId}/form/packing-slip | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/form/quick-sale | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/form/usar | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/form/usar/editable | GET | — | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/form/usar/editable | GET | api.jobs.form.usar_editable | — | EditableFormContent | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/parcelitems/{parcelItemId} | DELETE | api.jobs.parcel_items.delete | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/timeline/{timelineTaskId} | DELETE | api.jobs.timeline.delete_task | — | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/note/{id} | GET | api.jobs.note.get | — | JobNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
@@ -257,22 +245,21 @@ data. No fabricated captured fixture was added.
 | /job/{jobDisplayId}/timeline/{timelineTaskId} | PATCH | api.jobs.timeline.update_task | TimelineTaskUpdateRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/item/notes | POST | api.jobs.add_item_notes | ItemNotesRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/note | POST | api.jobs.note.create | JobNoteCreateRequest | JobNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/parcelitems | POST | api.jobs.parcel_items.create | ParcelItemCreateRequest | ParcelItem | PASS | PASS | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/parcelitems | POST | api.jobs.parcel_items.create | ParcelItemsRequest | ParcelItemsResponse | FAIL | FAIL | FAIL | FAIL | PASS | PASS | incomplete | auto-discovered |
 | /job/{jobDisplayId}/timeline | POST | api.jobs.timeline.create_task | — | TimelineSaveResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/item/{itemId} | PUT | api.jobs.update_item | ItemUpdateRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/item/{inventoryItemId} | PUT | api.jobs.update_inventory_info | JobInventoryItemInfoDataInput | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/note/{id} | PUT | api.jobs.note.update | JobNoteUpdateRequest | JobNote | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/searchByDetails | POST | api.jobs.search_by_details | JobSearchRequest | List[JobSearchResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/timeline/undoincrementjobstatus | POST | api.jobs.timeline.undo_increment_status | IncrementStatusRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/payment/create | GET | api.jobs.payment.get_create | — | PaymentInfo | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | auto-discovered |
 | /job/{jobDisplayId}/shipment/exportdata | GET | api.jobs.shipment.get_export_data | — | ShipmentExportData | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /shipment/document/{docId} | GET | api.shipments.get_shipment_document | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /Web2Lead/get | GET | api.web2lead.get | — | Web2LeadResponse | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | auto-discovered |
 | /job/{jobDisplayId}/changeAgent | POST | api.jobs.change_agent | ChangeJobAgentRequest | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /account/profile | GET | api.account.get_profile | — | AccountProfile | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
 | /documents/get/thumbnail/{docPath} | GET | api.documents.get_thumbnail | — | bytes | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /documents/hide/{docId} | PUT | api.documents.hide | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /job/{jobDisplayId}/book | POST | api.jobs.book | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
-| /job/{jobDisplayId}/tracking/shipment/{proNumber} | GET | api.jobs.tracking.shipment | — | ShipmentTrackingDetails | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/tracking/shipment/{proNumber} | GET | api.jobs.tracking.shipment | — | ShipmentTrackingDetails | FAIL | FAIL | PASS | PASS | PASS | PASS | incomplete | auto-discovered |
 | /job/feedback/{jobDisplayId} | GET | api.jobs.get_feedback | — | FeedbackSaveModel | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
 | /job/feedback/{jobDisplayId} | POST | api.jobs.save_feedback | FeedbackSaveModel | ServiceBaseResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /Bulk/upsert | POST | api.catalog.bulk_upsert | BulkUpsertRequest | List[CatalogWithLotsDto] | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
@@ -287,6 +274,63 @@ data. No fabricated captured fixture was added.
 | /Platform/{id} | GET | api.platforms.get | — | PlatformDto | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
 | /Platform | GET | — | — | PaginatedList[PlatformDto] | FAIL | FAIL | FAIL | PASS | FAIL | PASS | incomplete | auto-discovered |
 | /Platform/{id} | PUT | api.platforms.update | UpdatePlatformRequest | PlatformDto | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /company/{companyId}/inventory | POST | api.companies.create_inventory | CommonInventoryRequest | CommonInventory | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /company/{companyId}/inventory/{id} | DELETE | api.companies.delete_inventory | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /company/{companyId}/materials/default-pallet | GET | api.companies.get_default_pallet | — | MaterialResult | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /company/{companyId}/materials/d-containers | GET | api.companies.get_d_containers | — | List[MaterialResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /company/{companyId}/pack/handlingunit/materials | POST | api.companies.get_handling_unit_materials | GetHandlingUnitMaterialsModelInput | HandlingUnitMaterialsResponseServiceResponseResult | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /company/{companyId}/inventory | GET | api.companies.get_inventory | — | List[CommonInventory] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /company/{companyId}/materials | GET | api.companies.get_materials | — | List[MasterMaterialInfoResult] | PASS | PASS | PASS | PASS | FAIL | PASS | incomplete | auto-discovered |
+| /company/{companyId}/materials/stock-boxes | GET | api.companies.get_stock_boxes | — | List[MaterialResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /company/{companyId}/pack/handling-units | POST | api.companies.pack_handling_units | PackHandlingUnitsModelInput | JobHandlingUnitListServiceResponseResult | FAIL | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /company/{companyId}/pack/hierarchy | POST | api.companies.pack_hierarchy | List[PackHierarchyHandlingUnitModelInput] | SuggestedHierarchyHandlingUnitListServiceResponseResult | FAIL | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /company/{companyId}/pack/inventories | POST | api.companies.pack_inventories | List[PackInventoryItemModelInput] | SuggestedCombinedHandlingUnitListServiceResponseResult | FAIL | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /company/{companyId}/pack/inventory | POST | api.companies.pack_inventory | PackInventoryItemModelInput | SuggestedHandlingUnitServiceResponseResult | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /company/{companyId}/inventory/{id} | PUT | api.companies.update_inventory | CommonInventoryRequest | — | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /company/{companyId}/pack/validate | POST | api.companies.validate_handling_unit | ValidateHandlingUnitModelInput | ValidateHandlingUnitResultResult | PASS | PASS | PASS | PASS | PASS | FAIL | incomplete | auto-discovered |
+| /job/{jobDisplayId}/addOns/{addonId} | DELETE | api.jobs.add_ons.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/addOns | GET | api.jobs.add_ons.get_all | — | List[JobServiceAddOnResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/addOns | POST | api.jobs.add_ons.save | List[SaveJobServiceAddOnRequestInput] | JobServiceAddOnEntityListServiceResponseResult | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/freightproviders/finaloverride | POST | api.jobs.freight_providers.create_final_override | FinalOverrideRequest | CreateOverriddenQuoteResponseResult | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/freightproviders/final | POST | api.jobs.freight_providers.save_final_quote | SaveFinalQuoteRequest | JobModifiedDateServiceResponseResult | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/freightproviders/ratequote | POST | api.jobs.freight_providers.select_rate_quote | SelectRateQuoteRequest | SaveRateQuoteResponseResult | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/contentUnit | POST | api.jobs.handling_units.add_content_units | List[AddContentHandlingUnitModel] | List[ContentHandlingUnit] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/inventory | POST | api.jobs.handling_units.add_inventory | List[AddInventoryModel] | List[ContentInventoryItem] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/materials | POST | api.jobs.handling_units.add_materials | List[HandlingUnitMaterialModel] | List[HandlingUnitMaterial] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit | POST | api.jobs.handling_units.create | AddJobHandlingUnitModel | JobHandlingUnit | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id} | DELETE | api.jobs.handling_units.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/contentUnit/{contentUnitId} | DELETE | api.jobs.handling_units.delete_content_unit | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/inventory/{inventoryItemId} | DELETE | api.jobs.handling_units.delete_inventory | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/materials/{materialId} | DELETE | api.jobs.handling_units.delete_material | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit | GET | api.jobs.handling_units.get_all | — | List[JobHandlingUnitDetails] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/materials | GET | api.jobs.handling_units.get_materials | — | List[HandlingUnitMaterial] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/manage | POST | api.jobs.handling_units.manage | ManageHandlingUnitsModel | ManageHandlingUnitsResponse | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/materials | PUT | api.jobs.handling_units.replace_materials | List[HandlingUnitMaterialModel] | List[HandlingUnitMaterial] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/container-material | PUT | api.jobs.handling_units.set_container_material | SetHandlingUnitContainerMaterialModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id} | PUT | api.jobs.handling_units.update | JobHandlingUnitModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/contentUnit/{contentUnitId} | PUT | api.jobs.handling_units.update_content_unit | ContentHandlingUnitModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/inventory/{inventoryItemId} | PUT | api.jobs.handling_units.update_inventory | InventoryModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/handlingUnit/{id}/materials/{materialId} | PATCH | api.jobs.handling_units.update_material | HandlingUnitMaterialModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/inventory | POST | api.jobs.inventory.create | JobInventoryItemModel | JobInventoryItem | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/inventory/{id} | DELETE | api.jobs.inventory.delete | — | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/inventory | GET | api.jobs.inventory.get_all | — | List[JobInventoryItem] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/inventory/{id} | PUT | api.jobs.inventory.update | JobInventoryItemModel | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/payment/jobSubKey/{jobSubKey}/exchange | GET | api.jobs.payment.exchange | — | str | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/rates | POST | api.jobs.rates.request | HandlingUnitRateRequest | HandlingUnitRates | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/rates/select-quote | POST | api.jobs.rates.select_quote | SelectQuoteRequest | SelectedQuoteResult | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/shipment/v2/book | POST | api.jobs.shipment.book_v2 | BookShipmentRequestV2 | ShipmentBookingResult | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/shipment/cancel/{quoteId} | PUT | api.jobs.shipment.cancel | CancelShipmentRequest | ShipmentCancelResult | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/shipment/exportdata/{shippingId} | GET | api.jobs.shipment.get_shipping_export_data | — | ShippingExportData | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/shipment/exportdata/{shippingId} | POST | api.jobs.shipment.save_shipping_export_data | ShippingExportRequest | — | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/shipment/validate | POST | api.jobs.shipment.validate | BookShipmentRequestV2 | BookingValidationResult | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/shippings | GET | api.jobs.shippings.get_all | — | List[Shipping] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /job/{jobDisplayId}/tracking/shipment-documents/{proNumber} | GET | api.jobs.tracking.shipment_documents | — | List[ShipmentTrackingDocumentResult] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /job/{jobDisplayId}/tracking/shipment-history/{proNumber} | GET | api.jobs.tracking.shipment_history | — | CarrierShipmentDetails | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /lookup/addOns | GET | api.lookup.get_addons | — | List[ServiceAddOnEntityResult] | PASS | PASS | PASS | PASS | PASS | PASS | complete | auto-discovered |
+| /lookup/containerfill | GET | api.lookup.get_container_fills | — | List[LookupFillResult] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /lookup/handlingUnitContainerTypes | GET | api.lookup.get_container_types | — | List[HandlingUnitContainerTypeGroupResult] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /lookup/cPacks | GET | api.lookup.get_cpacks | — | List[CPackEntityResult] | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
+| /shipment/document | GET | api.shipments.get_shipment_document | — | CarrierShippingDocument | FAIL | FAIL | FAIL | PASS | PASS | PASS | incomplete | auto-discovered |
 
 ## Model Warning Summary
 
@@ -295,3 +339,6 @@ Models with `__pydantic_extra__` fields when validated against their fixtures:
 | Model | Issue |
 |-------|-------|
 | DashboardSummary | 31 undeclared field(s): actual, agent, basis, carrier, created, custRef, customer, dims, expedite, fullAge, held, item_Count, jobDisplayID, jobPrice, labels, labor, location, netAge, next, next_Status, note, opsForm, packer, pause, pickup, priority, rep, requestor, shipBy, status, step |
+| JobHandlingUnitListServiceResponseResult | 30 undeclared field(s): containerHandlingUnitMaterial, containerHandlingUnitMaterialId, containerName, containerThickness, containerTypeId, contentHandlingUnits, cubicFeet, declaredValue, documentExists, fillId, fillRate, freightClassId, hasCustomName, height, id, inchesToAdd, inventoryItems, isActive, isUsedInShipment, jobId, laborMinutes, length, materialTotalCost, materials, name, nmfcItemNo, quantity, sequenceNo, weight, width |
+| SuggestedCombinedHandlingUnitListServiceResponseResult | 20 undeclared field(s): containerMaterialId, containerThickness, containerTypeId, containerWeight, fillId, fillRate, fillWeight, freightClassId, height, inchesToAdd, inventoryItems, length, materialTotalCost, materialWeight, materials, name, quantity, sequenceNo, weight, width |
+| SuggestedHierarchyHandlingUnitListServiceResponseResult | 22 undeclared field(s): containerMaterialId, containerThickness, containerTypeId, containerWeight, contentHandlingUnits, fillId, fillRate, fillWeight, freightClassId, height, id, inchesToAdd, inventoryItems, length, materialTotalCost, materialWeight, materials, name, quantity, sequenceNo, weight, width |

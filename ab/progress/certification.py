@@ -194,11 +194,12 @@ class EndpointCertification:
     evidence: MutationEvidence | None = None
     evidence_detail: str | None = None
     example_path: str | None = None
+    unsupported_reason: str | None = None
 
     @property
     def implemented(self) -> bool:
-        """True by construction -- the denominator is public methods with Routes."""
-        return True
+        """A retained unsupported contract is not an implemented server operation."""
+        return self.unsupported_reason is None
 
     @property
     def returns_no_content(self) -> bool:
@@ -214,7 +215,8 @@ class EndpointCertification:
     @property
     def structurally_complete(self) -> bool:
         return (
-            self.has_example
+            self.implemented
+            and self.has_example
             and (self.returns_no_content or self.has_fixture)
             and (self.returns_no_content or self.has_model_test)
             and self.has_sphinx
@@ -223,7 +225,7 @@ class EndpointCertification:
     @property
     def operator_ready(self) -> bool:
         """Enough approved data on hand to actually run the example."""
-        if not self.has_example:
+        if not self.implemented or not self.has_example:
             return False
         if not self.needs_record_identifier:
             return True
@@ -231,7 +233,7 @@ class EndpointCertification:
 
     @property
     def live_verified(self) -> bool:
-        return self.evidence_state in {
+        return self.implemented and self.evidence_state in {
             EvidenceState.FRESH,
             EvidenceState.BINARY_VERIFIED,
         }
@@ -257,6 +259,8 @@ class EndpointCertification:
         )
 
     def levels(self) -> list[CertLevel]:
+        if not self.implemented:
+            return []
         out = [CertLevel.IMPLEMENTED]
         if self.structurally_complete:
             out.append(CertLevel.STRUCTURALLY_COMPLETE)
@@ -272,6 +276,8 @@ class EndpointCertification:
 
     def blockers(self) -> list[str]:
         """Human-readable reasons this endpoint is not certified."""
+        if self.unsupported_reason:
+            return ["unsupported on 8_01: " + self.unsupported_reason]
         out: list[str] = []
         if not self.has_example:
             out.append("no canonical example")
@@ -474,6 +480,7 @@ def build_certification() -> list[EndpointCertification]:
                     path=m.route.path,
                     response_model=model,
                     request_model=m.route.request_model,
+                    unsupported_reason=m.route.unsupported_reason,
                     has_example=has_example,
                     has_fixture=bool(model) and model in fixtures,
                     has_model_test=bool(model) and model in tested,

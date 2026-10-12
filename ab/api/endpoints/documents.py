@@ -9,13 +9,16 @@ from ab.api.base import BaseEndpoint
 from ab.api.models.documents import DocumentUploadRequest, DocumentUploadResponse
 from ab.api.models.enums import DocumentType
 from ab.api.route import Route
+from ab.exceptions import UnsupportedOperationError
 
 if TYPE_CHECKING:
     from ab.api.models.documents import Document, DocumentUpdateRequest
 
 _UPLOAD = Route(
-    "POST", "/documents",
-    request_model="DocumentUploadRequest", response_model="DocumentUploadResponse",
+    "POST",
+    "/documents",
+    request_model="DocumentUploadRequest",
+    response_model="DocumentUploadResponse",
 )
 _LIST = Route("GET", "/documents/list", params_model="DocumentListParams", response_model="List[Document]")
 _GET = Route("GET", "/documents/get/{docPath}", response_model="bytes")
@@ -51,6 +54,8 @@ class DocumentsEndpoint(BaseEndpoint):
         shared: int = 0,
         tags: list[str] | None = None,
         job_items: list[str] | None = None,
+        inventory_item_ids: list[int] | None = None,
+        handling_unit_ids: list[int] | None = None,
         rfq_id: int | None = None,
         filename: str | None = None,
     ) -> DocumentUploadResponse:
@@ -70,7 +75,7 @@ class DocumentsEndpoint(BaseEndpoint):
             document_type_description: Optional human-readable type label.
             shared: Sharing bitmask (0 = private).
             tags: Optional tags to attach.
-            job_items: Item UUID(s) to associate (used for item photos).
+            job_items: Integer inventory ID(s) to associate (used for item photos).
             rfq_id: Optional RFQ ID to associate.
             filename: Override the multipart filename (defaults to the file's
                 name; **required** for bytes / file-like sources).
@@ -82,13 +87,19 @@ class DocumentsEndpoint(BaseEndpoint):
         Request model: DocumentUploadRequest
         Response model: DocumentUploadResponse
         """
+        if job_items is not None:
+            raise UnsupportedOperationError(
+                "8_01 document associations require inventory_item_ids or handling_unit_ids; "
+                "legacy item UUIDs cannot be mapped."
+            )
         form = DocumentUploadRequest(
             job_display_id=job_display_id,
             document_type=document_type,
             document_type_description=document_type_description,
             shared=shared,
             tags=tags,
-            job_items=job_items,
+            inventory_item_ids=inventory_item_ids,
+            handling_unit_ids=handling_unit_ids,
             rfq_id=rfq_id,
         )
         data = form.model_dump(by_alias=True, exclude_none=True)
@@ -104,7 +115,7 @@ class DocumentsEndpoint(BaseEndpoint):
         self,
         *,
         job_display_id: str,
-        item_ids: str | list[str],
+        item_ids: int | list[int],
         file_path: FileSource,
         shared: int = 0,
         tags: list[str] | None = None,
@@ -114,7 +125,7 @@ class DocumentsEndpoint(BaseEndpoint):
 
         A thin convenience wrapper over :meth:`upload` that sets
         ``document_type=DocumentType.ITEM_PHOTO`` and routes ``item_ids`` to the
-        ``JobItems`` form field. Accepts a single item UUID or a list.
+        ``JobInventoryItems`` form field. Accepts a single item UUID or a list.
 
         Args:
             job_display_id: Job display ID the photo belongs to.
@@ -129,9 +140,11 @@ class DocumentsEndpoint(BaseEndpoint):
         Returns:
             DocumentUploadResponse: The parsed upload result.
         """
-        items = [item_ids] if isinstance(item_ids, str) else list(item_ids)
+        items = [item_ids] if isinstance(item_ids, (int, str)) else list(item_ids)
         if not items or any(not str(i).strip() for i in items):
             raise ValueError("item_ids must contain one or more non-empty item id(s)")
+        if any(isinstance(i, bool) or not isinstance(i, int) or i <= 0 for i in items):
+            raise UnsupportedOperationError("8_01 item photos require positive integer inventory item_ids, not UUIDs.")
         return self.upload(
             job_display_id=job_display_id,
             file_path=file_path,
@@ -139,7 +152,7 @@ class DocumentsEndpoint(BaseEndpoint):
             document_type_description="Item Photo",
             shared=shared,
             tags=tags,
-            job_items=items,
+            inventory_item_ids=items,
             filename=filename,
         )
 
@@ -147,7 +160,7 @@ class DocumentsEndpoint(BaseEndpoint):
         self,
         *,
         job_display_id: str,
-        item_ids: str | list[str],
+        item_ids: int | list[int],
         file_paths: list[FileSource],
         filenames: list[str] | None = None,
         shared: int = 0,
@@ -187,14 +200,34 @@ class DocumentsEndpoint(BaseEndpoint):
             for i, file_path in enumerate(file_paths)
         ]
 
-    def list(self, job_display_id: str | int) -> list[Document]:
+    def list(
+        self,
+        job_display_id: str | int,
+        *,
+        inventory_item_id: int | None = None,
+        handling_unit_id: int | None = None,
+        rfq_id: int | None = None,
+        item_id: str | None = None,
+    ) -> list[Document]:
         """GET /documents/list
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/documents/list.html
         Query params: DocumentListParams
         Response model: List[Document]
         """
-        return self._request(_LIST, params=dict(job_display_id=str(job_display_id)))
+        if item_id is not None:
+            raise UnsupportedOperationError(
+                "Use inventory_item_id or handling_unit_id on 8_01; item UUIDs are removed."
+            )
+        return self._request(
+            _LIST,
+            params=dict(
+                job_display_id=str(job_display_id),
+                inventory_item_id=inventory_item_id,
+                handling_unit_id=handling_unit_id,
+                rfq_id=rfq_id,
+            ),
+        )
 
     def get(self, doc_path: str) -> bytes:
         """``GET /documents/get/{docPath}`` — download a document as raw bytes.
@@ -246,4 +279,9 @@ class DocumentsEndpoint(BaseEndpoint):
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/documents/update.html
         Request model: DocumentUpdateRequest
         """
+        raw = data.model_dump(by_alias=True, exclude_unset=True) if hasattr(data, "model_dump") else data
+        if any(k in raw for k in ("JobItems", "jobItems", "job_items")):
+            raise UnsupportedOperationError(
+                "Use jobInventoryItems or jobHandlingUnits on 8_01; item UUIDs are removed."
+            )
         return self._request(_UPDATE.bind(docId=doc_id), json=data)

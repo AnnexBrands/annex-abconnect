@@ -1,74 +1,233 @@
-# Preparing for ABConnect 8_01
+# Migrating to ABConnect 8_01
 
-**Target: SDK 0.3.0. Status: migration preview.** The inventory/handling-unit and
-multiple-shipment SDK changes are not implemented yet. This page records the
-intended migration contract; runnable replacement calls will be added with the
-implementation and validated against real responses.
+SDK **0.3.0** targets ABConnect **8_01**. Inventory describes the goods, handling
+units describe their packing, and each job can have multiple active shipments.
+The examples below use provisioned staging credentials and operator-selected IDs.
 
 ## Inventory and handling units
 
-Treat inventory as the items being handled and handling units as the units used
-to pack and transport them. New integrations should use that common model for
-both parcel and freight rather than maintain two independent item workflows.
+Inventory describes the goods. Handling units describe how those goods are packed
+and transported. The same handling-unit model covers parcel and freight.
 
-Review code that creates, saves, deletes, or replaces parcel/freight items.
-Record the fields and return values it depends on, especially quantities,
-dimensions, weights, values, and packing relationships. Compatibility adapters
-must preserve that meaning and unrelated records during an update.
+```python
+import os
+from ab import ABConnectAPI
 
-## Multiple active shipments
+api = ABConnectAPI(env="staging")
+job_id = int(os.environ["AB_TEST_PACKING_JOB_ID"])
+inventory = api.jobs.inventory.get_all(job_id)
+handling_units = api.jobs.handling_units.get_all(job_id)
+```
 
-The development SDK now accepts the optional `quote_id` keyword on
-`api.jobs.form.packing_slip`, `api.jobs.form.packaging_specification`, and
-`api.jobs.tracking.shipment`. These read-only selectors are validated locally
-against the server contract; quote-selected live captures are still pending.
-The larger booking and inventory migration remains planned.
+`inventory.create()` and `inventory.update()` require `quantity`, `is_active`,
+and `sequence_no`. Inventory sequence numbers start at 1; handling-unit sequence
+numbers may start at 0. Model validation checks the server's dimension, quantity,
+value, and text limits before HTTP.
 
-A job can have more than one active shipment. Keep its shipping records as a
-collection and retain the identifiers needed by each operation.
+For an approved test job, create a unit containing existing inventory:
 
-| Identifier | Meaning and observed server use |
+```python
+unit = api.jobs.handling_units.create(
+    job_id,
+    quantity=1,
+    is_active=True,
+    sequence_no=0,
+    inventory_items=[{
+        "id": int(os.environ["AB_TEST_INVENTORY_ITEM_ID"]),
+        "count": 1,
+    }],
+)
+```
+
+Use `add_inventory`, `update_inventory`, and `delete_inventory` to change one
+content relationship. The corresponding `*_content_unit` methods manage nested
+handling units. `add_materials` adds material rows; `update_material` and
+`delete_material` target one existing row. **`replace_materials` replaces the whole
+material list, and `manage` submits a complete handling-unit arrangement.** Read
+and retain the current arrangement before using those operations.
+
+Nullable write fields preserve explicit `None`, allowing a relationship or value
+to be cleared. Omitted fields stay omitted in the JSON body. A server PUT can
+still replace fields: consult its contract and include the values to retain.
+The SDK does not perform a hidden read/merge/write or force a concurrency override.
+
+## Select the intended shipping record
+
+| Identifier | Use |
 |---|---|
-| Job display ID | Selects the job; does not uniquely select a shipment within it. |
-| `Shipping.id` / `shippingId` | Selects a shipping record; used for shipment-specific export data. |
-| `quoteId` | Selects a quote; required by the V2 booking request and used by the cancellation route. |
-| `shipmentId` | Returned carrier shipment identifier; keep separate from shipping-record and quote IDs. |
+| Job display ID | Identifies the job, not an individual shipment. |
+| `Shipping.id` / `shippingId` | Integer shipping-record ID; used for export data. |
+| `quoteId` | UUID used for booking, validation, cancellation, and selected forms/tracking. |
+| `shipmentId` | Carrier identifier returned by booking; never substitute it for either selector above. |
 
-Review helpers that choose the first rate or shipment, store one shipment on a
-job object, cancel a job's shipment implicitly, or retrieve one set of export
-data. The migrated workflow must select its target explicitly when several are
-possible. An ambiguous mutation must ask for the missing context before sending
-a request.
+The collection preserves active and archived records and their handling-unit and
+quote relationships. This selection works when a job has two or more active
+shipments and does not pick the first result:
 
-## Compatibility policy
+```python
+from ab.api.selection import select_shipping
 
-The 0.3.0 target is **supported legacy calls plus actionable warnings**. Existing
-public entry points remain available through a retained server route or a
-verified SDK adapter. Each warning should identify the legacy usage and the
-canonical replacement, with no removal deadline attached to this release.
+shippings = api.jobs.shippings.get_all(job_id)
+selected = select_shipping(
+    shippings,
+    shipping_id=int(os.environ["AB_TEST_SHIPPING_ID"]),
+    quote_id=os.environ["AB_TEST_QUOTE_ID"],
+)
+```
 
-Not every legacy server operation survives in 8_01. The inspected source retains
-legacy booking and parcel-item reads, while the old parcel write actions are
-absent from the inspected controller. An adapter is a release requirement to
-investigate and verify, not something the current SDK already provides.
+`select_shipping` rejects zero matches, multiple matches, archived records,
+unknown IDs, and conflicting shipping/quote pairs. Without selectors it succeeds
+only for exactly one explicitly active record. This is a local check against the
+supplied collection; server-side authorization and concurrency checks still apply.
 
-| Area | Preparation now | Evidence needed before release |
-|---|---|---|
-| Parcel and freight item writes | Inventory callers, fields, and replace-all assumptions. | Lossless adapter or documented unsupported mapping; preservation of unrelated items. |
-| Booking | Keep selected quote IDs and return-value expectations. | V1/V2 request and response fixtures; warning behavior; booking validation. |
-| Export data | Retain the shipping-record ID. | Targeted get/save and verified legacy fallback semantics. |
-| Cancellation and tracking | Separate quote, shipping, and carrier identifiers. | Operation-specific selectors and proof another active shipment is unaffected. |
+## Rates, booking, and cancellation
 
-## Before upgrading an application
+`api.jobs.rates.request()` accepts explicit `handling_units`, `origin_address`,
+`destination_address`, and `ship_out_date`. Preserve its opaque `rates_key` and
+the chosen provider's `carrier_code` and account ID.
 
-1. Record its installed SDK version and the server release in each environment.
-2. Identify uses of legacy item APIs and assumptions of one shipment per job.
-3. Preserve the completed Catalog migration, including bulk-upsert `platformId`.
-4. On the release candidate, exercise canonical and compatibility calls against
-   approved staging data and review every compatibility warning.
-5. Verify two active shipments on one job, with targeted updates that leave the
-   other shipment unchanged. Confirm response models against real captures.
+`rates.select_quote()` previews a quote; it does **not** persist a shipping record.
+Save the chosen rate with `freight_providers.select_rate_quote()`:
 
-The final release guide must replace this preview with working Python examples,
-the completed compatibility matrix, warning handling, and verified limitations.
-See [What's New](whats-new.md) and the [DX goals](dx-roadmap.md).
+```python
+saved = api.jobs.freight_providers.select_rate_quote(
+    job_id,
+    data={
+        "ratesKey": os.environ["AB_TEST_RATES_KEY"],
+        "carrierCode": os.environ["AB_TEST_CARRIER_CODE"],
+        "active": True,
+        "shippingId": selected.id,
+        "handlingUnits": [{
+            "id": int(os.environ["AB_TEST_HANDLING_UNIT_ID"]),
+            "quantity": 1,
+        }],
+        "jobModifiedDate": os.environ["AB_TEST_JOB_MODIFIED_DATE"],
+    },
+)
+if not saved.success:
+    raise ValueError(saved.error_message)
+quote_id = str(saved.transportation_quote.id)
+```
+
+Supply the selected provider's `carrierAccountId` when required by that rate.
+Omit `shippingId` intentionally to create a new shipping record. Retain unrelated
+shipping records and use the returned quote ID for booking and cancellation.
+Use `lookup.get_container_types()` to discover transportation containers:
+packing container type IDs and transportation container type IDs are different.
+For example, staging transportation `BOXES` is ID 25; packing `Stock Box` is ID 5.
+Discover them in your environment instead of hard-coding these observed values.
+
+Validate an explicit quote before booking:
+
+```python
+request = {
+    "quote_id": os.environ["AB_TEST_QUOTE_ID"],
+    "ship_out_date": os.environ["AB_TEST_SHIP_OUT_DATE"],
+    "job_modified_date": os.environ["AB_TEST_JOB_MODIFIED_DATE"],
+}
+validation = api.jobs.shipment.validate(job_id, **request)
+if not validation.valid:
+    raise ValueError(validation.errors)
+# Execute only when the selected shipment is ready to book:
+# booking = api.jobs.shipment.book_v2(job_id, **request)
+```
+
+`book_v2()` returns `success`, `error_message`, `shipment_id`, and
+`job_modified_date`; this response does not contain V1's document collection.
+Do not assume an HTTP 200 means booking succeeded: inspect `success`.
+
+`shipment.cancel(job_id, quote_id, job_modified_date=...)` targets the quote UUID
+in its path. Inspect `success` and `override_error` even after HTTP 200. If carrier
+cancellation fails, `force_delete=True` can remove ABConnect's booking state;
+it does **not** confirm that the carrier cancelled it. The staging release test
+exercised this failure and forced-removal path.
+
+Supply a fresh modification timestamp for writes. A refresh-policy conflict
+requires re-reading the job and reconciling the edit; `force_update=True` does
+not bypass that policy. A local selector check cannot prevent a concurrent change.
+
+## Shipment-specific export data
+
+```python
+export = api.jobs.shipment.get_shipping_export_data(job_id, selected.id)
+if export is not None:
+    edit = export.to_request()
+    edit.invoice_number = os.environ["AB_TEST_INVOICE_NUMBER"]
+    # Save only after reviewing the complete replacement export body:
+    # api.jobs.shipment.save_shipping_export_data(
+    #     job_id, selected.id, **edit.model_dump(by_alias=True, exclude_unset=True)
+    # )
+```
+
+`to_request()` retains commodity `jobItemId`, packing information, and explicit
+nulls. It removes only the computed `fullDescription`; unknown future fields
+raise validation errors rather than being silently lost from a replacement write.
+
+Packing-slip and packaging-specification methods accept `quote_id`; shipment
+tracking accepts the same selector alongside the carrier PRO number.
+
+## Compatibility notices
+
+Supported legacy calls emit `LegacyRequestWarning`, a visible `UserWarning` with
+a replacement call. It announces no removal schedule. Canonical explicit calls
+emit no compatibility notice.
+
+```python
+import warnings
+from ab import LegacyRequestWarning
+
+# Optional, after reviewing and migrating affected callers:
+warnings.filterwarnings("ignore", category=LegacyRequestWarning)
+```
+
+Legacy job-level booking, deletion, and export writes first require exactly one
+active shipping record. They fail before mutation when selection is ambiguous.
+Booking's old `quoteOptionIndex` field is rejected with guidance to `book_v2`;
+8_01 no longer reads that field. Legacy export saves now preserve `jobItemId`.
+
+Removed parcel/freight writes, item helpers, rate/accessorial routes, old payment
+routes, and email sending raise `UnsupportedOperationError` before HTTP. Their
+names and legacy DTO imports remain available, but the server no longer supports
+their contracts. See the complete [compatibility matrix](https://github.com/bmonson-annex/annex-abconnect/blob/main/specs/038-abconnect-8-01/compatibility.md).
+
+| Previous usage | 8_01 replacement |
+|---|---|
+| Parcel/freight item writes and item helpers | `jobs.inventory` and `jobs.handling_units` |
+| Freight-provider list returning legacy providers | `jobs.freight_providers.get_quotes()` returning transportation quotes |
+| Provider option indexes and provider-list saves | `select_rate_quote`, `create_final_override`, and `save_final_quote` with explicit identifiers |
+| Shipment accessorial writes | `jobs.add_ons.get_all/save/delete` |
+| Document `job_items` / item UUIDs | Integer `inventory_item_ids` and `handling_unit_ids` |
+| Global shipment document path parameter | `shipments.get_shipment_document(doc_id, franchisee_id=...)` |
+| Editable invoice/USAR assumed to be PDF | Typed JSON `EditableFormContent` |
+| Legacy payment operations | `jobs.payment.exchange()` for the current payment-app URL |
+
+Older flat-method alias `DeprecationWarning`s predate this release and are distinct
+from the supported-request notices. Never ignore `UnsupportedOperationError` as
+if a write had succeeded.
+
+## Reproduce staging validation
+
+
+For the authorized disposable staging environment, discover candidates from
+company LIVE's home grids with:
+
+```bash
+python scripts/discover_staging_jobs.py --company LIVE --scan 10
+```
+
+The script requests estimates, inbound, in-house, and outbound grids, then prints
+job IDs and inventory/handling-unit/shipping counts. It performs reads only and
+requires staging authentication. An explicit `--env-file` can select the local
+credential file; the environment remains staging.
+
+The runnable examples are `examples/jobs/inventory.py`, `handling_units.py`,
+`shippings.py`, and `transportation.py`. Reads require operator-selected staging
+IDs. Writes additionally require `AB_RUN_MUTATIONS=1`, an operation name, and a
+reviewed request JSON file; each invocation performs one chosen mutation.
+
+Reviewed captures and the mutation/isolation results are recorded in the
+[release validation report](https://github.com/bmonson-annex/annex-abconnect/blob/main/specs/038-abconnect-8-01/validation.md).
+The scripts under `scripts/verify_*_8_01.py` are release verification tools;
+read their targets and effects before running them. The booking script creates
+a carrier booking and reports failure if normal cancellation fails.
+The completed Catalog migration still requires bulk-upsert `platformId`.

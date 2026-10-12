@@ -33,6 +33,8 @@ Request model: :class:`DocumentUpdateRequest`
 | `Shared` | `Optional[int]` | no | Updated sharing level |
 | `Tags` | `Optional[list[str]]` | no | Free-form tags to attach to the document. |
 | `JobItems` | `Optional[list[str]]` | no | Associated job item UUIDs. |
+| `JobInventoryItems` | `Optional[list[int]]` | no | Integer inventory identifiers to associate. |
+| `JobHandlingUnits` | `Optional[list[int]]` | no | Integer handling-unit identifiers to associate. |
 
 ## Response
 

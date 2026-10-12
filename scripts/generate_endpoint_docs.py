@@ -249,6 +249,10 @@ def render_page(entry: Entry) -> str:
     out.append("")
     out.append(f"> `{r.method} {r.path}` — {surface}")
     out.append("")
+    if r.unsupported_reason:
+        out.append("**Unsupported on 8_01:** " + r.unsupported_reason)
+        out.append("This retained entry point raises `UnsupportedOperationError` before HTTP.")
+        out.append("")
     out.append("**Python**")
     out.append("")
     out.append("```python")

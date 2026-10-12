@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
+from uuid import UUID
 
 from pydantic import Field
 
@@ -91,10 +92,14 @@ class DashboardSummary(ResponseModel):
     outbound_count: Optional[int] = Field(None, alias="outboundCount", description="Outbound shipment count")
     in_house_count: Optional[int] = Field(None, alias="inHouseCount", description="In-house shipment count")
     local_deliveries_count: Optional[int] = Field(
-        None, alias="localDeliveriesCount", description="Local delivery count",
+        None,
+        alias="localDeliveriesCount",
+        description="Local delivery count",
     )
     recent_estimates_count: Optional[int] = Field(
-        None, alias="recentEstimatesCount", description="Recent estimates count",
+        None,
+        alias="recentEstimatesCount",
+        description="Recent estimates count",
     )
     data: Optional[List[DashboardItem]] = Field(None, description="Grid view rows")
 
@@ -142,21 +147,81 @@ class GridViewInfo(ResponseModel):
     data_key: Optional[str] = Field(None, alias="dataKey", description="Data key")
     is_active: Optional[bool] = Field(None, alias="isActive", description="Whether the view is active")
     stored_procedure: Optional[str] = Field(
-        None, alias="storedProcedure", description="Backing stored procedure",
+        None,
+        alias="storedProcedure",
+        description="Backing stored procedure",
     )
     columns_specification: Optional[str] = Field(
-        None, alias="columnsSpecification", description="Column specification (raw)",
+        None,
+        alias="columnsSpecification",
+        description="Column specification (raw)",
     )
     sp_columns: Optional[List[dict]] = Field(
-        None, alias="spColumns", description="Stored procedure column metadata",
+        None,
+        alias="spColumns",
+        description="Stored procedure column metadata",
     )
 
     def cli_format(self) -> str:
         """One-line pretty row used by the CLI and examples (vs. JSON)."""
         id_str = "—" if self.id is None else str(self.id)
-        return (
-            f"id={id_str:<5} "
-            f"name={self.name!r:<30} "
-            f"dataKey={self.data_key!r:<20} "
-            f"active={self.is_active}"
-        )
+        return f"id={id_str:<5} name={self.name!r:<30} dataKey={self.data_key!r:<20} active={self.is_active}"
+
+
+class GridSorting(RequestModel):
+    """SortingInfo body options for the 8_01 dashboard grids."""
+
+    selector: str | None = Field(None, alias="selector", description="Selector.")
+    desc: bool = Field(False, alias="desc", description="Desc.")
+
+
+class GridGrouping(RequestModel):
+    """GroupingInfo body options for the 8_01 dashboard grids."""
+
+    selector: str | None = Field(None, alias="selector", description="Selector.")
+    desc: bool = Field(False, alias="desc", description="Desc.")
+    group_interval: str | None = Field(None, alias="groupInterval", description="Group interval.")
+    is_expanded: bool | None = Field(None, alias="isExpanded", description="Is expanded.")
+
+
+class GridSummary(RequestModel):
+    """SummaryInfo body options for the 8_01 dashboard grids."""
+
+    selector: str | None = Field(None, alias="selector", description="Selector.")
+    summary_type: str | None = Field(None, alias="summaryType", description="Summary type.")
+
+
+class DashboardGridOptions(RequestModel):
+    """WebApiDataSourceLoadOptions body options for the 8_01 dashboard grids."""
+
+    require_total_count: bool = Field(False, alias="requireTotalCount", description="Require total count.")
+    require_group_count: bool = Field(False, alias="requireGroupCount", description="Require group count.")
+    is_count_query: bool = Field(False, alias="isCountQuery", description="Is count query.")
+    is_summary_query: bool = Field(False, alias="isSummaryQuery", description="Is summary query.")
+    skip: int = Field(0, alias="skip", description="Skip.", ge=0)
+    take: int = Field(0, alias="take", description="Take.", ge=0)
+    sort: list[GridSorting] | None = Field(None, alias="sort", description="Sort.")
+    group: list[GridGrouping] | None = Field(None, alias="group", description="Group.")
+    filter: list[Any] | None = Field(None, alias="filter", description="Filter.")
+    total_summary: list[GridSummary] | None = Field(None, alias="totalSummary", description="Total summary.")
+    group_summary: list[GridSummary] | None = Field(None, alias="groupSummary", description="Group summary.")
+    select: list[str] | None = Field(None, alias="select", description="Select.")
+    pre_select: list[str] | None = Field(None, alias="preSelect", description="Pre select.")
+    remote_select: bool | None = Field(None, alias="remoteSelect", description="Remote select.")
+    remote_grouping: bool | None = Field(None, alias="remoteGrouping", description="Remote grouping.")
+    expand_linq_sum_type: bool | None = Field(None, alias="expandLinqSumType", description="Expand linq sum type.")
+    primary_key: list[str] | None = Field(None, alias="primaryKey", description="Primary key.")
+    default_sort: str | None = Field(None, alias="defaultSort", description="Default sort.")
+    string_to_lower: bool | None = Field(None, alias="stringToLower", description="String to lower.")
+    paginate_via_primary_key: bool | None = Field(
+        None, alias="paginateViaPrimaryKey", description="Paginate via primary key."
+    )
+    sort_by_primary_key: bool | None = Field(None, alias="sortByPrimaryKey", description="Sort by primary key.")
+    allow_async_over_sync: bool = Field(False, alias="allowAsyncOverSync", description="Allow async over sync.")
+    search_value: str | None = Field(None, alias="searchValue", description="Search value.")
+
+
+class DashboardGridParams(RequestModel):
+    """Company scope is a query parameter, separate from grid load options."""
+
+    company_id: UUID = Field(alias="companyId", description="Company UUID whose jobs populate the grid.")

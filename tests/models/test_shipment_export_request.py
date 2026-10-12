@@ -7,8 +7,7 @@ The ACPortal ``POST /job/{jobDisplayId}/shipment/exportdata`` body is a flat
 real payload was rejected client-side, and the envelope shape the SDK would
 send binds portal-side as all-null params, silently WIPING the job's export
 data. These tests pin the flat wire shape so the destructive envelope cannot
-return. GET additionally returns a per-commodity ``jobItemId`` the POST schema
-forbids; the endpoint strips it to keep GET → edit → POST round-trips legal.
+return. In 8_01 the commodity ``jobItemId`` is preserved when saving.
 """
 
 from __future__ import annotations
@@ -61,7 +60,7 @@ def test_customs_value_is_required():
         ShipmentExportRequest.check(incomplete)
 
 
-def test_endpoint_strips_get_only_job_item_id_from_commodities():
+def test_legacy_endpoint_preserves_job_item_id_from_commodities():
     endpoint = object.__new__(JobShipmentEndpoint)
     seen = {}
 
@@ -70,12 +69,13 @@ def test_endpoint_strips_get_only_job_item_id_from_commodities():
         return {"success": True}
 
     endpoint._request = fake_request
+    endpoint._require_single_shipping = lambda job_id: None
 
     round_trip = dict(FLAT_PAYLOAD)
-    round_trip["commodities"] = [dict(FLAT_PAYLOAD["commodities"][0], jobItemId=987654)]
+    round_trip["commodities"] = [dict(FLAT_PAYLOAD["commodities"][0], jobItemId="11111111-2222-4333-8444-555555555555")]
     endpoint.post_export_data(7435592, data=round_trip)
 
     sent = seen["json"]["commodities"][0]
-    assert "jobItemId" not in sent
+    assert sent["jobItemId"] == "11111111-2222-4333-8444-555555555555"
     assert sent["description"] == "Oil painting"
     assert seen["json"]["customsValue"] == 1500.0

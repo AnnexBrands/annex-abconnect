@@ -15,7 +15,7 @@ python -c "from importlib.metadata import version; print(version('annex-abconnec
 
 On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1` instead.
 For reproducible deployments, pin the version you have validated, such as
-`annex-abconnect==0.2.3`. Editable installation is for SDK contributors.
+`annex-abconnect==0.3.0`. Editable installation is for SDK contributors.
 
 ## Configuration
 

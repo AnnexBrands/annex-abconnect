@@ -26,8 +26,6 @@ from typing import TYPE_CHECKING, Any, Iterable
 
 from ab.api.models.jobs import (
     FreightShipment,
-    ItemUpdateRequest,
-    ParcelItemCreateRequest,
 )
 
 if TYPE_CHECKING:
@@ -99,38 +97,50 @@ class JobItemsHelpers:
         return self._jobs.parcel_items.list(job_display_id)
 
     def upsert_parcel(self, job_display_id: int, *, description: str, **fields: Any) -> ParcelItem:
-        """Create a parcel item, dropping any kwargs the create body rejects.
+        """Legacy mutation; use inventory/handling_units on 8_01."""
+        from ab.exceptions import UnsupportedOperationError
 
-        ``description`` is required by the API; ``length``, ``width``,
-        ``height``, ``weight`` and ``quantity`` are accepted. Unknown kwargs are
-        ignored rather than raising.
-        """
-        data = _filtered(ParcelItemCreateRequest, {"description": description, **fields})
-        return self._jobs.parcel_items.create(job_display_id, data=data)
+        raise UnsupportedOperationError(
+            (
+                "8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with "
+                "their integer IDs; legacy UUIDs cannot be translated losslessly."
+            )
+        )
 
     def update_parcel(self, job_display_id: int, item_id: str, **fields: Any) -> ServiceBaseResponse:
-        """Update a parcel item in place via ``PUT /job/{id}/item/{itemId}``.
+        """Legacy mutation; use inventory/handling_units on 8_01."""
+        from ab.exceptions import UnsupportedOperationError
 
-        Only ``description``, ``quantity`` and ``weight`` are sent; other kwargs
-        are dropped so the strict update body never rejects the call.
-        """
-        data = _filtered(ItemUpdateRequest, fields)
-        return self._jobs.update_item(job_display_id, str(item_id), data=data)
+        raise UnsupportedOperationError(
+            (
+                "8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with "
+                "their integer IDs; legacy UUIDs cannot be translated losslessly."
+            )
+        )
 
     def delete_parcel(self, job_display_id: int, parcel_item_id: str) -> ServiceBaseResponse:
-        """Delete a parcel item (``DELETE /job/{id}/parcelitems/{parcelItemId}``)."""
-        return self._jobs.parcel_items.delete(job_display_id, str(parcel_item_id))
+        """Legacy mutation; use inventory/handling_units on 8_01."""
+        from ab.exceptions import UnsupportedOperationError
+
+        raise UnsupportedOperationError(
+            (
+                "8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with "
+                "their integer IDs; legacy UUIDs cannot be translated losslessly."
+            )
+        )
 
     def replace_parcel(
         self, job_display_id: int, parcel_item_id: str, *, description: str, **fields: Any
     ) -> ParcelItem:
-        """Replace a parcel item: delete the existing one, then create a fresh one.
+        """Legacy mutation; use inventory/handling_units on 8_01."""
+        from ab.exceptions import UnsupportedOperationError
 
-        The parcel endpoint exposes no PUT, so "replace" is delete + create.
-        Returns the newly created :class:`ParcelItem`.
-        """
-        self._jobs.parcel_items.delete(job_display_id, str(parcel_item_id))
-        return self.upsert_parcel(job_display_id, description=description, **fields)
+        raise UnsupportedOperationError(
+            (
+                "8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with "
+                "their integer IDs; legacy UUIDs cannot be translated losslessly."
+            )
+        )
 
     # ---- Freight items (get-merge-write; replace-all) -----------------------
 
@@ -155,22 +165,15 @@ class JobItemsHelpers:
     def set_freight(
         self, job_display_id: int, items: Iterable[Any], *, force_update: bool = True
     ) -> list[JobFreightItem]:
-        """Replace ALL freight items on the job with *items* (full save).
+        """Legacy mutation; use inventory/handling_units on 8_01."""
+        from ab.exceptions import UnsupportedOperationError
 
-        Each item may be a :class:`FreightShipment`/:class:`JobFreightItem`
-        model or a plain dict; unrecognized keys are dropped. ``force_update``
-        bypasses the job's optimistic-concurrency check. Returns the refreshed
-        freight items so the caller can confirm the resulting state.
-        """
-        payload = []
-        for item in items:
-            raw = item.model_dump(by_alias=True, exclude_none=True) if hasattr(item, "model_dump") else dict(item)
-            payload.append(_filtered(FreightShipment, raw))
-        self._jobs.add_freight_items(
-            job_display_id,
-            data={"freightItems": payload, "forceUpdate": force_update},
+        raise UnsupportedOperationError(
+            (
+                "8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with "
+                "their integer IDs; legacy UUIDs cannot be translated losslessly."
+            )
         )
-        return self.list_freight(job_display_id)
 
     def upsert_freight(
         self,
@@ -180,41 +183,37 @@ class JobItemsHelpers:
         item_id: str | None = None,
         **fields: Any,
     ) -> list[JobFreightItem]:
-        """Add or update one freight item while preserving the others.
+        """Legacy mutation; use inventory/handling_units on 8_01."""
+        from ab.exceptions import UnsupportedOperationError
 
-        Identifies the target by ``freight_item_id`` or ``item_id``; merges the
-        given fields onto it (or appends a new item when none matches), then
-        saves the full set. Accepts friendly shorthand (``weight``, ``length``,
-        …) as well as exact field names/aliases.
-        """
-        current = self._current_freight_dicts(job_display_id)
-        new_fields = _normalize_freight_to_camel(fields)
-        matched = False
-        for item in current:
-            if self._matches(item, freight_item_id=freight_item_id, item_id=item_id):
-                item.update(new_fields)
-                matched = True
-        if not matched:
-            fresh: dict[str, Any] = {}
-            if freight_item_id is not None:
-                fresh["freightItemId"] = freight_item_id
-            if item_id is not None:
-                fresh["itemID"] = item_id
-            fresh.update(new_fields)
-            current.append(fresh)
-        return self.set_freight(job_display_id, current)
+        raise UnsupportedOperationError(
+            (
+                "8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with "
+                "their integer IDs; legacy UUIDs cannot be translated losslessly."
+            )
+        )
 
     def replace_freight(self, job_display_id: int, freight_item_id: str, **fields: Any) -> list[JobFreightItem]:
-        """Overwrite the matching freight item's fields, preserving the others."""
-        return self.upsert_freight(job_display_id, freight_item_id=freight_item_id, **fields)
+        """Legacy mutation; use inventory/handling_units on 8_01."""
+        from ab.exceptions import UnsupportedOperationError
+
+        raise UnsupportedOperationError(
+            (
+                "8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with "
+                "their integer IDs; legacy UUIDs cannot be translated losslessly."
+            )
+        )
 
     def delete_freight(self, job_display_id: int, freight_item_id: str) -> list[JobFreightItem]:
-        """Remove one freight item by saving the remaining set (no DELETE route)."""
-        current = self._current_freight_dicts(job_display_id)
-        remaining = [
-            item for item in current if not self._matches(item, freight_item_id=freight_item_id, item_id=None)
-        ]
-        return self.set_freight(job_display_id, remaining)
+        """Legacy mutation; use inventory/handling_units on 8_01."""
+        from ab.exceptions import UnsupportedOperationError
+
+        raise UnsupportedOperationError(
+            (
+                "8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with "
+                "their integer IDs; legacy UUIDs cannot be translated losslessly."
+            )
+        )
 
 
 def _normalize_freight_to_camel(fields: dict) -> dict:

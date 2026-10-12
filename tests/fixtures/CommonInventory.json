@@ -1,0 +1,16 @@
+{
+  "id": 5005,
+  "name": "Northwind Freight",
+  "companyId": "4d58a6ca-e2eb-a753-d207-378ffa9c26f4",
+  "isActive": true,
+  "isPublic": false,
+  "length": 12.0,
+  "width": 10.0,
+  "height": 8.0,
+  "weight": 4.0,
+  "value": null,
+  "cPackId": null,
+  "eccn": null,
+  "scheduleB": null,
+  "parentInventoryItemId": null
+}

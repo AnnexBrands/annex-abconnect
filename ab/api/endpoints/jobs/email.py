@@ -21,7 +21,13 @@ if TYPE_CHECKING:
 from ab.api.base import BaseEndpoint
 from ab.api.route import Route
 
-_SEND = Route("POST", "/job/{jobDisplayId}/email", request_model="SendEmailRequest")
+_SEND = Route(
+    "POST",
+    "/job/{jobDisplayId}/email",
+    request_model="SendEmailRequest",
+    unsupported_reason="8_01 POST email now creates a draft by template; "
+    "the old send payload cannot be translated. Use the current email full-send contract explicitly.",
+)
 _SEND_DOCUMENT = Route(
     "POST",
     "/job/{jobDisplayId}/email/senddocument",

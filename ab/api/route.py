@@ -29,6 +29,16 @@ class Route:
     #: when one is available, but an anonymous client may call it too.
     auth_optional: bool = False
 
+    #: Explanation and migration path when the server no longer supports this contract.
+    unsupported_reason: str | None = None
+
+    def ensure_supported(self) -> None:
+        """Fail before any transport or payload processing for removed contracts."""
+        if self.unsupported_reason:
+            from ab.exceptions import UnsupportedOperationError
+
+            raise UnsupportedOperationError(self.unsupported_reason)
+
     # Private: extracted ``{param}`` names — populated in __post_init__
     _path_params: frozenset[str] = field(default=frozenset(), repr=False, compare=False)
 
@@ -56,4 +66,5 @@ class Route:
             response_model=self.response_model,
             api_surface=self.api_surface,
             auth_optional=self.auth_optional,
+            unsupported_reason=self.unsupported_reason,
         )

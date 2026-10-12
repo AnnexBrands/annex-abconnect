@@ -111,12 +111,16 @@ class BaseEndpoint:
           ``json`` is in kwargs)
         - response model casting (single or ``List[Model]``)
         """
+        route.ensure_supported()
         target = client or self._client
 
         # Validate outbound body
         if "json" in kwargs and route.request_model:
             model_cls = self._resolve_model(route.request_model)
             body = kwargs["json"]
+            is_list, _ = self._parse_type_string(route.request_model)
+            if is_list and not isinstance(body, list):
+                raise TypeError(f"{route.request_model} requires a JSON array, not a single object")
             if hasattr(model_cls, "check"):
                 kwargs["json"] = model_cls.check(body)
 

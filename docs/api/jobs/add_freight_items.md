@@ -3,6 +3,9 @@
 
 > `POST /job/{jobDisplayId}/freightitems` — ACPortal
 
+**Unsupported on 8_01:** 8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with their integer IDs; legacy UUIDs cannot be translated losslessly.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

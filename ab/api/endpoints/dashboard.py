@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
+from ab.api.models.dashboard import DashboardCompanyRequest, DashboardGridParams
+from ab.warnings import warn_legacy_request
 
 if TYPE_CHECKING:
     from ab.api.models.dashboard import DashboardCompanyRequest, DashboardSummary, GridViewInfo, GridViewState
@@ -16,11 +19,19 @@ _GET_GRID_VIEWS = Route(
 )
 _GET_GRID_VIEW_STATE = Route("GET", "/dashboard/gridviewstate/{id}", response_model="GridViewState")
 _SAVE_GRID_VIEW_STATE = Route("POST", "/dashboard/gridviewstate/{id}", request_model="GridViewState")
-_INBOUND = Route("POST", "/dashboard/inbound", request_model="DashboardCompanyRequest")
-_IN_HOUSE = Route("POST", "/dashboard/inhouse", request_model="DashboardCompanyRequest")
-_OUTBOUND = Route("POST", "/dashboard/outbound", request_model="DashboardCompanyRequest")
-_LOCAL_DELIVERIES = Route("POST", "/dashboard/local-deliveries", request_model="DashboardCompanyRequest")
-_RECENT_ESTIMATES = Route("POST", "/dashboard/recentestimates", request_model="DashboardCompanyRequest")
+_INBOUND = Route("POST", "/dashboard/inbound", request_model="DashboardGridOptions", params_model="DashboardGridParams")
+_IN_HOUSE = Route(
+    "POST", "/dashboard/inhouse", request_model="DashboardGridOptions", params_model="DashboardGridParams"
+)
+_OUTBOUND = Route(
+    "POST", "/dashboard/outbound", request_model="DashboardGridOptions", params_model="DashboardGridParams"
+)
+_LOCAL_DELIVERIES = Route(
+    "POST", "/dashboard/local-deliveries", request_model="DashboardGridOptions", params_model="DashboardGridParams"
+)
+_RECENT_ESTIMATES = Route(
+    "POST", "/dashboard/recentestimates", request_model="DashboardGridOptions", params_model="DashboardGridParams"
+)
 
 
 class DashboardEndpoint(BaseEndpoint):
@@ -84,72 +95,130 @@ class DashboardEndpoint(BaseEndpoint):
         """
         return self._request(_SAVE_GRID_VIEW_STATE.bind(id=view_id), json=data)
 
-    def inbound(self, *, data: DashboardCompanyRequest | dict) -> None:
+    def inbound(
+        self,
+        *,
+        company_id: str | None = None,
+        data: DashboardCompanyRequest | dict | None = None,
+        **options: Any,
+    ) -> Any:
         """POST /dashboard/inbound.
 
         Args:
-            data: Dashboard company filter payload.
-                Accepts a :class:`DashboardCompanyRequest` instance or a dict.
+            company_id: Company UUID sent as a query parameter.
+            data: Legacy company-only body, adapted to the query parameter with a warning.
+            **options: Grid paging, filtering, and sorting options sent in the JSON body.
 
         Request model: :class:`DashboardCompanyRequest`
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/dashboard/inbound.html
-        Request model: DashboardCompanyRequest
+        Request model: DashboardGridOptions
+        Query params: DashboardGridParams
         """
-        return self._request(_INBOUND, json=data)
+        params = self._company_params(company_id, data)
+        return self._request(_INBOUND, params=params, json=options)
 
-    def in_house(self, *, data: DashboardCompanyRequest | dict) -> None:
+    def in_house(
+        self,
+        *,
+        company_id: str | None = None,
+        data: DashboardCompanyRequest | dict | None = None,
+        **options: Any,
+    ) -> Any:
         """POST /dashboard/inhouse.
 
         Args:
-            data: Dashboard company filter payload.
-                Accepts a :class:`DashboardCompanyRequest` instance or a dict.
+            company_id: Company UUID sent as a query parameter.
+            data: Legacy company-only body, adapted to the query parameter with a warning.
+            **options: Grid paging, filtering, and sorting options sent in the JSON body.
 
         Request model: :class:`DashboardCompanyRequest`
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/dashboard/in_house.html
-        Request model: DashboardCompanyRequest
+        Request model: DashboardGridOptions
+        Query params: DashboardGridParams
         """
-        return self._request(_IN_HOUSE, json=data)
+        params = self._company_params(company_id, data)
+        return self._request(_IN_HOUSE, params=params, json=options)
 
-    def outbound(self, *, data: DashboardCompanyRequest | dict) -> None:
+    def outbound(
+        self,
+        *,
+        company_id: str | None = None,
+        data: DashboardCompanyRequest | dict | None = None,
+        **options: Any,
+    ) -> Any:
         """POST /dashboard/outbound.
 
         Args:
-            data: Dashboard company filter payload.
-                Accepts a :class:`DashboardCompanyRequest` instance or a dict.
+            company_id: Company UUID sent as a query parameter.
+            data: Legacy company-only body, adapted to the query parameter with a warning.
+            **options: Grid paging, filtering, and sorting options sent in the JSON body.
 
         Request model: :class:`DashboardCompanyRequest`
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/dashboard/outbound.html
-        Request model: DashboardCompanyRequest
+        Request model: DashboardGridOptions
+        Query params: DashboardGridParams
         """
-        return self._request(_OUTBOUND, json=data)
+        params = self._company_params(company_id, data)
+        return self._request(_OUTBOUND, params=params, json=options)
 
-    def local_deliveries(self, *, data: DashboardCompanyRequest | dict) -> None:
+    def local_deliveries(
+        self,
+        *,
+        company_id: str | None = None,
+        data: DashboardCompanyRequest | dict | None = None,
+        **options: Any,
+    ) -> Any:
         """POST /dashboard/local-deliveries.
 
         Args:
-            data: Dashboard company filter payload.
-                Accepts a :class:`DashboardCompanyRequest` instance or a dict.
+            company_id: Company UUID sent as a query parameter.
+            data: Legacy company-only body, adapted to the query parameter with a warning.
+            **options: Grid paging, filtering, and sorting options sent in the JSON body.
 
         Request model: :class:`DashboardCompanyRequest`
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/dashboard/local_deliveries.html
-        Request model: DashboardCompanyRequest
+        Request model: DashboardGridOptions
+        Query params: DashboardGridParams
         """
-        return self._request(_LOCAL_DELIVERIES, json=data)
+        params = self._company_params(company_id, data)
+        return self._request(_LOCAL_DELIVERIES, params=params, json=options)
 
-    def recent_estimates(self, *, data: DashboardCompanyRequest | dict) -> None:
+    def recent_estimates(
+        self,
+        *,
+        company_id: str | None = None,
+        data: DashboardCompanyRequest | dict | None = None,
+        **options: Any,
+    ) -> Any:
         """POST /dashboard/recentestimates.
 
         Args:
-            data: Dashboard company filter payload.
-                Accepts a :class:`DashboardCompanyRequest` instance or a dict.
+            company_id: Company UUID sent as a query parameter.
+            data: Legacy company-only body, adapted to the query parameter with a warning.
+            **options: Grid paging, filtering, and sorting options sent in the JSON body.
 
         Request model: :class:`DashboardCompanyRequest`
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/dashboard/recent_estimates.html
-        Request model: DashboardCompanyRequest
+        Request model: DashboardGridOptions
+        Query params: DashboardGridParams
         """
-        return self._request(_RECENT_ESTIMATES, json=data)
+        params = self._company_params(company_id, data)
+        return self._request(_RECENT_ESTIMATES, params=params, json=options)
+
+    @staticmethod
+    def _company_params(company_id: str | None, data: DashboardCompanyRequest | dict | None) -> dict:
+        if data is not None:
+            warn_legacy_request("dashboard feed data={companyId: ...}", "dashboard feed company_id=...")
+            legacy = DashboardCompanyRequest.check(data).get("companyId")
+            if company_id is not None and legacy is not None:
+                if DashboardGridParams.check({"company_id": company_id}) != DashboardGridParams.check(
+                    {"company_id": legacy}
+                ):
+                    raise ValueError("Conflicting company_id and legacy data.companyId")
+            company_id = company_id if company_id is not None else legacy
+        return DashboardGridParams.check({"company_id": company_id})

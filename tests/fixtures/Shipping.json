@@ -1,0 +1,14 @@
+{
+  "id": 1001,
+  "name": "Shipment 2",
+  "handlingUnits": [
+    {
+      "quantity": 1,
+      "id": 8008
+    }
+  ],
+  "freightQuoteOptions": [
+    "5a7ed290-3988-ac1c-b4ea-3dd2da5540b8"
+  ],
+  "isArchived": false
+}

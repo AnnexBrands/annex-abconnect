@@ -3,6 +3,9 @@
 
 > `POST /job/{jobDisplayId}/freightproviders` — ACPortal
 
+**Unsupported on 8_01:** 8_01 removed provider-list writes and option indexes. Use create_final_override or save_final_quote with explicit shipping/quote identifiers.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

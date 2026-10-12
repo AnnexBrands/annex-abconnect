@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "group": {
+      "id": 1,
+      "pricing": {
+        "from": 2.9,
+        "to": 7.55
+      },
+      "carrierAPI": 3,
+      "name": "UPS Signature Options",
+      "description": "Delivery confirmation options with or without signature"
+    },
+    "uniqueId": "258893dd-c7a5-a04d-b2d8-c06e6992daed",
+    "name": "Adult Signature Required",
+    "additionalDescription": "sanitized text 125",
+    "serviceType": 1
+  },
+  {
+    "id": 2,
+    "group": {
+      "id": 1,
+      "pricing": {
+        "from": 2.9,
+        "to": 7.55
+      },
+      "carrierAPI": 3,
+      "name": "UPS Signature Options",
+      "description": "Delivery confirmation options with or without signature"
+    },
+    "uniqueId": "015c9e63-c52d-a90b-46c8-f49c3a13b74f",
+    "name": "No Signature",
+    "additionalDescription": "sanitized text 371",
+    "serviceType": 1
+  }
+]

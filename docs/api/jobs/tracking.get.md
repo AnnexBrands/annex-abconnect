@@ -3,6 +3,9 @@
 
 > `GET /job/{jobDisplayId}/tracking` — ACPortal
 
+**Unsupported on 8_01:** 8_01 removed unversioned job tracking. Use jobs.tracking.v3 or shipment with quote_id.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

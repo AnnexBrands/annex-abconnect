@@ -6,13 +6,13 @@
 **Python**
 
 ```python
-api.documents.list(job_display_id: str | int) -> list[Document]
+api.documents.list(job_display_id: str | int, *, inventory_item_id: int | None = None, handling_unit_id: int | None = None, rfq_id: int | None = None, item_id: str | None = None) -> list[Document]
 ```
 
 **CLI**
 
 ```bash
-ab documents list <job_display_id>
+ab documents list <job_display_id> [--inventory-item-id ...] [--handling-unit-id ...] [--rfq-id ...] [--item-id ...]
 ```
 
 GET /documents/list
@@ -22,6 +22,9 @@ GET /documents/list
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `jobDisplayId` | `Optional[str]` | no | Job display identifier |
+| `rfqId` | `Optional[int]` | no | RFQ identifier. |
+| `inventoryItemId` | `Optional[int]` | no | Inventory ID. |
+| `handlingUnitId` | `Optional[int]` | no | Handling unit ID. |
 
 ## Response
 

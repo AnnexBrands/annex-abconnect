@@ -3,6 +3,9 @@
 
 > `GET /job/{jobDisplayId}/parcel-items-with-materials` — ACPortal
 
+**Unsupported on 8_01:** Use jobs.handling_units.get_all and get_materials; 8_01 removed parcel-items-with-materials.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

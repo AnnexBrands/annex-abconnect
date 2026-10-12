@@ -42,9 +42,9 @@ me = api.contacts.get_current_user()
 print(me.full_name)
 ```
 
-**Release status:** the current tagged SDK is 0.2.3. SDK 0.3.0 targets ABConnect
-8_01 and is planned; its new inventory/handling-unit and multiple-shipment SDK
-workflows are not implemented yet. See [What's New](whats-new.md) before upgrading.
+**SDK 0.3.0 targets ABConnect 8_01:** unified inventory and handling units,
+explicit shipment selection, and migration notices for supported legacy calls.
+Read [What's New](whats-new.md) and the [migration guide](migration-8-01.md) before upgrading.
 
 ## API Reference
 
@@ -100,6 +100,9 @@ models/web2lead
 models/commodities
 models/payments
 models/shipments
+models/packing
+models/transportation
+models/release_support
 models/rfq
 models/views
 models/dashboard

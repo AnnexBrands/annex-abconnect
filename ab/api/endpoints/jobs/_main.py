@@ -11,19 +11,27 @@ import warnings
 from typing import TYPE_CHECKING
 
 from ab.api.base import BaseEndpoint
+from ab.api.endpoints.jobs.add_ons import JobAddOnsEndpoint
 from ab.api.endpoints.jobs.email import JobEmailEndpoint
 from ab.api.endpoints.jobs.form import JobFormEndpoint
 from ab.api.endpoints.jobs.freight_providers import JobFreightProvidersEndpoint
+from ab.api.endpoints.jobs.handling_units import JobHandlingUnitsEndpoint
+from ab.api.endpoints.jobs.inventory import JobInventoryEndpoint
 from ab.api.endpoints.jobs.note import JobNoteEndpoint
 from ab.api.endpoints.jobs.on_hold import JobOnHoldEndpoint
 from ab.api.endpoints.jobs.parcel_items import JobParcelItemsEndpoint
 from ab.api.endpoints.jobs.payment import JobPaymentEndpoint
+from ab.api.endpoints.jobs.rates import JobRatesEndpoint
 from ab.api.endpoints.jobs.rfq import JobRfqEndpoint
 from ab.api.endpoints.jobs.shipment import JobShipmentEndpoint
+from ab.api.endpoints.jobs.shippings import JobShippingsEndpoint
 from ab.api.endpoints.jobs.sms import JobSmsEndpoint
 from ab.api.endpoints.jobs.status import JobStatusEndpoint
 from ab.api.endpoints.jobs.timeline import JobTimelineEndpoint
 from ab.api.endpoints.jobs.tracking import JobTrackingEndpoint
+from ab.api.models.release_support import (
+    JobInventoryItemInfoDataInput,
+)
 from ab.api.route import Route
 from ab.cache import CodeResolver
 from ab.http import HttpClient
@@ -36,6 +44,7 @@ def _deprecated(old: str, new: str) -> None:
         DeprecationWarning,
         stacklevel=3,
     )
+
 
 if TYPE_CHECKING:
     from ab.api.helpers.agent import AgentHelpers
@@ -134,17 +143,12 @@ _GET_PACKAGING_CONTAINERS = Route(
     "/job/{jobDisplayId}/packagingcontainers",
     response_model="List[PackagingContainer]",
 )
-_PUT_ITEM = Route(
-    "PUT",
-    "/job/{jobDisplayId}/item/{itemId}",
-    request_model="ItemUpdateRequest",
-    response_model="ServiceBaseResponse",
-)
 _POST_ITEM_NOTES = Route(
     "POST",
     "/job/{jobDisplayId}/item/notes",
     request_model="ItemNotesRequest",
     response_model="ServiceBaseResponse",
+    unsupported_reason="8_01 rejects legacy item notes. Use jobs.update_inventory_info with an integer inventory ID.",
 )
 
 
@@ -161,6 +165,10 @@ _ADD_FREIGHT_ITEMS = Route(
     "POST",
     "/job/{jobDisplayId}/freightitems",
     request_model="FreightItemsRequest",
+    unsupported_reason=(
+        '8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with '
+        'their integer IDs; legacy UUIDs cannot be translated losslessly.'
+    ),
 )
 
 _BOOK = Route("POST", "/job/{jobDisplayId}/book")
@@ -170,6 +178,14 @@ _POST_CHANGE_AGENT = Route(
     "POST",
     "/job/{jobDisplayId}/changeAgent",
     request_model="ChangeJobAgentRequest",
+    response_model="ServiceBaseResponse",
+)
+
+
+_CURRENT_UPDATE_INVENTORY_INFO = Route(
+    "PUT",
+    "/job/{jobDisplayId}/item/{inventoryItemId}",
+    request_model="JobInventoryItemInfoDataInput",
     response_model="ServiceBaseResponse",
 )
 
@@ -190,6 +206,11 @@ class JobsEndpoint(BaseEndpoint):
 
     # Class-level type annotations make CLI discovery introspectable
     # without instantiating the client.
+    add_ons: JobAddOnsEndpoint
+    inventory: JobInventoryEndpoint
+    handling_units: JobHandlingUnitsEndpoint
+    shippings: JobShippingsEndpoint
+    rates: JobRatesEndpoint
     note: JobNoteEndpoint
     on_hold: JobOnHoldEndpoint
     form: JobFormEndpoint
@@ -218,6 +239,11 @@ class JobsEndpoint(BaseEndpoint):
         self.items: JobItemsHelpers = _JobItemsHelpers(self)
 
         # Subgroups (instances share the parent's HttpClient).
+        self.inventory = JobInventoryEndpoint(acportal_client)
+        self.handling_units = JobHandlingUnitsEndpoint(acportal_client)
+        self.shippings = JobShippingsEndpoint(acportal_client)
+        self.add_ons = JobAddOnsEndpoint(acportal_client)
+        self.rates = JobRatesEndpoint(acportal_client)
         self.note = JobNoteEndpoint(acportal_client)
         self.on_hold = JobOnHoldEndpoint(acportal_client)
         self.form = JobFormEndpoint(acportal_client)
@@ -590,14 +616,14 @@ class JobsEndpoint(BaseEndpoint):
 
         Request model: :class:`ItemUpdateRequest`
 
-        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/update_item.html
+        Docs: https://ab-sdk.readthedocs.io/en/latest/migration-8-01.html
         Request model: ItemUpdateRequest
         Response model: ServiceBaseResponse
         """
-        return self._request(
-            _PUT_ITEM.bind(jobDisplayId=job_display_id, itemId=item_id),
-            json=data,
-        )
+        from ab.exceptions import UnsupportedOperationError
+
+        raise UnsupportedOperationError("8_01 inventory IDs are integers. Use jobs.update_inventory_info "
+                                        "or jobs.inventory.update with the current request model.")
 
     def add_item_notes(
         self,
@@ -848,5 +874,21 @@ class JobsEndpoint(BaseEndpoint):
         """
         return self._request(
             _POST_CHANGE_AGENT.bind(jobDisplayId=job_display_id),
+            json=data,
+        )
+
+    def update_inventory_info(
+        self, job_display_id: int, inventory_item_id: int, *, data: JobInventoryItemInfoDataInput | dict
+    ) -> ServiceBaseResponse:
+        """PUT /job/{jobDisplayId}/item/{inventoryItemId}.
+
+        Uses explicit 8_01 identifiers and validates the complete request.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/update_inventory_info.html
+        Request model: JobInventoryItemInfoDataInput
+        Response model: ServiceBaseResponse
+        """
+        return self._request(
+            _CURRENT_UPDATE_INVENTORY_INFO.bind(jobDisplayId=job_display_id, inventoryItemId=inventory_item_id),
             json=data,
         )

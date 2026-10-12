@@ -1,0 +1,2062 @@
+{
+  "baseline": "ae87d11",
+  "server_source": "23a8a00cd3883b4e4783de76f3e5e8c8b901660a",
+  "added": [
+    {
+      "method": "DELETE",
+      "path": "/api/company/{companyId}/email-templates/{templateId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/company/{companyId}/inventory/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/addOns/{addonId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/email/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/contentUnit/{contentUnitId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/inventory/{inventoryItemId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/materials/{materialId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/inventory/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/partner/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/bill-to"
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/carriers"
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/geosettings/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/carrierapis"
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/email-templates"
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/email-templates/shared"
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/email-templates/{templateId}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/inventory"
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/materials"
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/materials/d-containers"
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/materials/default-pallet"
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/materials/stock-boxes"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/addOns"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/email"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/email/allowed-templates"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/email/list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/email/sending-info"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/handlingUnit"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/materials"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/inventory"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/owner"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/payment/jobSubKey/{jobSubKey}/exchange"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/shipment/exportdata/{shippingId}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/shippings"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/tracking/shipment-documents/{proNumber}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/tracking/shipment-history/{proNumber}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/addOns"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/cPacks"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/containerfill"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/handlingUnitContainerTypes"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/jobhandlingunits"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/jobinventoryitems"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/notificationTokens/{tokenType}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/shipment/document"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/job/{jobDisplayId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/materials/{materialId}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/email-templates"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/gridsettings/reset"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/inventory"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/pack/handling-units"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/pack/handlingunit/materials"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/pack/hierarchy"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/pack/inventories"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/pack/inventory"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/pack/validate"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/rates"
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/rates/select-quote"
+    },
+    {
+      "method": "POST",
+      "path": "/api/email/{jobDisplayId}/labelRequest"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/addOns"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/email/attach"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/email/clone"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/email/full-send"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/email/labelrequest"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/form/invoice/edited-pdf"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/form/usar/edited-pdf"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/freightproviders/final"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/freightproviders/finaloverride"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/freightproviders/ratequote"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/handlingUnit"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/manage"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/contentUnit"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/inventory"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/materials"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/inventory"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/is-modified"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/rates"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/rates/select-quote"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/shipment/exportdata/{shippingId}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/shipment/v2/book"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/shipment/validate"
+    },
+    {
+      "method": "POST",
+      "path": "/api/partner"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/company/{companyId}/email-templates/set-exclusion"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/company/{companyId}/inventory/{id}"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/email"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/email/set-confirmation"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/container-material"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/contentUnit/{contentUnitId}"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/inventory/{inventoryItemId}"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/handlingUnit/{id}/materials"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/inventory/{id}"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/item/{inventoryItemId}"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/shipment/cancel/{quoteId}"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/partner/{id}"
+    }
+  ],
+  "removed": [
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/parcelitems/{parcelItemId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/shipment/accessorial/{addOnId}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/SmsTemplate/notificationTokens"
+    },
+    {
+      "method": "GET",
+      "path": "/api/Values"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/parcel-items-with-materials"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/payment"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/payment/create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/payment/sources"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/shipment/accessorials"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/shipment/exportdata"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/shipment/ratequotes"
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/tracking"
+    },
+    {
+      "method": "GET",
+      "path": "/api/shipment/document/{docId}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/email/{jobDisplayId}/labelrequest"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/freightitems"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/freightproviders"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/freightproviders/{optionIndex}/ratequote"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/parcelitems"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/payment/ACHCreditTransfer"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/payment/ACHPaymentSession"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/payment/attachCustomerBank"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/payment/banksource"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/payment/bysource"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/payment/cancelJobACHVerification"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/payment/verifyJobACHSource"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/shipment/accessorial"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/shipment/exportdata"
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/shipment/ratequotes"
+    },
+    {
+      "method": "POST",
+      "path": "/api/webhooks/stripe/checkout.session.completed"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/item/{itemId}"
+    }
+  ],
+  "changed": [
+    {
+      "method": "DELETE",
+      "path": "/api/SmsTemplate/{templateId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/account/paymentsource/{sourceId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/company/{companyId}/accounts/stripe",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/company/{companyId}/document-templates/{documentId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/company/{companyId}/material/{materialId}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/company/{companyId}/truck/{truckId}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/onhold",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/job/{jobDisplayId}/shipment",
+      "categories": [
+        "request contract",
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/jobintacct/{jobDisplayId}/{franchiseeId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/views/{viewId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/SmsTemplate/list",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/SmsTemplate/{templateId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/account/profile",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/account/verifyresettoken",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/address/isvalid",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/advancedsettings/all",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/advancedsettings/{id}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/carriererrormessage/all",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/globalsettings/companyhierarchy",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/globalsettings/companyhierarchy/company/{companyId}",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/availableByCurrentUser",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/brands",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/brandstree",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/geoAreaCompanies",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/geosettings",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/infoFromKey",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/search",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/search/carrier-accounts",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/capabilities",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/carrierAcounts",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/details",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/fulldetails",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/geosettings",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/inheritedPackagingTariffs",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/inheritedpackaginglabor",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/packaginglabor",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{companyId}/packagingsettings",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/{id}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/accounts/stripe/connecturl",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/calendar/{date}/endofday",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/calendar/{date}/startofday",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/document-templates",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/gridsettings",
+      "categories": [
+        "parameter contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/material",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/company/{companyId}/truck",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/contacts/user",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/contacts/{id}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/dashboard",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/dashboard/gridviews",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/dashboard/gridviewstate/{id}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/documents/get/thumbnail/{docPath}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/documents/get/{docPath}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/documents/list",
+      "categories": [
+        "parameter contract",
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/e-sign/result",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/e-sign/{jobDisplayId}/{bookingKey}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/documentConfig",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/feedback/{jobDisplayId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/jobAccessLevel",
+      "categories": [
+        "parameter contract",
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/search",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/calendaritems",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/address-label",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/bill-of-lading",
+      "categories": [
+        "parameter contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/credit-card-authorization",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/customer-quote",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/invoice",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/invoice/editable",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/item-labels",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/operations",
+      "categories": [
+        "parameter contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/packaging-labels",
+      "categories": [
+        "parameter contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/packaging-specification",
+      "categories": [
+        "parameter contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/packing-slip",
+      "categories": [
+        "parameter contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/quick-sale",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/usar",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/form/usar/editable",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/freightproviders",
+      "categories": [
+        "parameter contract",
+        "response contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/note",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/onhold",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/onhold/followupuser/{contactId}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/onhold/followupusers",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/onhold/{id}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/parcelitems",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/price",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/rfq",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/rfq/statusof/{rfqServiceType}/forcompany/{companyId}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/shipment/ratesstate",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/sms",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/sms/templatebased/{templateId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/submanagementstatus",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/timeline/{taskCode}/agent",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/timeline/{timelineTaskIdentifier}",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/job/{jobDisplayId}/tracking/shipment/{proNumber}",
+      "categories": [
+        "parameter contract"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobintacct/{jobDisplayId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/PPCCampaigns",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/accessKey/{accessKey}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/accessKeys",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/comonInsurance",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/documentTypes",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/items",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/jobStatuses",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/parcelPackageTypes",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/referCategory",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/referCategoryHeirachy",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/{masterConstantKey}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/lookup/{masterConstantKey}/{valueId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/note",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/note/suggestUsers",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/notifications",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/rfq/forjob/{jobId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/rfq/{rfqId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/users/pocusers",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/users/roles",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/job/{jobDisplayId}/tracking/{historyAmount}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v3/job/{jobDisplayId}/tracking/{historyAmount}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/views/all",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/views/datasetsp/{spName}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/views/datasetsps",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/views/{viewId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/views/{viewId}/accessinfo",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/SmsTemplate/save",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/account/confirm",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/account/forgot",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/account/register",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/account/resetpassword",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/account/sendConfirmation",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/account/setpassword",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/address/{addressId}/avoidValidation",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/address/{addressId}/validated",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/globalsettings/approveinsuranceexception",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/globalsettings/getinsuranceexceptions",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/globalsettings/intacct",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/logbuffer/flush",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/commodity-map/search",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/commodity/search",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/commodity/suggestions",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/filteredCustomers",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/list",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/search/v2",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/simplelist",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/{companyId}/capabilities",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/{companyId}/carrierAcounts",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/{companyId}/geosettings",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/{companyId}/packaginglabor",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/{companyId}/packagingsettings",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/accounts/stripe/completeconnection",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/document-templates",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/gridsettings",
+      "categories": [
+        "parameter contract",
+        "request contract",
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/material",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/company/{companyId}/truck",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/contacts/customers",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/contacts/editdetails",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/contacts/search",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/contacts/v2/search",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/contacts/{mergeToId}/merge/preview",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/dashboard/gridviewstate/{id}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/dashboard/inbound",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/dashboard/inhouse",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/dashboard/local-deliveries",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/dashboard/outbound",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/dashboard/recentestimates",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/documents",
+      "categories": [
+        "request contract",
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/feedback/{jobDisplayId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/searchByDetails",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/transfer/{jobDisplayId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/book",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/changeAgent",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/copy/{documentId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/email",
+      "categories": [
+        "request contract",
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/email/createtransactionalemail",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/email/senddocument",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/email/{emailTemplateGuid}/send",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/item/notes",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/note",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/onhold",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/onhold/{onHoldId}/comment",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/shipment/book",
+      "categories": [
+        "request contract",
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/sms",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/status/quote",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/timeline",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/job/{jobDisplayId}/timeline/undoincrementjobstatus",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobintacct/{jobDisplayId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobintacct/{jobDisplayId}/applyRebate",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobintacct/{jobDisplayId}/draft",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/note",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports/insurance",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports/referredBy",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports/sales",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports/salesDrilldown",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports/topRevenueCustomers",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports/topRevenueSalesReps",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/reports/web2Lead",
+      "categories": [
+        "response contract"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/rfq/{rfqId}/accept",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/rfq/{rfqId}/acceptwinner",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/rfq/{rfqId}/cancel",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/rfq/{rfqId}/comment",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/rfq/{rfqId}/decline",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/users/list",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/users/user",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/views",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/webhooks/stripe/connect/handle",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/webhooks/stripe/handle",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/webhooks/twilio/body-sms-inbound",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/webhooks/twilio/form-sms-inbound",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/account/paymentsource/{sourceId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/companies/{companyId}/fulldetails",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/company/{companyId}/document-templates/{documentId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/company/{companyId}/material/{materialId}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/company/{companyId}/truck/{truckId}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/contacts/{contactId}/editdetails",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/contacts/{mergeToId}/merge",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/documents/hide/{docId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/documents/update/{docId}",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/save",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/note/{id}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/onhold/{onHoldId}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/onhold/{onHoldId}/dates",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/job/{jobDisplayId}/onhold/{onHoldId}/resolve",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/note/{id}",
+      "categories": [
+        "documentation or error-response metadata"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/users/user",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/views/{viewId}/access",
+      "categories": [
+        "response metadata newly specified"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "errorMessage": null,
+  "jobModifiedDate": "2026-10-12T00:20:43.082839Z",
+  "transportationQuote": {
+    "id": "5d384571-bc94-ae23-77bd-82f169dc1338",
+    "active": true,
+    "shipmentType": "66b5cfa4-0a09-a051-fcef-7787e9fb6b36",
+    "providerAPI": 3,
+    "providerId": "7cdefb18-ca9f-a7d4-0f20-25d09e1f5519",
+    "providerCode": "UPS03",
+    "providerCompanyName": "Lakeshore Galleries",
+    "freightAmount": 25.5,
+    "accessorialAmount": 10.0,
+    "billToFranchiseeId": null,
+    "billToFranchiseeCode": null,
+    "serviceDays": null,
+    "quoteNumber": "ups_75960187",
+    "estimatedArrival": null,
+    "shipmentAccepted": false,
+    "shipmentAcceptedDate": null,
+    "proNumber": null,
+    "isOverridden": false,
+    "usedCarrierAccountInfo": null,
+    "quoteSnapshot": "{\"fromZip\":\"21231\",\"toZip\":\"06351\",\"handlingUnits\":[{\"quantity\":1,\"width\":10.0,\"length\":12.0,\"height\":8.0,\"weight\":4.0,\"containerTypeId\":25,\"declaredValue\":null,\"freightItemClass\":\"150\"}],\"transportationAddOns\":[],\"shipOutDate\":\"2026-10-14T10:00:00Z\"}",
+    "shippingId": 8008,
+    "orderInShipping": null,
+    "createdBy": null,
+    "createdDate": "2026-10-12T00:20:43.059356Z",
+    "modifiedBy": null,
+    "modifiedDate": null
+  }
+}

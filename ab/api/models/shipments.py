@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import List, Optional
+from uuid import UUID
 
 from pydantic import AliasChoices, Field
 
@@ -279,7 +280,7 @@ class ShipmentExportRequest(RequestModel):
     customs_value: float = Field(alias="customsValue", description="Customs declared value (portal-required)")
     commodities: Optional[List[dict]] = Field(
         None,
-        description="Commodity lines (GET adds a per-line jobItemId the POST schema forbids; the endpoint strips it)",
+        description="Commodity lines; 8_01 accepts and preserves the per-line jobItemId",
     )
     packing_info: Optional[list] = Field(None, alias="packingInfo", description="Packing information entries")
     invoice_number: Optional[str] = Field(None, alias="invoiceNumber", description="Commercial invoice number")
@@ -297,3 +298,10 @@ class ShipmentExportRequest(RequestModel):
     values_specified: Optional[bool] = Field(
         None, alias="valuesSpecified", description="Whether numeric values are explicitly specified",
     )
+
+
+class CurrentShipmentDocumentParams(RequestModel):
+    """8_01 shipment document selectors."""
+
+    doc_id: str = Field(alias="DocId", min_length=1, description="Carrier document identifier.")
+    franchisee_id: UUID = Field(alias="FranchiseeId", description="Franchisee UUID owning the document.")

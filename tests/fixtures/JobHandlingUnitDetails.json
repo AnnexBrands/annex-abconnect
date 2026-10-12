@@ -1,0 +1,36 @@
+{
+  "id": 4004,
+  "jobId": "a770f045-51e3-a701-c9da-6d4899331410",
+  "quantity": 1,
+  "isActive": true,
+  "sequenceNo": 0,
+  "length": 14.0,
+  "width": 12.0,
+  "height": 10.0,
+  "weight": 6.0,
+  "containerTypeId": null,
+  "containerName": null,
+  "fillId": null,
+  "fillRate": null,
+  "inchesToAdd": null,
+  "containerThickness": null,
+  "freightClassId": null,
+  "nmfcItemNo": null,
+  "laborMinutes": null,
+  "declaredValue": 150.5,
+  "documentExists": false,
+  "name": "SDK 8_01 unit",
+  "hasCustomName": false,
+  "inventoryItems": [
+    {
+      "id": 7007,
+      "count": 2
+    }
+  ],
+  "contentHandlingUnits": [],
+  "materials": [],
+  "containerHandlingUnitMaterialId": null,
+  "containerHandlingUnitMaterial": null,
+  "materialTotalCost": null,
+  "isUsedInShipment": false
+}

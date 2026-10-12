@@ -24,6 +24,7 @@ from ab.api.models.jobs import (
     SaveOnHoldRequest,
     SendEmailRequest,
 )
+from ab.exceptions import UnsupportedOperationError
 
 
 @pytest.fixture
@@ -131,10 +132,9 @@ class TestEmailAssignee:
     def test_send_posts_camelcase_body(self, jobs, acportal):
         acportal.request.return_value = None
         body = SendEmailRequest(to=["b@x.co"], subject="Hold for you", body="Please review")
-        jobs.email.send(42, data=body)
-        args, kwargs = acportal.request.call_args
-        assert args == ("POST", "/job/42/email")
-        assert kwargs["json"] == {"to": ["b@x.co"], "subject": "Hold for you", "body": "Please review"}
+        with pytest.raises(UnsupportedOperationError, match="draft"):
+            jobs.email.send(42, data=body)
+        acportal.request.assert_not_called()
 
 
 # ---------------------------------------------------------------------------
@@ -179,8 +179,6 @@ class TestFullChain:
                 {"contactId": 206, "fullName": "Brett", "email": "b@x.co", "jobRelation": "Owner"},
                 # 3.  create
                 {"onHoldId": "5001", "status": "Open"},
-                # 4.  email send
-                None,
                 # 5.  resolve
                 {"resolved": True, "status": "Resolved"},
             ]
@@ -202,10 +200,11 @@ class TestFullChain:
                 assignedToId=user.contact_id,
             ),
         )
-        jobs.email.send(
-            42,
-            data=SendEmailRequest(to=[user.email], subject="hold", body="hi"),
-        )
+        with pytest.raises(UnsupportedOperationError):
+            jobs.email.send(
+                42,
+                data=SendEmailRequest(to=[user.email], subject="hold", body="hi"),
+            )
         resolution = jobs.on_hold.resolve(
             42,
             created.on_hold_id,
@@ -222,6 +221,5 @@ class TestFullChain:
             ("GET", "/job/42/onhold"),
             ("GET", "/job/42/onhold/followupuser/206"),
             ("POST", "/job/42/onhold"),
-            ("POST", "/job/42/email"),
             ("PUT", "/job/42/onhold/5001/resolve"),
         ]

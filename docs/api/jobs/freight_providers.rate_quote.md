@@ -3,6 +3,9 @@
 
 > `POST /job/{jobDisplayId}/freightproviders/{optionIndex}/ratequote` — ACPortal
 
+**Unsupported on 8_01:** 8_01 removed option-index ratequote. Use select_rate_quote with ratesKey and explicit shipping/handling units.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

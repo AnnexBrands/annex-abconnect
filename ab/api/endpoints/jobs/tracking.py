@@ -16,14 +16,26 @@ because it's a separate versioned controller; both methods are tagged
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from uuid import UUID
+
+from ab.api.base import BaseEndpoint
+from ab.api.models.release_support import (
+    CarrierShipmentDetails,
+    ShipmentTrackingDocumentResult,
+)
+from ab.api.route import Route
+from ab.warnings import warn_legacy_request
 
 if TYPE_CHECKING:
     from ab.api.models.jobs import ShipmentTrackingDetails, TrackingInfo, TrackingInfoV3
 
-from ab.api.base import BaseEndpoint
-from ab.api.route import Route
 
-_GET = Route("GET", "/job/{jobDisplayId}/tracking", response_model="TrackingInfo")
+_GET = Route(
+    "GET",
+    "/job/{jobDisplayId}/tracking",
+    response_model="TrackingInfo",
+    unsupported_reason="8_01 removed unversioned job tracking. Use jobs.tracking.v3 or shipment with quote_id.",
+)
 _GET_V3 = Route(
     "GET",
     "/v3/job/{jobDisplayId}/tracking/{historyAmount}",
@@ -35,6 +47,22 @@ _SHIPMENT = Route(
     "/job/{jobDisplayId}/tracking/shipment/{proNumber}",
     response_model="ShipmentTrackingDetails",
     params_model="ShipmentTrackingParams",
+)
+
+
+
+
+_CURRENT_SHIPMENT_HISTORY = Route(
+    "GET",
+    "/job/{jobDisplayId}/tracking/shipment-history/{proNumber}",
+    response_model="CarrierShipmentDetails",
+    params_model="ShipmentHistoryParams",
+)
+_CURRENT_SHIPMENT_DOCUMENTS = Route(
+    "GET",
+    "/job/{jobDisplayId}/tracking/shipment-documents/{proNumber}",
+    response_model="List[ShipmentTrackingDocumentResult]",
+    params_model="ShipmentDocumentsParams",
 )
 
 
@@ -61,7 +89,11 @@ class JobTrackingEndpoint(BaseEndpoint):
         )
 
     def shipment(
-        self, job_display_id: int, pro_number: str, *, quote_id: str | None = None,
+        self,
+        job_display_id: int,
+        pro_number: str,
+        *,
+        quote_id: str | None = None,
     ) -> ShipmentTrackingDetails:
         """``GET /job/{jobDisplayId}/tracking/shipment/{proNumber}``
 
@@ -81,7 +113,41 @@ class JobTrackingEndpoint(BaseEndpoint):
         Query params: ShipmentTrackingParams
         Response model: ShipmentTrackingDetails
         """
+        if quote_id is None:
+            warn_legacy_request("jobs.tracking.shipment()", "jobs.tracking.shipment(quote_id=...)")
         return self._request(
             _SHIPMENT.bind(jobDisplayId=job_display_id, proNumber=pro_number),
+            params=dict(quote_id=quote_id),
+        )
+
+    def shipment_history(
+        self, job_display_id: int, pro_number: str, *, quote_id: UUID | None = None
+    ) -> CarrierShipmentDetails:
+        """GET /job/{jobDisplayId}/tracking/shipment-history/{proNumber}.
+
+        Uses explicit 8_01 identifiers and validates the complete request.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/tracking.shipment_history.html
+        Query params: ShipmentHistoryParams
+        Response model: CarrierShipmentDetails
+        """
+        return self._request(
+            _CURRENT_SHIPMENT_HISTORY.bind(jobDisplayId=job_display_id, proNumber=pro_number),
+            params=dict(quote_id=quote_id),
+        )
+
+    def shipment_documents(
+        self, job_display_id: int, pro_number: str, *, quote_id: UUID | None = None
+    ) -> list[ShipmentTrackingDocumentResult]:
+        """GET /job/{jobDisplayId}/tracking/shipment-documents/{proNumber}.
+
+        Uses explicit 8_01 identifiers and validates the complete request.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/tracking.shipment_documents.html
+        Query params: ShipmentDocumentsParams
+        Response model: List[ShipmentTrackingDocumentResult]
+        """
+        return self._request(
+            _CURRENT_SHIPMENT_DOCUMENTS.bind(jobDisplayId=job_display_id, proNumber=pro_number),
             params=dict(quote_id=quote_id),
         )

@@ -1,0 +1,16 @@
+[
+  {
+    "materialID": "16c11d3f-8925-a5cd-5cf5-645bb4427d54",
+    "materialName": "Bubble Wrap 1 ft.",
+    "materialDescription": "BubbleWrap 1 ft.",
+    "unitCost": 25.5,
+    "ncMaterialId": 8008
+  },
+  {
+    "materialID": "8c0f6ea9-f1a6-a1f4-e681-55f35c4d0377",
+    "materialName": "Double Wall Corrugated - 275#",
+    "materialDescription": "Double Wall Corrugated - 275#",
+    "unitCost": 25.5,
+    "ncMaterialId": 3003
+  }
+]

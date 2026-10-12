@@ -3,6 +3,9 @@
 
 > `POST /job/{jobDisplayId}/payment/verifyJobACHSource` — ACPortal
 
+**Unsupported on 8_01:** 8_01 moved payments to the payment application. Use jobs.payment.exchange for the payment-app entry URL; the SDK cannot translate this removed financial operation.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

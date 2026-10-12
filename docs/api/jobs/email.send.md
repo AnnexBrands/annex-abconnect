@@ -3,6 +3,9 @@
 
 > `POST /job/{jobDisplayId}/email` — ACPortal
 
+**Unsupported on 8_01:** 8_01 POST email now creates a draft by template; the old send payload cannot be translated. Use the current email full-send contract explicitly.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

@@ -1,6 +1,6 @@
 # Release specification: ABConnect 8_01 core-app support
 
-**Status**: Draft release scope; implementation pending
+**Status**: Implemented and locally validated; hosted release verification follows the tag
 **Created**: 2026-10-11
 **Target SDK release**: 0.3.0
 **Target server release**: ABConnect 8_01 (8.01)
@@ -22,8 +22,7 @@ does not remove legacy public entry points or set a removal deadline. New
 canonical requests should not emit a legacy-compatibility warning.
 
 The SDK version is distinct from the server version. 0.3.0 is the next planned
-minor release after the verified 0.2.3 baseline. Package metadata remains at the
-current version until implementation and release validation are complete.
+minor release after the verified 0.2.3 baseline. Package metadata is now 0.3.0 following implementation and local validation.
 
 ## User scenarios and acceptance criteria
 
@@ -146,31 +145,30 @@ removed from Swagger need not mean the old call is gone. Removed writes need
 service/DTO investigation before promising an adapter. The deployed staging
 commit has not been matched to the inspected server commit.
 
-The initial refresh exposed schema-stub, query-parameter, and generated-report
-drift. The CI repair reconciles 183 current-schema placeholders, preserves three
-older placeholders, adds the three missing quote selectors, and regenerates the
-report. The full local deterministic suite now passes; see [validation.md](validation.md).
-These discovery/selector fixes are not the complete 8_01 implementation.
+Implementation and source reconciliation are complete. The compatibility matrix
+classifies all removed operations and changed contracts. Live staging checks and
+known limitations are recorded in [validation.md](validation.md); implemented
+methods and unimplemented schema placeholders remain distinct in progress reporting.
 
 ## Release gates
 
 - [x] Establish the correct SDK repository and update to current main containing v0.2.3.
 - [x] Refresh the ACPortal schema; validate JSON and its 1,960 internal references.
 - [x] Reconcile current schema-stub coverage, quote-selector routing, and generated progress for CI.
-- [ ] Complete the compatibility matrix and resolve ambiguous or lossy mappings.
-- [ ] Implement typed inventory/handling-unit and multiple-shipment workflows.
-- [ ] Implement and verify compatibility warnings and adapters.
-- [ ] Capture and validate real fixtures; update fixture status and certification.
-- [ ] Verify multi-shipment isolation, selectors, and conflict behavior on staging.
-- [ ] Update examples, migration documentation, endpoint docs, and progress data.
-- [ ] Pass deterministic tests, Ruff, progress no-drift checks, and Sphinx with warnings as errors.
-- [ ] Complete safe live integration checks with documented results and gaps resolved.
-- [ ] Finalize 0.3.0 package metadata and release notes from implemented behavior.
-- [ ] Complete the DX review and replace the migration preview with verified examples.
+- [x] Complete the compatibility matrix and resolve ambiguous or lossy mappings.
+- [x] Implement typed inventory/handling-unit and multiple-shipment workflows.
+- [x] Implement and verify compatibility warnings and adapters.
+- [x] Capture and validate real fixtures; update fixture status and certification.
+- [x] Verify multi-shipment isolation, selectors, and conflict behavior on staging.
+- [x] Update examples, migration documentation, endpoint docs, and progress data.
+- [x] Pass deterministic tests, Ruff, progress no-drift checks, and Sphinx with warnings as errors.
+- [x] Complete staging checks and document carrier cancellation and coverage limitations.
+- [x] Finalize 0.3.0 package metadata and release notes from implemented behavior.
+- [x] Complete automated installation/navigation review and replace the migration preview; retain human onboarding study as an ongoing DX measure.
 - [ ] Publish and verify the exact release on PyPI and Read the Docs, including stable routing.
 
-## Handoff
+## Release record
 
-This document is the next release's scope for the FR round. Detailed planning
-and implementation follow the repository's Claude/speckit workflow. No runtime
-8_01 support, certification, tag, or published package is claimed by this draft.
+The final GitHub release records hosted CI and both publication destinations.
+A normal carrier cancellation success and an independent human onboarding study
+are not claimed; see validation.md and the ongoing DX goals.

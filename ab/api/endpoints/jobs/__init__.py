@@ -12,21 +12,31 @@ with ``Job`` stripped and snake_case applied to multi-word tags):
 """
 
 from ab.api.endpoints.jobs._main import JobsEndpoint
+from ab.api.endpoints.jobs.add_ons import JobAddOnsEndpoint
 from ab.api.endpoints.jobs.email import JobEmailEndpoint
 from ab.api.endpoints.jobs.form import JobFormEndpoint
 from ab.api.endpoints.jobs.freight_providers import JobFreightProvidersEndpoint
+from ab.api.endpoints.jobs.handling_units import JobHandlingUnitsEndpoint
+from ab.api.endpoints.jobs.inventory import JobInventoryEndpoint
 from ab.api.endpoints.jobs.note import JobNoteEndpoint
 from ab.api.endpoints.jobs.on_hold import JobOnHoldEndpoint
 from ab.api.endpoints.jobs.parcel_items import JobParcelItemsEndpoint
 from ab.api.endpoints.jobs.payment import JobPaymentEndpoint
+from ab.api.endpoints.jobs.rates import JobRatesEndpoint
 from ab.api.endpoints.jobs.rfq import JobRfqEndpoint
 from ab.api.endpoints.jobs.shipment import JobShipmentEndpoint
+from ab.api.endpoints.jobs.shippings import JobShippingsEndpoint
 from ab.api.endpoints.jobs.sms import JobSmsEndpoint
 from ab.api.endpoints.jobs.status import JobStatusEndpoint
 from ab.api.endpoints.jobs.timeline import JobTimelineEndpoint
 from ab.api.endpoints.jobs.tracking import JobTrackingEndpoint
 
 __all__ = [
+    "JobAddOnsEndpoint",
+    "JobRatesEndpoint",
+    "JobShippingsEndpoint",
+    "JobHandlingUnitsEndpoint",
+    "JobInventoryEndpoint",
     "JobsEndpoint",
     "JobNoteEndpoint",
     "JobOnHoldEndpoint",

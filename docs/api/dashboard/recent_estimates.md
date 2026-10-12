@@ -6,28 +6,57 @@
 **Python**
 
 ```python
-api.dashboard.recent_estimates(*, data: DashboardCompanyRequest | dict) -> None
+api.dashboard.recent_estimates(*, company_id: str | None = None, data: DashboardCompanyRequest | dict | None = None, **options: Any) -> Any
 ```
 
 **CLI**
 
 ```bash
-ab dashboard recent_estimates [--data ...]
+ab dashboard recent_estimates [--company-id ...] [--data ...] [--body ...]
 ```
 
 POST /dashboard/recentestimates.
 
 Args:
-    data: Dashboard company filter payload.
-        Accepts a :class:`DashboardCompanyRequest` instance or a dict.
+    company_id: Company UUID sent as a query parameter.
+    data: Legacy company-only body, adapted to the query parameter with a warning.
+    **options: Grid paging, filtering, and sorting options sent in the JSON body.
 
 Request model: :class:`DashboardCompanyRequest`
 
-## Request body — `DashboardCompanyRequest`
+## Request body — `DashboardGridOptions`
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `companyId` | `Optional[str]` | no | Company UUID filter |
+| `requireTotalCount` | `bool` | no | Require total count. |
+| `requireGroupCount` | `bool` | no | Require group count. |
+| `isCountQuery` | `bool` | no | Is count query. |
+| `isSummaryQuery` | `bool` | no | Is summary query. |
+| `skip` | `int` | no | Skip. |
+| `take` | `int` | no | Take. |
+| `sort` | `Optional[list[GridSorting]]` | no | Sort. |
+| `group` | `Optional[list[GridGrouping]]` | no | Group. |
+| `filter` | `Optional[list[Any]]` | no | Filter. |
+| `totalSummary` | `Optional[list[GridSummary]]` | no | Total summary. |
+| `groupSummary` | `Optional[list[GridSummary]]` | no | Group summary. |
+| `select` | `Optional[list[str]]` | no | Select. |
+| `preSelect` | `Optional[list[str]]` | no | Pre select. |
+| `remoteSelect` | `Optional[bool]` | no | Remote select. |
+| `remoteGrouping` | `Optional[bool]` | no | Remote grouping. |
+| `expandLinqSumType` | `Optional[bool]` | no | Expand linq sum type. |
+| `primaryKey` | `Optional[list[str]]` | no | Primary key. |
+| `defaultSort` | `Optional[str]` | no | Default sort. |
+| `stringToLower` | `Optional[bool]` | no | String to lower. |
+| `paginateViaPrimaryKey` | `Optional[bool]` | no | Paginate via primary key. |
+| `sortByPrimaryKey` | `Optional[bool]` | no | Sort by primary key. |
+| `allowAsyncOverSync` | `bool` | no | Allow async over sync. |
+| `searchValue` | `Optional[str]` | no | Search value. |
+
+## Query parameters — `DashboardGridParams`
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `companyId` | `UUID` | yes | Company UUID whose jobs populate the grid. |
 
 ## Response
 

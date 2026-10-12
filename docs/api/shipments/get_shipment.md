@@ -6,7 +6,7 @@
 **Python**
 
 ```python
-api.shipments.get_shipment(*, franchisee_id: str | None = None, provider_id: str | None = None, pro_number: str | None = None) -> ShipmentInfo
+api.shipments.get_shipment(*, franchisee_id: str | None = None, provider_id: str | None = None, pro_number: str | None = None) -> CarrierShipmentDetails
 ```
 
 **CLI**
@@ -27,24 +27,21 @@ ab shipments get_shipment [--franchisee-id ...] [--provider-id ...] [--pro-numbe
 
 ## Response
 
-Returns `ShipmentInfo`.
+Returns `CarrierShipmentDetails`.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `shipmentId` | `Optional[str]` | no | Shipment identifier |
-| `status` | `Optional[str]` | no | Current status |
-| `carrier` | `Optional[str]` | no | Carrier name |
-| `proNumber` | `Optional[str]` | no | PRO tracking number |
-| `usedAPI` | `Optional[int]` | no | API used for shipment |
-| `historyProviderName` | `Optional[str]` | no | Tracking history provider |
-| `historyStatuses` | `Optional[list]` | no | Tracking status history |
-| `weight` | `Optional[ShipmentWeight]` | no | Shipment weight details |
-| `jobWeight` | `Optional[float]` | no | Job total weight |
-| `successfully` | `Optional[bool]` | no | Whether shipment was successful |
-| `errorMessage` | `Optional[str]` | no | Error message if failed |
-| `multipleShipments` | `Optional[bool]` | no | Multiple shipments flag |
-| `packages` | `Optional[list]` | no | Package details |
-| `estimatedDelivery` | `Optional[str]` | no | Estimated delivery date |
+| `proNumber` | `Optional[str]` | no | Pro number. |
+| `usedAPI` | `Optional[Literal[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 14, 15, 20]]` | no | Used api. |
+| `historyProviderName` | `Optional[str]` | no | History provider name. |
+| `historyStatuses` | `Optional[list[ShippingHistoryStatusResult]]` | no | History statuses. |
+| `weight` | `Optional[WeightInfoResult]` | no | Weight. |
+| `jobWeight` | `Optional[WeightInfoResult]` | no | Job weight. |
+| `successfully` | `Optional[bool]` | no | Successfully. |
+| `errorMessage` | `Optional[str]` | no | Error message. |
+| `multipleShipments` | `Optional[bool]` | no | Multiple shipments. |
+| `packages` | `Optional[list[ShippingPackageInfoResult]]` | no | Packages. |
+| `estimatedDelivery` | `Optional[datetime]` | no | Estimated delivery. |
 
 ---
 

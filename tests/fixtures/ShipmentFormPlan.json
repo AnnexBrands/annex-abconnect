@@ -1,0 +1,28 @@
+[
+  {
+    "jobShipmentID": "f15325e0-b7e6-aa42-dfb0-9d3e15935705",
+    "jobID": "82949aa4-6c20-aa9d-5761-833f8dd48f2c",
+    "fromAddressId": 7007,
+    "toAddressId": 7007,
+    "providerID": "27641050-bf81-a4f7-7b43-afcadbe6947b",
+    "sequenceNo": 2,
+    "fromLocationCompanyName": "Ridgeline Freight",
+    "toLocationCompanyName": "Fairmont Galleries",
+    "transportType": "PickUp",
+    "providerCompanyName": "Fairmont Galleries",
+    "freightQuoteOptionsId": null
+  },
+  {
+    "jobShipmentID": "c785c2e4-9186-a6e3-2853-ff8697021bd2",
+    "jobID": "82949aa4-6c20-aa9d-5761-833f8dd48f2c",
+    "fromAddressId": 7007,
+    "toAddressId": 8008,
+    "providerID": "9ab8f85c-6eff-a876-ce77-d8832da2e788",
+    "sequenceNo": 6,
+    "fromLocationCompanyName": "Fairmont Galleries",
+    "toLocationCompanyName": "Lakeshore Trading Co",
+    "transportType": "PickUp (LTL)",
+    "providerCompanyName": "Ridgeline Galleries",
+    "freightQuoteOptionsId": "a63a060e-e135-a160-3b44-c8afe892ffa1"
+  }
+]

@@ -3,6 +3,9 @@
 
 > `DELETE /job/{jobDisplayId}/shipment/accessorial/{addOnId}` — ACPortal
 
+**Unsupported on 8_01:** 8_01 replaced shipment accessorials. Use jobs.add_ons with the current service add-on identifiers.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

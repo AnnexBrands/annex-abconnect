@@ -166,12 +166,33 @@ def test_dashboard_panel_posts_company_request(method, path, dashboard, client):
     getattr(dashboard, method)(data=payload)
     args, kwargs = client.request.call_args
     assert args == ("POST", path)
-    assert kwargs["json"] == {"companyId": "93179b52-3da9-e311-b6f8-000c298b59ee"}
+    assert kwargs["params"] == {"companyId": "93179b52-3da9-e311-b6f8-000c298b59ee"}
+    assert kwargs["json"] == {}
 
 
 def test_dashboard_panel_accepts_dict(dashboard, client):
     client.request.return_value = None
-    dashboard.inbound(data={"companyId": "abc"})
+    dashboard.inbound(data={"companyId": "93179b52-3da9-e311-b6f8-000c298b59ee"})
     args, kwargs = client.request.call_args
     assert args == ("POST", "/dashboard/inbound")
-    assert kwargs["json"] == {"companyId": "abc"}
+    assert kwargs["params"] == {"companyId": "93179b52-3da9-e311-b6f8-000c298b59ee"}
+    assert kwargs["json"] == {}
+
+
+def test_grid_pagination_goes_in_body_and_company_in_query(dashboard, client):
+    dashboard.inbound(company_id="93179b52-3da9-e311-b6f8-000c298b59ee", take=50, skip=100, require_total_count=True)
+    client.request.assert_called_once_with(
+        "POST",
+        "/dashboard/inbound",
+        params={"companyId": "93179b52-3da9-e311-b6f8-000c298b59ee"},
+        json={"take": 50, "skip": 100, "requireTotalCount": True},
+    )
+
+
+def test_conflicting_grid_company_is_rejected_before_http(dashboard, client):
+    with pytest.raises(ValueError, match="Conflicting"):
+        dashboard.inbound(
+            company_id="93179b52-3da9-e311-b6f8-000c298b59ee",
+            data={"companyId": "11111111-2222-4333-8444-555555555555"},
+        )
+    client.request.assert_not_called()

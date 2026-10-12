@@ -11,6 +11,11 @@ from __future__ import annotations
 import warnings
 from typing import TYPE_CHECKING
 
+from ab.api.base import BaseEndpoint
+from ab.api.endpoints.jobs.shipment import JobShipmentEndpoint
+from ab.api.models.release_support import CarrierShipmentDetails, CarrierShippingDocument
+from ab.api.route import Route
+
 if TYPE_CHECKING:
     from ab.api.models.shared import ServiceBaseResponse
     from ab.api.models.shipments import (
@@ -22,21 +27,24 @@ if TYPE_CHECKING:
         ShipmentBookRequest,
         ShipmentExportData,
         ShipmentExportRequest,
-        ShipmentInfo,
         ShipmentOriginDestination,
         ShipmentRateQuoteRequest,
     )
 
-from ab.api.base import BaseEndpoint
-from ab.api.endpoints.jobs.shipment import JobShipmentEndpoint
-from ab.api.route import Route
 
 # Non-job-scoped routes (kept here)
-_GET_SHIPMENT = Route("GET", "/shipment", params_model="ShipmentParams", response_model="ShipmentInfo")
-_GET_GLOBAL_ACCESSORIALS = Route("GET", "/shipment/accessorials", response_model="List[GlobalAccessorial]")
+_GET_SHIPMENT = Route("GET", "/shipment", params_model="ShipmentParams", response_model="CarrierShipmentDetails")
+_GET_GLOBAL_ACCESSORIALS = Route(
+    "GET",
+    "/shipment/accessorials",
+    response_model="List[GlobalAccessorial]",
+    unsupported_reason=("The 8_01 server does not implement global shipment accessorials. Use lookup.get_addons."),
+)
 _GET_SHIPMENT_DOCUMENT = Route(
-    "GET", "/shipment/document/{docId}",
-    params_model="ShipmentDocumentParams", response_model="bytes",
+    "GET",
+    "/shipment/document",
+    params_model="CurrentShipmentDocumentParams",
+    response_model="CarrierShippingDocument",
 )
 
 
@@ -67,12 +75,12 @@ class ShipmentsEndpoint(BaseEndpoint):
         franchisee_id: str | None = None,
         provider_id: str | None = None,
         pro_number: str | None = None,
-    ) -> ShipmentInfo:
+    ) -> CarrierShipmentDetails:
         """``GET /shipment``
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/shipments/get_shipment.html
         Query params: ShipmentParams
-        Response model: ShipmentInfo
+        Response model: CarrierShipmentDetails
         """
         return self._request(
             _GET_SHIPMENT,
@@ -87,13 +95,16 @@ class ShipmentsEndpoint(BaseEndpoint):
         """
         return self._request(_GET_GLOBAL_ACCESSORIALS)
 
-    def get_shipment_document(self, doc_id: str) -> bytes:
+    def get_shipment_document(self, doc_id: str, *, franchisee_id: str | None = None) -> CarrierShippingDocument:
         """``GET /shipment/document/{docId}``
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/shipments/get_shipment_document.html
-        Query params: ShipmentDocumentParams
+        Query params: CurrentShipmentDocumentParams
+        Response model: CarrierShippingDocument
         """
-        return self._request(_GET_SHIPMENT_DOCUMENT.bind(docId=doc_id))
+        if franchisee_id is None:
+            raise ValueError("8_01 shipment documents require franchisee_id and doc_id")
+        return self._request(_GET_SHIPMENT_DOCUMENT, params=dict(doc_id=doc_id, franchisee_id=franchisee_id))
 
     # ---- Job-scoped (deprecated shims) --------------------------------
 
@@ -103,7 +114,10 @@ class ShipmentsEndpoint(BaseEndpoint):
         return self._shipment.get_rate_quotes(job_display_id)
 
     def request_rate_quotes(
-        self, job_display_id: int, *, data: ShipmentRateQuoteRequest | dict,
+        self,
+        job_display_id: int,
+        *,
+        data: ShipmentRateQuoteRequest | dict,
     ) -> list[RateQuote]:
         """Deprecated. Use ``api.jobs.shipment.request_rate_quotes(...)``."""
         _deprecated("request_rate_quotes", "request_rate_quotes")
@@ -125,7 +139,10 @@ class ShipmentsEndpoint(BaseEndpoint):
         return self._shipment.get_accessorials(job_display_id)
 
     def add_accessorial(
-        self, job_display_id: int, *, data: AccessorialAddRequest | dict,
+        self,
+        job_display_id: int,
+        *,
+        data: AccessorialAddRequest | dict,
     ) -> ServiceBaseResponse:
         """Deprecated. Use ``api.jobs.shipment.add_accessorial(...)``."""
         _deprecated("add_accessorial", "add_accessorial")
@@ -147,7 +164,10 @@ class ShipmentsEndpoint(BaseEndpoint):
         return self._shipment.get_export_data(job_display_id)
 
     def post_export_data(
-        self, job_display_id: int, *, data: ShipmentExportRequest | dict,
+        self,
+        job_display_id: int,
+        *,
+        data: ShipmentExportRequest | dict,
     ) -> ServiceBaseResponse:
         """Deprecated. Use ``api.jobs.shipment.post_export_data(...)``."""
         _deprecated("post_export_data", "post_export_data")

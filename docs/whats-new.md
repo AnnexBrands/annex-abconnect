@@ -1,36 +1,40 @@
 # What's New
 
-Use this page to decide what an upgrade changes for your application. SDK package
-versions and ABConnect server versions are separate: the upcoming **SDK 0.3.0**
-targets **ABConnect 8_01**.
+SDK **0.3.0** targets **ABConnect 8_01**. SDK and server version numbers are separate.
+Read the [migration guide](migration-8-01.md) before upgrading an existing integration.
 
-## Upcoming: 0.3.0 — ABConnect 8_01
-
-**Status: planned, not released.** Updating the Swagger snapshot does not add the
-new SDK workflows. Implementation and certification are still required.
+## 0.3.0 — Unified packing and multiple shipments
 
 | Change | What it means for your integration |
 |---|---|
-| Inventory and handling units | A unified packing and transportation workflow replaces separate parcel-item and freight-item workflows. |
-| Multiple active shipments per job | Select the intended shipment or quote explicitly; a job ID alone may no longer identify the operation's target. |
-| Compatibility warnings | Supported legacy requests remain available with guidance toward their replacements. Public entry points are not scheduled for removal in this release. |
-| Better developer guidance | Updated onboarding, migration examples, troubleshooting, and release documentation are release requirements. |
+| Inventory and handling units | Describe goods separately from their packing; use one workflow for parcel and freight. |
+| Company packing | Manage common inventory, discover materials and container types, and request packing suggestions and validation. |
+| Multiple active shipments | Inspect all shipping records and select the intended shipping ID or quote UUID explicitly. |
+| Rates and booking | Request rates for handling units, save selected quotes, validate and book V2 shipments, and inspect cancellation results. |
+| Shipment-specific data | Export data targets a shipping ID; forms, tracking, documents, and add-ons expose current 8_01 contracts. |
+| Supported legacy requests | Visible, filterable `LegacyRequestWarning` notices point to replacements without a removal deadline. |
+| Removed server contracts | Retained method names raise `UnsupportedOperationError` before HTTP when no lossless adapter exists. |
 
-Start with the [8_01 migration guide](migration-8-01.md). It identifies what can be
-prepared now and what depends on the new SDK implementation. The updated portal
-schema contains 363 operations and 527 schemas; those counts describe the API,
-not completed SDK coverage.
+Nested request validation rejects unknown fields before HTTP and preserves explicit
+nulls. Shipping records, quote UUIDs, and carrier shipment identifiers remain distinct.
+Ambiguous legacy shipping mutations fail before making a request.
 
-The development SDK now exposes optional quote selection on packing slips,
-packaging specifications, and shipment tracking. These selectors pass local
-transport checks; live quote-selected validation is pending. The remaining new
-routes are discoverable placeholders, not implemented endpoint wrappers.
+The bundled portal Swagger contains 363 operations and 527 schemas. Unimplemented
+schema methods remain explicit placeholders; these counts do not claim full API coverage.
+Reviewed staging captures cover packing, materials, rates, booking, shipping isolation,
+and company support. Normal carrier cancellation failed in the staging release test;
+forced removal succeeded in ABConnect and **does not prove cancellation with the carrier**.
+Callers must inspect `success`, `error_message`, and `override_error`.
 
-The current development branch also adds `ab token` / `abs token` to refresh and
-print the access token. This is after the 0.2.3 tag; do not expect it in an
-installed 0.2.3 package. Its output is a credential, not diagnostic log data.
+The release also includes `ab token` / `abs token` to refresh and print an access
+token. Treat that output as a credential. Explicit environment selection now takes
+precedence over the environment named in a supplied configuration file.
 
-## Current tagged release: 0.2.3
+Start with [Quickstart](quickstart.md), [migration examples](migration-8-01.md), and
+[Troubleshooting](troubleshooting.md). The [release evidence](https://github.com/bmonson-annex/annex-abconnect/blob/main/specs/038-abconnect-8-01/validation.md)
+distinguishes deterministic checks, observed staging behavior, and hosted publication.
+
+## 0.2.3 — Catalog bulk upserts
 
 Catalog bulk upserts now require `platformId` on every catalog, together with
 `customerCatalogId`, `title`, dates, and seller data. This fixes the missing

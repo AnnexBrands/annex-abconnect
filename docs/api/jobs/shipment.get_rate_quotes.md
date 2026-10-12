@@ -3,6 +3,9 @@
 
 > `GET /job/{jobDisplayId}/shipment/ratequotes` — ACPortal
 
+**Unsupported on 8_01:** 8_01 removed legacy ratequotes. Use jobs.rates.request with explicit handling units and addresses, then jobs.rates.select_quote.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python

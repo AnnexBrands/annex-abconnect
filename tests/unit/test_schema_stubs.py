@@ -38,7 +38,7 @@ def test_all_schema_stubs_are_discoverable_and_unrouted():
             assert methods[spec.method_name].route is None
             discovered_total += 1
 
-    assert discovered_total == expected_total == 183
+    assert discovered_total == expected_total == 125
 
 
 def test_schema_stub_registry_matches_current_route_gaps():

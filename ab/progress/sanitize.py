@@ -103,6 +103,9 @@ SAFE_KEYS = frozenset(
 )
 
 _HIGH_KEY_PATTERNS: list[tuple[re.Pattern, Kind]] = [
+    # Editable forms embed customer data in HTML/CSS. Leaf email matching cannot
+    # inspect that document reliably; preserve the string type, redact the blob.
+    (re.compile(r"^(html_?markup_?content|markup_?styles)$", re.I), Kind.TEXT),
     (re.compile(r"e?mail", re.I), Kind.EMAIL),
     (re.compile(r"phone|mobile|^fax$|telephone", re.I), Kind.PHONE),
     (re.compile(r"^address\d|^address\d?value$|street|addressline", re.I), Kind.STREET),

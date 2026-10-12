@@ -4,43 +4,43 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
-## [0.3.0] - Unreleased — targeting ABConnect 8_01
+## [0.3.0] - 2026-10-11
 
-Release scope is defined in [specs/038-abconnect-8-01/spec.md](specs/038-abconnect-8-01/spec.md).
-The implementation and certification are pending; these are release requirements,
-not claims of shipped SDK support. The baseline is v0.2.3 plus the current main
-branch's CLI token-refresh addition.
+Targets ABConnect 8_01. See the [migration guide](docs/migration-8-01.md).
 
-### Prepared
+### Added
 
-- Reconciled the refreshed schema with 183 discoverable unimplemented route
-  stubs, retaining three older placeholders for compatibility. Added optional
-  quote selectors to packing slips, packaging specifications, and shipment
-  tracking with UUID validation and the server's exact query aliases.
-- Regenerated progress and endpoint documentation after the schema refresh;
-  kept the gate regression baseline intact. Made notebook generation relative
-  to the checkout so local and CI validation target the same artifact.
-- Refreshed the bundled ACPortal Swagger from staging: 363 operations and 527
-  component schemas. This updates discovery evidence, not endpoint compatibility.
-- Added What's New, an 8_01 migration preview, troubleshooting, and measurable
-  developer-experience goals. Reworked the docs home and quickstart around package
-  installation and a first read-only call; corrected outdated example arguments.
-- Added a release runbook requiring verified publication on both PyPI and Read
-  the Docs. Read the Docs now fails on build warnings, and the PyPI workflow
-  checks distribution metadata and description rendering before upload.
-- Corrected the package repository link to `bmonson-annex/annex-abconnect`.
+- Typed job inventory and unified handling units, including nested contents,
+  materials, containers, company inventory, packing suggestions, and validation.
+- Multiple-shipment collections, explicit selectors, handling-unit rates,
+  persisted quote selection, final overrides, V2 booking/validation/cancellation,
+  and shipping-specific export data.
+- Current transportation add-ons, lookup, tracking/history/documents, editable
+  forms, inventory-info updates, and payment-app exchange contracts.
+- Visible `LegacyRequestWarning` with replacement guidance for supported legacy
+  calls, without a removal deadline. Ambiguous legacy mutations fail locally.
+- Reviewed staging fixtures, contract/isolation regressions, operator-selected
+  examples, migration/What's New/troubleshooting guides, and a PyPI + RTD runbook.
+- `ab token` / `abs token` to refresh and print an access token (sensitive output).
 
-### Planned
+### Changed
 
-- Unified inventory and handling-unit operations replace the parcel-item versus
-  freight-item split as the primary SDK workflow.
-- Multiple active shipments per job, with explicit selection of the appropriate
-  shipping record, quote, and carrier shipment for each operation.
-- Preserve supported legacy requests through verified server compatibility or
-  explicit SDK adapters. Emit actionable compatibility warnings; do not remove
-  public methods or announce a removal deadline in this release.
-- Updated typed models, runnable examples, real fixtures, migration guidance,
-  and certification evidence for the 8_01 core-app changes.
+- Preserve nested request validation, explicit nulls, export commodity IDs, and
+  job-modification fields; reject ignored option indexes and removed document fields.
+- Retain removed legacy method names and DTO imports, with explicit
+  `UnsupportedOperationError` before HTTP where no lossless mapping exists.
+- Correct dashboard company query/body binding and explicit environment precedence.
+- Refresh bundled ACPortal Swagger and reconcile schema placeholders and progress
+  without changing the regression gate baseline.
+- Validate Python 3.11–3.14 in CI and build documentation with warnings as errors.
+
+### Validation limitation
+
+The staging test booked an explicit UPS quote without changing other shipments.
+Normal carrier cancellation returned a failure; forced ABConnect removal succeeded.
+Forced removal does not establish carrier cancellation. Inspect result fields and
+handle that distinction in applications. Details are in
+[release evidence](specs/038-abconnect-8-01/validation.md).
 
 ## [0.2.3] - 2026-08-28
 

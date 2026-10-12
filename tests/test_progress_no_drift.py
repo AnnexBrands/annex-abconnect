@@ -69,7 +69,7 @@ def test_certification_panel_is_not_tautological():
     from ab.progress.certification import build_certification, certification_summary
 
     s = certification_summary(build_certification())
-    assert s["implemented"] == s["total"], "implemented is inventory — expected 100%"
+    assert s["implemented"] < s["total"], "retained unsupported contracts must not count as implemented"
     assert s["certified"] <= s["live_verified"] <= s["total"]
     # Certification must not silently inherit the tautological 100%.
     assert not (s["certified"] == s["total"] and s["evidence_missing"] > 0)

@@ -76,3 +76,9 @@ class BankSourceRequest(RequestModel):
     """Body for POST /job/{jobDisplayId}/payment/banksource."""
 
     source_id: Optional[str] = Field(None, alias="sourceId", description="Bank source ID")
+
+
+class PaymentExchangeParams(RequestModel):
+    """Payment application exchange origin."""
+
+    origin: str | None = Field(None, alias="Origin", description="Payment application origin.")

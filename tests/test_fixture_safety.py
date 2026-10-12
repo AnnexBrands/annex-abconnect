@@ -103,7 +103,8 @@ def test_no_production_contact_data_anywhere_in_the_tree() -> None:
     scan would have caught.
     """
     tracked = subprocess.run(
-        ["git", "ls-files"], cwd=REPO_ROOT, capture_output=True, text=True
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+        cwd=REPO_ROOT, capture_output=True, text=True
     ).stdout.split()
     offenders: list[str] = []
     for rel in tracked:
@@ -150,3 +151,19 @@ def test_reference_labels_are_not_sanitized(name: str, expected: str) -> None:
         pytest.skip(f"{name} fixture not present")
     text = json.dumps(json.loads(path.read_text(encoding="utf-8")))
     assert expected in text, f"{expected!r} was sanitized out of {name}.json"
+
+
+def test_editable_form_blobs_are_redacted_before_fixture_review():
+    from ab.progress.sanitize import sanitize
+
+    payload = {
+        "htmlMarkupContent": "<p>Sample Person: customer@example.com, 123 Sample Street</p>",
+        "markupStyles": "body { background: url('https://example.com/customer-document'); }",
+    }
+    clean, report = sanitize(payload)
+    assert set(clean) == set(payload)
+    assert all(isinstance(value, str) for value in clean.values())
+    assert all(clean[key] != payload[key] for key in payload)
+    assert "Sample Person" not in clean["htmlMarkupContent"]
+    assert "customer-document" not in clean["markupStyles"]
+    assert sanitize(clean)[0] == clean

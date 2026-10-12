@@ -6,7 +6,7 @@
 **Python**
 
 ```python
-api.jobs.form.shipments(job_display_id: int) -> list[FormsShipmentPlan]
+api.jobs.form.shipments(job_display_id: int) -> list[ShipmentFormPlan]
 ```
 
 **CLI**
@@ -22,25 +22,21 @@ Returns ``List[FormsShipmentPlan]`` rather than PDF bytes -- use the
 
 ## Response
 
-Returns a list of `List[FormsShipmentPlan]`.
+Returns a list of `List[ShipmentFormPlan]`.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `shipmentPlanId` | `Optional[str]` | no | Plan identifier |
-| `providerOptionIndex` | `Optional[int]` | no | Provider index |
-| `carrierName` | `Optional[str]` | no | Carrier |
-| `serviceType` | `Optional[str]` | no | Service level |
-| `jobShipmentID` | `Optional[str]` | no | Shipment UUID |
-| `jobID` | `Optional[str]` | no | Job UUID |
-| `fromAddressId` | `Optional[int]` | no | Origin address ID |
-| `toAddressId` | `Optional[int]` | no | Destination address ID |
-| `providerID` | `Optional[str]` | no | Provider UUID |
-| `sequenceNo` | `Optional[int]` | no | Sequence number |
-| `fromLocationCompanyName` | `Optional[str]` | no | Origin company name |
-| `toLocationCompanyName` | `Optional[str]` | no | Destination company name |
-| `transportType` | `Optional[str]` | no | Transport type (PickUp, Delivery, House) |
-| `providerCompanyName` | `Optional[str]` | no | Provider company name |
-| `optionIndex` | `Optional[int]` | no | Option index |
+| `jobShipmentID` | `Optional[UUID]` | no | Job shipment id. |
+| `jobID` | `Optional[UUID]` | no | Job id. |
+| `fromAddressId` | `Optional[int]` | no | From address id. |
+| `toAddressId` | `Optional[int]` | no | To address id. |
+| `providerID` | `Optional[UUID]` | no | Provider id. |
+| `sequenceNo` | `Optional[int]` | no | Sequence no. |
+| `fromLocationCompanyName` | `Optional[str]` | no | From location company name. |
+| `toLocationCompanyName` | `Optional[str]` | no | To location company name. |
+| `transportType` | `Optional[str]` | no | Transport type. |
+| `providerCompanyName` | `Optional[str]` | no | Provider company name. |
+| `freightQuoteOptionsId` | `Optional[UUID]` | no | Freight quote options id. |
 
 ---
 

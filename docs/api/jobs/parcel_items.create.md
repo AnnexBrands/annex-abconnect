@@ -3,6 +3,9 @@
 
 > `POST /job/{jobDisplayId}/parcelitems` — ACPortal
 
+**Unsupported on 8_01:** 8_01 replaced parcel/freight item writes. Use jobs.inventory and jobs.handling_units with their integer IDs; legacy UUIDs cannot be translated losslessly.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python
@@ -15,14 +18,7 @@ api.jobs.parcel_items.create(job_display_id: int, *, data: ParcelItemCreateReque
 ab jobs parcel_items create <job_display_id> [--data ...]
 ```
 
-Add ONE parcel item, preserving the existing set (ACID get-merge-write).
-
-``POST /job/{jobDisplayId}/parcelitems`` is replace-all
-(``SaveAllParcelItemsRequest``): the body's ``parcelItems`` array becomes
-the ENTIRE set. To avoid wiping the other items, this reads the current
-parcel items, appends *data* (an ergonomic single-item
-:class:`ParcelItemCreateRequest`), and saves the full set. Returns the
-newly added :class:`ParcelItem`.
+Retained legacy write; 8_01 requires inventory and handling units.
 
 ## Request body — `ParcelItemsRequest`
 

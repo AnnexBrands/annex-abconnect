@@ -15,7 +15,20 @@ Note: ``add_freight_items`` is tagged ``Job`` in swagger, not
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
+from uuid import UUID
+
+from ab.api.base import BaseEndpoint
+from ab.api.models.release_support import (
+    CreateOverriddenQuoteResponseResult,
+    FinalOverrideRequest,
+    JobModifiedDateServiceResponseResult,
+    SaveFinalQuoteRequest,
+    SaveRateQuoteResponseResult,
+    SelectRateQuoteRequest,
+    TransportationQuoteResult,
+)
+from ab.api.route import Route
 
 if TYPE_CHECKING:
     from ab.api.models.jobs import (
@@ -25,25 +38,53 @@ if TYPE_CHECKING:
     )
     from ab.api.models.shared import ServiceBaseResponse
 
-from ab.api.base import BaseEndpoint
-from ab.api.route import Route
 
 _LIST = Route(
     "GET",
     "/job/{jobDisplayId}/freightproviders",
-    params_model="FreightProvidersParams",
-    response_model="List[PricedFreightProvider]",
+    params_model="GetQuotesParams",
+    response_model="List[TransportationQuoteResult]",
 )
 _SAVE = Route(
     "POST",
     "/job/{jobDisplayId}/freightproviders",
     request_model="ShipmentPlanProvider",
     response_model="ServiceBaseResponse",
+    unsupported_reason=(
+        '8_01 removed provider-list writes and option indexes. Use create_final_override or '
+        'save_final_quote with explicit shipping/quote identifiers.'
+    ),
 )
 _RATE_QUOTE = Route(
     "POST",
     "/job/{jobDisplayId}/freightproviders/{optionIndex}/ratequote",
     request_model="RateQuoteRequest",
+    unsupported_reason=(
+        '8_01 removed option-index ratequote. Use select_rate_quote with ratesKey and explicit '
+        'shipping/handling units.'
+    ),
+)
+
+
+
+
+_CURRENT_CREATE_FINAL_OVERRIDE = Route(
+    "POST",
+    "/job/{jobDisplayId}/freightproviders/finaloverride",
+    request_model="FinalOverrideRequest",
+    response_model="CreateOverriddenQuoteResponseResult",
+)
+_CURRENT_SELECT_RATE_QUOTE = Route(
+    "POST",
+    "/job/{jobDisplayId}/freightproviders/ratequote",
+    request_model="SelectRateQuoteRequest",
+    response_model="SaveRateQuoteResponseResult",
+)
+_CURRENT_SAVE_FINAL_QUOTE = Route(
+    "POST",
+    "/job/{jobDisplayId}/freightproviders/final",
+    request_model="SaveFinalQuoteRequest",
+    response_model="JobModifiedDateServiceResponseResult",
 )
 
 
@@ -60,17 +101,15 @@ class JobFreightProvidersEndpoint(BaseEndpoint):
     ) -> list[PricedFreightProvider]:
         """``GET /job/{jobDisplayId}/freightproviders``
 
-        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/freight_providers.list.html
+        Docs: https://ab-sdk.readthedocs.io/en/latest/migration-8-01.html
         Query params: FreightProvidersParams
         Response model: List[PricedFreightProvider]
         """
-        return self._request(
-            _LIST.bind(jobDisplayId=job_display_id),
-            params=dict(
-                provider_indexes=provider_indexes,
-                shipment_types=shipment_types,
-                only_active=only_active,
-            ),
+        from ab.exceptions import UnsupportedOperationError
+
+        raise UnsupportedOperationError(
+            "8_01 returns transportation quotes, not PricedFreightProvider. "
+            "Use jobs.freight_providers.get_quotes with active/shipment_types filters."
         )
 
     def save(
@@ -81,9 +120,8 @@ class JobFreightProvidersEndpoint(BaseEndpoint):
     ) -> ServiceBaseResponse | None:
         """``POST /job/{jobDisplayId}/freightproviders``
 
-        Request model: :class:`ShipmentPlanProvider`. API 7.11 binds this
-        route as ``List[ShipmentPlanProvider]``; a single row is accepted for
-        compatibility and wrapped into a one-item array before dispatch.
+        Retained legacy provider-list write; raises UnsupportedOperationError
+        before HTTP on 8_01. Use explicit final/override/rate quote methods.
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/freight_providers.save.html
         Request model: ShipmentPlanProvider
@@ -171,4 +209,72 @@ class JobFreightProvidersEndpoint(BaseEndpoint):
         return self._request(
             _RATE_QUOTE.bind(jobDisplayId=job_display_id, optionIndex=option_index),
             json=data,
+        )
+
+    def create_final_override(
+        self, job_display_id: int, *, data: FinalOverrideRequest | dict
+    ) -> CreateOverriddenQuoteResponseResult:
+        """POST /job/{jobDisplayId}/freightproviders/finaloverride.
+
+        Uses explicit 8_01 identifiers and validates the complete request.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/freight_providers.create_final_override.html
+        Request model: FinalOverrideRequest
+        Response model: CreateOverriddenQuoteResponseResult
+        """
+        return self._request(_CURRENT_CREATE_FINAL_OVERRIDE.bind(jobDisplayId=job_display_id), json=data)
+
+    def select_rate_quote(
+        self, job_display_id: int, *, data: SelectRateQuoteRequest | dict
+    ) -> SaveRateQuoteResponseResult:
+        """POST /job/{jobDisplayId}/freightproviders/ratequote.
+
+        Uses explicit 8_01 identifiers and validates the complete request.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/freight_providers.select_rate_quote.html
+        Request model: SelectRateQuoteRequest
+        Response model: SaveRateQuoteResponseResult
+        """
+        return self._request(_CURRENT_SELECT_RATE_QUOTE.bind(jobDisplayId=job_display_id), json=data)
+
+    def save_final_quote(
+        self, job_display_id: int, *, data: SaveFinalQuoteRequest | dict
+    ) -> JobModifiedDateServiceResponseResult:
+        """POST /job/{jobDisplayId}/freightproviders/final.
+
+        Uses explicit 8_01 identifiers and validates the complete request.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/freight_providers.save_final_quote.html
+        Request model: SaveFinalQuoteRequest
+        Response model: JobModifiedDateServiceResponseResult
+        """
+        return self._request(_CURRENT_SAVE_FINAL_QUOTE.bind(jobDisplayId=job_display_id), json=data)
+
+    def get_quotes(
+        self,
+        job_display_id: int,
+        *,
+        shipment_types: list[UUID] | None = None,
+        active: bool | None = None,
+        is_overridden: bool | None = None,
+        carrier_apis: list[Literal[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 14, 15, 20]] | None = None,
+        shipped: bool | None = None,
+    ) -> list[TransportationQuoteResult]:
+        """GET /job/{jobDisplayId}/freightproviders.
+
+        Uses explicit 8_01 identifiers and validates the complete request.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/freight_providers.get_quotes.html
+        Query params: GetQuotesParams
+        Response model: List[TransportationQuoteResult]
+        """
+        return self._request(
+            _LIST.bind(jobDisplayId=job_display_id),
+            params=dict(
+                shipment_types=shipment_types,
+                active=active,
+                is_overridden=is_overridden,
+                carrier_apis=carrier_apis,
+                shipped=shipped,
+            ),
         )

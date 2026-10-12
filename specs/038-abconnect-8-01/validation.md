@@ -1,69 +1,112 @@
-# Release preparation validation
+# 0.3.0 release validation
 
-Status: local release preparation, not a published or certified 0.3.0 release.
-Validated 2026-10-11 using Python 3.14.8 in an isolated temporary environment.
+Validated 2026-10-11. SDK baseline: v0.2.3 plus main's CLI token addition.
+Server source: `origin/release` at `23a8a00cd3883b4e4783de76f3e5e8c8b901660a`.
+Staging deployment commit is not exposed; source decisions were cross-checked
+against live responses. See [compatibility.md](compatibility.md) and the complete
+[Swagger operation audit](swagger-audit.json).
 
-## Passed
+## Deterministic and packaging checks
 
-- `ruff check .` and `git diff --check`.
-- Sphinx HTML build with `-E -b html -W --keep-going`, including external Python
-  and Pydantic reference inventories. Build completed without warnings.
-- Rendered HTML checks for home, quickstart, What's New, migration preview,
-  troubleshooting, DX goals, and release runbook: 1,026 local links/anchors
-  resolve; the home page links directly to all six guides.
-- Parsed all 13 Python snippets in home, quickstart, and troubleshooting;
-  checked corrected method signatures and the local validation-error example.
-- Built wheel and source distribution; both passed `twine check --strict`.
-  Verified the wheel includes the portal Swagger and corrected repository URL.
-  These are temporary validation artifacts carrying the unchanged 0.2.3 package
-  version, not release artifacts to publish or overwrite on PyPI.
-- ACPortal Swagger parses; all 1,960 internal references resolve. Saved bytes
-  match the staging download.
+- Python 3.14.8: **1,554 passed, 39 skipped, 71 deselected**; live tests are excluded
+  from the deterministic command. Fourteen expected legacy warnings remain visible.
+- Ruff, whitespace checks, route/stub inventory, generated-reference freshness,
+  and the unchanged gate baseline pass.
+- Strict Sphinx HTML build succeeds, including Python/Pydantic reference inventories.
+- Wheel and source distribution for **0.3.0** build and pass `twine check --strict`.
+- `uv lock --check --offline` passes with the corrected package version.
+- Fresh temporary environment installed the wheel outside the checkout, imported
+  typed workflows, ran CLI discovery, and made the quickstart's authenticated
+  read-only staging contact request. Total automated install-to-call time: **2.13 s**.
+  No credential or contact value is in this report. This is an automated smoke
+  check, not an independent first-time developer study.
+- CI now runs Python 3.11, 3.12, 3.13, and 3.14 before tag publication.
+  Hosted run URLs and final publication evidence will be recorded in the GitHub release.
 
-## Targeted regression result
+## Staging discovery and packing
 
-Command scope: `tests/test_example_params.py`,
-`tests/unit/test_schema_stubs.py`,
-`tests/unit/test_timeline_update_transport.py`, and
-`tests/unit/test_token_refresh.py`.
+All calls explicitly selected staging with git-ignored credentials. The user
+explicitly authorized all staging data as disposable. Production was not mutated.
+Company LIVE home grids supplied estimates (234564), inbound (1495), in-house
+(909), and outbound (765) candidates; these are observed counts, not fixture expectations.
 
-Result: **108 passed, 7 skipped, 5 xfailed, 1 failed**.
+On empty estimate **9165707**, inventory and handling-unit create/read/update/delete,
+inventory association changes, nested unit relationships, explicit nulls, and
+cleanup all passed. Only test-created records were removed. A subsequent empty
+`manage` request succeeded and preserved the empty collection.
 
-The failure is `test_schema_stub_registry_matches_current_route_gaps`: the
-refreshed Swagger differs from the existing route/stub registry. FR-007 requires
-reconciling this during 8_01 implementation. The test remains intact.
+Company inventory create/update/delete passed; deletion is soft deletion, so the
+new row remains visible as inactive. Existing rows remained unchanged. Nonempty
+material add, replacement, container assignment/clear, and deletion passed.
+Container assignment uses the material association row ID.
 
-## Pending release evidence
+Company pack-inventory, combined-inventories, hierarchy packing, handling-unit
+packing, and material suggestions succeeded. A negative container validation
+correctly reported that the container did not fit. Staging-only `fill` and
+`containerMaterial` metadata (observed null) are preserved as optional opaque
+objects; their non-null schema has not been inferred. Editable invoice and USAR
+returned typed JSON successfully.
 
-- The full CI matrix and API implementation/certification remain release gates.
-- No timed onboarding review or two-active-shipment live test was performed.
-- At validation time, no tag, package upload, GitHub release publication, or
-  hosted-doc deployment had been performed. This report describes local checks;
-  subsequent commit/push operations do not establish publication success.
-- The RTD project uses `AnnexBrands/annex-abconnect`. Synchronize reviewed commits
-  and release tags to that upstream and verify the actual build commit and version
-  URLs before release completion. PyPI upload runs only in the origin repository.
+## Rates, booking, conflicts, and shipment isolation
 
-## CI repair after the preparation commit
+- Job **13829427** has two active shipping records, **619100** and **619101**.
+  Explicit export reads and a write targeting 619100 left 619101 and the shipping
+  collection unchanged. The marked `SDK-8_01-ISOLATION-CHECK` export is retained;
+  no export-delete operation exists.
+- A new handling unit on **5483351** used the transportation `BOXES` container
+  (observed ID 25), distinct from packing `Stock Box` (ID 5). Its rate request
+  returned five UPS providers, no errors, and a billable-weight warning.
+- Persisted rate selection created new shipping records and preserved existing
+  quotes and shipping relationships. Legacy source rows with null CreatedDate
+  are projected with the current time by `JobShipmentPlanService`; only this
+  source-confirmed volatile field was excluded from quote comparisons.
+- A stale job modification timestamp was rejected with HTTP 400 and refresh
+  guidance with both `forceUpdate=false` and `true`; existing shippings were unchanged.
+- V2 validation returned `valid=true`; booking returned `success=true` for quote
+  **664ee852-119d-4870-7c2f-08df27f6a737**, shipping **1513059**.
+  Other shipping records remained unchanged. Negative validation of an already
+  shipped quote also returned its expected business error without mutations.
+- Normal cancellation failed on repeated attempts with `override_error=true`.
+  The server reported that the carrier must also be notified. The SDK retained
+  this business failure; HTTP success was not treated as cancellation success.
+- Explicit **forced deletion succeeded in ABConnect**, again preserving the other
+  shipments. **Carrier cancellation remains unconfirmed.** No carrier notification
+  was sent. Forced deletion is not evidence that UPS cancelled the booking.
 
-Both repositories failed on commit `7c8b5d4` with the same four checks: two stale
-progress-report assertions, the schema-stub inventory, and the parameter-routing
-regression gate. The latter found missing quote parameters on packing-slip,
-packaging-specification, and shipment-tracking GETs.
+Marked test units/quotes remain on disposable job 5483351: units 6330561–6330563,
+shipping records 1513057–1513059 (the last booking was force-removed). Earlier
+attempts stopped at isolation assertions before booking. These records are retained
+for inspection rather than silently erasing the validation trail.
 
-The repair keeps the gate baseline and schema equality check intact:
+## CI fixture-safety correction
 
-- Register 183 current-schema placeholders, retaining three removed-from-schema
-  placeholders without counting them as current coverage. They all still raise
-  `NotImplementedError`; no route is presented as implemented by adding a stub.
-- Add validated optional quote parameters using `quoteId` for the forms and
-  `QuoteId` for tracking, as confirmed in the 8_01 controllers and DTOs.
-- Regenerate endpoint docs and the progress report.
-- Remove the notebook generator's hard-coded checkout path so the existing
-  generator consistency test validates this repository on local machines too.
+The first hosted run caught contact data embedded in editable-form HTML. The
+capture sanitizer now redacts entire HTML/CSS leaf strings, preserving the real
+response structure and types. The fixture was re-proposed, reviewed, and approved.
+The safety gate now includes untracked, non-ignored files so local checks catch
+new fixtures before the first commit. A regression test verifies blob redaction
+and sanitizer idempotence. The exposed implementation revision was replaced on
+both branch heads before tagging; no package was published from that revision.
 
-Local deterministic suite after repair: **1,331 passed, 39 skipped, 68 deselected,
-5 xfailed**. New tests cover correct query aliases, omitted selectors, rejection
-before HTTP, legacy-placeholder preservation, and unique stub names/routes.
-The three new read-only live tests are opt-in and were not executed; quote-selected
-capture status remains pending in `FIXTURES.md`.
+## Fixture review and limits
+
+Twenty-seven new real response fixtures were sanitized, reviewed through
+`CertificationSession.propose_fixture`, explicitly approved, and validated with
+no extra fields. Pending raw/sanitized bundles remain git-ignored. Historical DTO
+fixtures remain for compatible imports and for the contracts now rejected before HTTP.
+The empty add-ons capture proves the empty-list shape only.
+
+Transport tests cover every retained unsupported Route and item helper, asserting
+zero HTTP calls. Canonical selectors, nested arrays, exact query aliases, optional
+nulls, concurrency data, and legacy-warning behavior have deterministic coverage.
+Not every endpoint or carrier is live-certified: payment exchange, final override,
+final quote edits, document uploads, and carrier-specific document/history variants
+have contract/source coverage rather than a claimed live mutation result. No financial
+transaction or outbound email was performed for this release.
+
+## Publication
+
+Local verification does not establish hosted publication. The release process
+must verify both PyPI and Read the Docs against the final tag. The GitHub release
+records the exact commit, CI run, artifact names, clean PyPI installation, RTD build,
+and version/stable URLs after those checks complete.

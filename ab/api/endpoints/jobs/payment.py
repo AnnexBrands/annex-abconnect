@@ -12,6 +12,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ab.api.base import BaseEndpoint
+from ab.api.route import Route
+
 if TYPE_CHECKING:
     from ab.api.models.payments import (
         ACHCreditTransferRequest,
@@ -26,39 +29,111 @@ if TYPE_CHECKING:
     )
     from ab.api.models.shared import ServiceBaseResponse
 
-from ab.api.base import BaseEndpoint
-from ab.api.route import Route
 
-_GET = Route("GET", "/job/{jobDisplayId}/payment", params_model="PaymentParams", response_model="PaymentInfo")
-_GET_CREATE = Route("GET", "/job/{jobDisplayId}/payment/create", response_model="PaymentInfo")
-_GET_SOURCES = Route("GET", "/job/{jobDisplayId}/payment/sources", response_model="List[PaymentSource]")
+_GET = Route(
+    "GET",
+    "/job/{jobDisplayId}/payment",
+    params_model="PaymentParams",
+    response_model="PaymentInfo",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
+)
+_GET_CREATE = Route(
+    "GET",
+    "/job/{jobDisplayId}/payment/create",
+    response_model="PaymentInfo",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
+)
+_GET_SOURCES = Route(
+    "GET",
+    "/job/{jobDisplayId}/payment/sources",
+    response_model="List[PaymentSource]",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
+)
 _PAY_BY_SOURCE = Route(
-    "POST", "/job/{jobDisplayId}/payment/bysource",
-    request_model="PayBySourceRequest", response_model="ServiceBaseResponse",
+    "POST",
+    "/job/{jobDisplayId}/payment/bysource",
+    request_model="PayBySourceRequest",
+    response_model="ServiceBaseResponse",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
 )
 _ACH_SESSION = Route(
-    "POST", "/job/{jobDisplayId}/payment/ACHPaymentSession",
-    request_model="ACHSessionRequest", response_model="ACHSessionResponse",
+    "POST",
+    "/job/{jobDisplayId}/payment/ACHPaymentSession",
+    request_model="ACHSessionRequest",
+    response_model="ACHSessionResponse",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
 )
 _ACH_CREDIT_TRANSFER = Route(
-    "POST", "/job/{jobDisplayId}/payment/ACHCreditTransfer",
-    request_model="ACHCreditTransferRequest", response_model="ServiceBaseResponse",
+    "POST",
+    "/job/{jobDisplayId}/payment/ACHCreditTransfer",
+    request_model="ACHCreditTransferRequest",
+    response_model="ServiceBaseResponse",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
 )
 _ATTACH_BANK = Route(
-    "POST", "/job/{jobDisplayId}/payment/attachCustomerBank",
-    request_model="AttachBankRequest", response_model="ServiceBaseResponse",
+    "POST",
+    "/job/{jobDisplayId}/payment/attachCustomerBank",
+    request_model="AttachBankRequest",
+    response_model="ServiceBaseResponse",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
 )
 _VERIFY_ACH = Route(
-    "POST", "/job/{jobDisplayId}/payment/verifyJobACHSource",
-    request_model="VerifyACHRequest", response_model="ServiceBaseResponse",
+    "POST",
+    "/job/{jobDisplayId}/payment/verifyJobACHSource",
+    request_model="VerifyACHRequest",
+    response_model="ServiceBaseResponse",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
 )
 _CANCEL_ACH = Route(
-    "POST", "/job/{jobDisplayId}/payment/cancelJobACHVerification",
+    "POST",
+    "/job/{jobDisplayId}/payment/cancelJobACHVerification",
     response_model="ServiceBaseResponse",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
 )
 _BANK_SOURCE = Route(
-    "POST", "/job/{jobDisplayId}/payment/banksource",
-    request_model="BankSourceRequest", response_model="ServiceBaseResponse",
+    "POST",
+    "/job/{jobDisplayId}/payment/banksource",
+    request_model="BankSourceRequest",
+    response_model="ServiceBaseResponse",
+    unsupported_reason=(
+        '8_01 moved payments to the payment application. Use jobs.payment.exchange for the '
+        'payment-app entry URL; the SDK cannot translate this removed financial operation.'
+    ),
+)
+
+
+_EXCHANGE = Route(
+    "GET",
+    "/job/{jobDisplayId}/payment/jobSubKey/{jobSubKey}/exchange",
+    params_model="PaymentExchangeParams",
+    response_model="str",
 )
 
 
@@ -183,3 +258,13 @@ class JobPaymentEndpoint(BaseEndpoint):
         Response model: ServiceBaseResponse
         """
         return self._request(_BANK_SOURCE.bind(jobDisplayId=job_display_id), json=data)
+
+    def exchange(self, job_display_id: int, job_sub_key: str, *, origin: str | None = None) -> str:
+        """Get the payment application entry URL; treat this result as sensitive.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/payment.exchange.html
+        Query params: PaymentExchangeParams
+        """
+        return self._request(
+            _EXCHANGE.bind(jobDisplayId=job_display_id, jobSubKey=job_sub_key), params=dict(origin=origin)
+        )

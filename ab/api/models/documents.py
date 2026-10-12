@@ -16,6 +16,10 @@ class DocumentListParams(RequestModel):
 
     job_display_id: Optional[str] = Field(None, alias="jobDisplayId", description="Job display identifier")
 
+    rfq_id: Optional[int] = Field(None, alias="rfqId", description="RFQ identifier.")
+    inventory_item_id: Optional[int] = Field(None, alias="inventoryItemId", ge=1, description="Inventory ID.")
+    handling_unit_id: Optional[int] = Field(None, alias="handlingUnitId", ge=1, description="Handling unit ID.")
+
 
 class Document(ResponseModel, IdentifiedModel):
     """Document record — GET /documents/list and embedded in Job response.
@@ -80,6 +84,13 @@ class DocumentUpdateRequest(RequestModel):
         description="Associated job item UUIDs.",
     )
 
+    inventory_item_ids: Optional[List[int]] = Field(
+        None, alias="JobInventoryItems", description="Integer inventory identifiers to associate."
+    )
+    handling_unit_ids: Optional[List[int]] = Field(
+        None, alias="JobHandlingUnits", description="Integer handling-unit identifiers to associate."
+    )
+
 
 class DocumentUploadRequest(RequestModel):
     """Multipart form fields for ``POST /documents``.
@@ -97,32 +108,46 @@ class DocumentUploadRequest(RequestModel):
     """
 
     job_display_id: str = Field(
-        ..., alias="JobDisplayId",
+        ...,
+        alias="JobDisplayId",
         description="Job display ID the document belongs to (e.g. '2000000').",
     )
     document_type: Union[DocumentType, int] = Field(
-        ..., alias="DocumentType",
+        ...,
+        alias="DocumentType",
         description="Document type ID; see DocumentType (6 = Item Photo).",
     )
     document_type_description: Optional[str] = Field(
-        None, alias="DocumentTypeDescription",
+        None,
+        alias="DocumentTypeDescription",
         description="Human-readable label for the document type.",
     )
     shared: int = Field(
-        0, alias="Shared",
+        0,
+        alias="Shared",
         description="Sharing bitmask (0 = private); controls portal visibility.",
     )
     tags: Optional[List[str]] = Field(
-        None, alias="Tags",
+        None,
+        alias="Tags",
         description="Free-form tags to attach to the document.",
     )
     job_items: Optional[List[str]] = Field(
-        None, alias="JobItems",
+        None,
+        alias="JobItems",
         description="Item UUID(s) to associate the document with (required for item photos).",
     )
     rfq_id: Optional[int] = Field(
-        None, alias="RfqId",
+        None,
+        alias="RfqId",
         description="RFQ ID to associate the document with, if applicable.",
+    )
+
+    inventory_item_ids: Optional[List[int]] = Field(
+        None, alias="JobInventoryItems", description="Integer inventory identifiers to associate."
+    )
+    handling_unit_ids: Optional[List[int]] = Field(
+        None, alias="JobHandlingUnits", description="Integer handling-unit identifiers to associate."
     )
 
 
@@ -139,12 +164,14 @@ class UploadedFile(ResponseModel):
     file_name: Optional[str] = Field(None, alias="fileName", description="Stored file name.")
     file_size: Optional[int] = Field(None, alias="fileSize", description="File size in bytes.")
     document_type: Optional[str] = Field(
-        None, alias="documentType",
+        None,
+        alias="documentType",
         description="Document type name as echoed by the server.",
     )
     item_id: Optional[int] = Field(None, alias="itemId", description="Associated job item ID, if any.")
     thumbnail_url: Optional[str] = Field(
-        None, alias="thumbnailUrl",
+        None,
+        alias="thumbnailUrl",
         description="URL to the generated thumbnail, if any.",
     )
 
@@ -253,11 +280,13 @@ class DocumentUploadResponse(ResponseModel):
         None, alias="documentDetails", description="Document detail payload returned by the server."
     )
     uploaded_files: Optional[List[UploadedFile]] = Field(
-        None, alias="uploadedFiles",
+        None,
+        alias="uploadedFiles",
         description="Per-file results for the upload.",
     )
     id: Optional[int] = Field(None, description="Document ID when a single file was uploaded.")
     file_name: Optional[str] = Field(
-        None, alias="fileName",
+        None,
+        alias="fileName",
         description="Stored file name when a single file was uploaded.",
     )

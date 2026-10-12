@@ -34,6 +34,11 @@ _SECTION_RE = re.compile(r"^## (ACPortal|Catalog|ABC) Endpoints", re.IGNORECASE)
 #    create-vs-update distinction even though the canonical Route name is
 #    the unified class.
 _HELPER_REQUEST_FIXTURES: set[str] = {
+    # Retained legacy DTOs; the 8_01 endpoints reject these selectors before HTTP.
+    "FreightProvidersParams", "BillOfLadingParams", "ShipmentDocumentParams",
+    # Retained legacy DTOs; the 8_01 endpoints reject these selectors before HTTP.
+    "FreightProvidersParams", "BillOfLadingParams", "ShipmentDocumentParams",
+    "ItemUpdateRequest", "DashboardCompanyRequest", "ParcelItemCreateRequest",
     # (1) polymorphic timeline tasks
     "InTheFieldTaskRequest",
     "SimpleTaskRequest",
@@ -101,7 +106,7 @@ def _extract_from_gate_table(content: str) -> dict[str, set[str]]:
         req_model = cells[3]
         resp_model = cells[4]
         g2 = cells[6]
-        g6 = cells[10]
+        notes = cells[12] if len(cells) > 12 else ""
 
         # Track response models
         if resp_model and resp_model != "—":
@@ -117,7 +122,7 @@ def _extract_from_gate_table(content: str) -> dict[str, set[str]]:
         if req_model and req_model != "—":
             clean_req = _strip_list_wrapper(req_model)
             req_all.add(clean_req)
-            if g6 == "PASS":
+            if "request fixture captured" in notes.lower():
                 req_captured.add(clean_req)
 
     return {
@@ -192,8 +197,9 @@ class TestFixtureCoverage:
             tracked_resp = captured | pending | needs_data
             tracked_req = set()
 
+        historical_responses = {"FormsShipmentPlan", "ShipmentInfo", "PricedFreightProvider"}
         untracked_resp = {
-            f for f in resp_files - tracked_resp
+            f for f in resp_files - tracked_resp - historical_responses
             if not _is_variant_tracked(f, tracked_resp)
         }
         untracked_req = {

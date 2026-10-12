@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1001,
+    "materialId": 4004,
+    "materialName": null,
+    "materialDescription": null,
+    "quantityPlanned": 2.0,
+    "unitCost": 49.99,
+    "addedByAutoPacker": false,
+    "wasteQuantity": 0.0
+  }
+]

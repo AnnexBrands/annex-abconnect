@@ -15,14 +15,22 @@ class BillOfLadingParams(RequestModel):
 
     shipment_plan_id: Optional[str] = Field(None, alias="shipmentPlanId", description="Shipment plan identifier")
     provider_option_index: Optional[int] = Field(
-        None, alias="providerOptionIndex", description="Provider option index"
+        None, alias="providerOptionIndex", description="Legacy provider index."
     )
+
+
+class ShipmentBillOfLadingParams(RequestModel):
+    """Query parameters for GET /job/{jobDisplayId}/form/bill-of-lading."""
+
+    shipment_plan_id: Optional[str] = Field(None, alias="shipmentPlanId", description="Shipment plan identifier")
+    quote_id: Optional[UUID] = Field(None, alias="quoteId", description="Transportation quote UUID.")
 
 
 class OperationsFormParams(RequestModel):
     """Query parameters for GET /job/{jobDisplayId}/form/operations."""
 
     ops_type: Optional[str] = Field(None, alias="type", description="Operations form type")
+    quote_id: Optional[UUID] = Field(None, alias="quoteId", description="Transportation quote UUID.")
 
 
 class FormTypeParams(RequestModel):
@@ -69,7 +77,5 @@ class FormsShipmentPlan(ResponseModel):
     transport_type: Optional[str] = Field(
         None, alias="transportType", description="Transport type (PickUp, Delivery, House)"
     )
-    provider_company_name: Optional[str] = Field(
-        None, alias="providerCompanyName", description="Provider company name"
-    )
+    provider_company_name: Optional[str] = Field(None, alias="providerCompanyName", description="Provider company name")
     option_index: Optional[int] = Field(None, alias="optionIndex", description="Option index")

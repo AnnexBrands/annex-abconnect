@@ -6,13 +6,13 @@
 **Python**
 
 ```python
-api.documents.upload(*, job_display_id: str, file_path: FileSource, document_type: DocumentType | int, document_type_description: str | None = None, shared: int = 0, tags: list[str] | None = None, job_items: list[str] | None = None, rfq_id: int | None = None, filename: str | None = None) -> DocumentUploadResponse
+api.documents.upload(*, job_display_id: str, file_path: FileSource, document_type: DocumentType | int, document_type_description: str | None = None, shared: int = 0, tags: list[str] | None = None, job_items: list[str] | None = None, inventory_item_ids: list[int] | None = None, handling_unit_ids: list[int] | None = None, rfq_id: int | None = None, filename: str | None = None) -> DocumentUploadResponse
 ```
 
 **CLI**
 
 ```bash
-ab documents upload [--job-display-id ...] [--file-path ...] [--document-type ...] [--document-type-description ...] [--shared ...] [--tags ...] [--job-items ...] [--rfq-id ...] [--filename ...]
+ab documents upload [--job-display-id ...] [--file-path ...] [--document-type ...] [--document-type-description ...] [--shared ...] [--tags ...] [--job-items ...] [--inventory-item-ids ...] [--handling-unit-ids ...] [--rfq-id ...] [--filename ...]
 ```
 
 POST /documents — upload a single document of any type (multipart).
@@ -31,7 +31,7 @@ Args:
     document_type_description: Optional human-readable type label.
     shared: Sharing bitmask (0 = private).
     tags: Optional tags to attach.
-    job_items: Item UUID(s) to associate (used for item photos).
+    job_items: Integer inventory ID(s) to associate (used for item photos).
     rfq_id: Optional RFQ ID to associate.
     filename: Override the multipart filename (defaults to the file's
         name; **required** for bytes / file-like sources).
@@ -50,6 +50,8 @@ Returns:
 | `Tags` | `Optional[list[str]]` | no | Free-form tags to attach to the document. |
 | `JobItems` | `Optional[list[str]]` | no | Item UUID(s) to associate the document with (required for item photos). |
 | `RfqId` | `Optional[int]` | no | RFQ ID to associate the document with, if applicable. |
+| `JobInventoryItems` | `Optional[list[int]]` | no | Integer inventory identifiers to associate. |
+| `JobHandlingUnits` | `Optional[list[int]]` | no | Integer handling-unit identifiers to associate. |
 
 ## Response
 

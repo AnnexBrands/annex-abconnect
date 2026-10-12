@@ -1,0 +1,43 @@
+{
+  "success": true,
+  "errorMessage": null,
+  "data": [
+    {
+      "id": 0,
+      "jobId": "00000000-0000-0000-0000-000000000000",
+      "quantity": 1,
+      "isActive": true,
+      "sequenceNo": 0,
+      "length": 48.0,
+      "width": 40.0,
+      "height": 14.0,
+      "weight": 40.0,
+      "containerTypeId": 32,
+      "containerName": null,
+      "fillId": null,
+      "fillRate": null,
+      "inchesToAdd": null,
+      "containerThickness": null,
+      "freightClassId": "883125af-293c-a216-b0db-4f454d6c6f1b",
+      "nmfcItemNo": "100240-1",
+      "laborMinutes": null,
+      "declaredValue": 0.0,
+      "documentExists": false,
+      "name": "Household Goods, RVNX 10 cents per lb.",
+      "hasCustomName": false,
+      "inventoryItems": [],
+      "contentHandlingUnits": [
+        {
+          "id": 1,
+          "count": 1
+        }
+      ],
+      "materials": [],
+      "containerHandlingUnitMaterialId": null,
+      "containerHandlingUnitMaterial": null,
+      "materialTotalCost": null,
+      "isUsedInShipment": null,
+      "cubicFeet": null
+    }
+  ]
+}

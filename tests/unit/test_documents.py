@@ -68,7 +68,7 @@ def test_upload_builds_multipart_form(documents, client, photo):
 def test_upload_item_photo_sets_type_and_items(documents, client, photo):
     documents.upload_item_photo(
         job_display_id="2000000",
-        item_ids="ITEM-UUID-1",
+        item_ids=101,
         file_path=photo,
     )
     _args, kwargs = _last_call(client)
@@ -76,17 +76,17 @@ def test_upload_item_photo_sets_type_and_items(documents, client, photo):
     assert data["DocumentType"] == int(DocumentType.ITEM_PHOTO) == 6
     assert data["DocumentTypeDescription"] == "Item Photo"
     # A single id is normalised to a one-element JobItems list.
-    assert data["JobItems"] == ["ITEM-UUID-1"]
+    assert data["JobInventoryItems"] == [101]
 
 
 def test_upload_item_photo_accepts_id_list(documents, client, photo):
     documents.upload_item_photo(
         job_display_id="2000000",
-        item_ids=["A", "B"],
+        item_ids=[101, 102],
         file_path=photo,
     )
     _args, kwargs = _last_call(client)
-    assert kwargs["data"]["JobItems"] == ["A", "B"]
+    assert kwargs["data"]["JobInventoryItems"] == [101, 102]
 
 
 def test_upload_item_photos_returns_one_result_per_file(documents, client, tmp_path):
@@ -98,7 +98,7 @@ def test_upload_item_photos_returns_one_result_per_file(documents, client, tmp_p
 
     results = documents.upload_item_photos(
         job_display_id="2000000",
-        item_ids="ITEM-UUID-1",
+        item_ids=101,
         file_paths=files,
     )
     assert isinstance(results, list)
@@ -111,7 +111,7 @@ def test_upload_item_photos_single_file_still_returns_list(documents, client, ph
     """Regression vs the legacy SDK's variable return — always a list."""
     results = documents.upload_item_photos(
         job_display_id="2000000",
-        item_ids="ITEM-UUID-1",
+        item_ids=101,
         file_paths=[photo],
     )
     assert isinstance(results, list)
@@ -128,3 +128,25 @@ def test_upload_item_photo_rejects_empty_item_ids(documents, client, photo, bad_
             file_path=photo,
         )
     client.request.assert_not_called()
+
+
+def test_legacy_document_uuid_filter_cannot_be_silently_ignored(documents, client):
+    from ab.exceptions import UnsupportedOperationError
+
+    with pytest.raises(UnsupportedOperationError):
+        documents.list(123, item_id="legacy-uuid")
+    with pytest.raises(UnsupportedOperationError):
+        documents.upload_item_photo(
+            job_display_id="123", item_ids="legacy-uuid", file_path=b"photo", filename="test.jpg"
+        )
+    client.request.assert_not_called()
+
+
+def test_inventory_and_handling_unit_document_filters(documents, client):
+    client.request.return_value = []
+    documents.list(123, inventory_item_id=4, handling_unit_id=5)
+    assert client.request.call_args.kwargs["params"] == {
+        "jobDisplayId": "123",
+        "inventoryItemId": 4,
+        "handlingUnitId": 5,
+    }

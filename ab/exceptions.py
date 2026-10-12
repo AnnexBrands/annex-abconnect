@@ -31,3 +31,6 @@ class ValidationError(ABConnectError):
     """Raised when data validation fails outside of Pydantic model validation."""
 
 
+
+class UnsupportedOperationError(ABConnectError):
+    """The server removed this contract and no lossless adapter exists."""

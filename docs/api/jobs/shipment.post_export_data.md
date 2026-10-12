@@ -18,17 +18,17 @@ ab jobs shipment post_export_data <job_display_id> [--data ...]
 ``POST /job/{jobDisplayId}/shipment/exportdata``
 
 The body is the portal's flat ``InternationalParams`` shape —
-:class:`ShipmentExportRequest`, ``customsValue`` required. GET returns
-a ``jobItemId`` on each commodity that the POST schema forbids
-(``additionalProperties: false``), so it is stripped here to keep the
-GET → edit → POST round-trip legal.
+:class:`ShipmentExportRequest`, ``customsValue`` required. In 8_01,
+commodity ``jobItemId`` is accepted and retained when saving. A single
+active shipping record is required for this legacy job-level write.
+Use :meth:`save_shipping_export_data` for explicit shipment selection.
 
 ## Request body — `ShipmentExportRequest`
 
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `customsValue` | `float` | yes | Customs declared value (portal-required) |
-| `commodities` | `Optional[list[dict]]` | no | Commodity lines (GET adds a per-line jobItemId the POST schema forbids; the endpoint strips it) |
+| `commodities` | `Optional[list[dict]]` | no | Commodity lines; 8_01 accepts and preserves the per-line jobItemId |
 | `packingInfo` | `Optional[list]` | no | Packing information entries |
 | `invoiceNumber` | `Optional[str]` | no | Commercial invoice number |
 | `purchaseOrderNumber` | `Optional[str]` | no | Purchase order number |

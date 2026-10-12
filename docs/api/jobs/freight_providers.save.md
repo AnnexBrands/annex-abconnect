@@ -3,6 +3,9 @@
 
 > `POST /job/{jobDisplayId}/freightproviders` — ACPortal
 
+**Unsupported on 8_01:** 8_01 removed provider-list writes and option indexes. Use create_final_override or save_final_quote with explicit shipping/quote identifiers.
+This retained entry point raises `UnsupportedOperationError` before HTTP.
+
 **Python**
 
 ```python
@@ -17,9 +20,8 @@ ab jobs freight_providers save <job_display_id> [--data ...]
 
 ``POST /job/{jobDisplayId}/freightproviders``
 
-Request model: :class:`ShipmentPlanProvider`. API 7.11 binds this
-route as ``List[ShipmentPlanProvider]``; a single row is accepted for
-compatibility and wrapped into a one-item array before dispatch.
+Retained legacy provider-list write; raises UnsupportedOperationError
+before HTTP on 8_01. Use explicit final/override/rate quote methods.
 
 ## Request body — `ShipmentPlanProvider`
 

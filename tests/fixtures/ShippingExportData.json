@@ -1,0 +1,17 @@
+{
+  "commodities": [],
+  "packingInfo": [],
+  "customsValue": 15.0,
+  "invoiceNumber": "SDK-8_01-ISOLATION-CHECK",
+  "purchaseOrderNumber": null,
+  "termsOfSale": null,
+  "exporterTaxId": null,
+  "consigneeTaxId": null,
+  "totalCosts": null,
+  "soldTo": null,
+  "uspsSpecific": null,
+  "fedExSpecific": null,
+  "upsSpecific": null,
+  "valuesSpecified": null,
+  "soldToContactDetails": null
+}

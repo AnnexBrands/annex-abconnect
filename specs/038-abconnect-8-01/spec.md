@@ -1,6 +1,6 @@
 # Release specification: ABConnect 8_01 core-app support
 
-**Status**: Implemented and locally validated; hosted release verification follows the tag
+**Status**: Released; PyPI and Read the Docs verified at v0.3.0
 **Created**: 2026-10-11
 **Target SDK release**: 0.3.0
 **Target server release**: ABConnect 8_01 (8.01)
@@ -165,7 +165,7 @@ methods and unimplemented schema placeholders remain distinct in progress report
 - [x] Complete staging checks and document carrier cancellation and coverage limitations.
 - [x] Finalize 0.3.0 package metadata and release notes from implemented behavior.
 - [x] Complete automated installation/navigation review and replace the migration preview; retain human onboarding study as an ongoing DX measure.
-- [ ] Publish and verify the exact release on PyPI and Read the Docs, including stable routing.
+- [x] Publish and verify the exact release on PyPI and Read the Docs, including stable routing.
 
 ## Release record
 

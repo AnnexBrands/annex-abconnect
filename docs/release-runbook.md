@@ -45,9 +45,10 @@ git push origin main
 git push upstream main
 ```
 
-Retain `main` as RTD's default branch and verify the GitHub integration on the
-AnnexBrands repository. The organization repository was initially empty when
-this setup was inspected; verify its refs rather than assuming synchronization.
+Retain `main` as RTD's default branch and `stable` as its default documentation
+version. The organization repository has a manually configured push webhook to
+the existing ab-sdk integration. It returned HTTP 200 during 0.3.0 publication;
+verify its current delivery status for each release.
 
 Verify a webhook delivery and a successful `latest` build against the intended
 commit. Confirm the relevant release versions can be activated. Repository

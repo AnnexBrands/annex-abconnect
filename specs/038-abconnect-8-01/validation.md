@@ -104,9 +104,27 @@ final quote edits, document uploads, and carrier-specific document/history varia
 have contract/source coverage rather than a claimed live mutation result. No financial
 transaction or outbound email was performed for this release.
 
-## Publication
+## Publication — verified complete
 
-Local verification does not establish hosted publication. The release process
-must verify both PyPI and Read the Docs against the final tag. The GitHub release
-records the exact commit, CI run, artifact names, clean PyPI installation, RTD build,
-and version/stable URLs after those checks complete.
+- Release/tag **v0.3.0**, commit `86ba0e943fc5c46130c8af3b9cfa07c1c7793a12`,
+  mirrored to both repositories.
+- [GitHub release and full evidence](https://github.com/bmonson-annex/annex-abconnect/releases/tag/v0.3.0).
+- [Tag CI and PyPI publication](https://github.com/bmonson-annex/annex-abconnect/actions/runs/38193144260)
+  succeeded after Python 3.11–3.14 validation.
+- [PyPI 0.3.0](https://pypi.org/project/annex-abconnect/0.3.0/) contains the wheel
+  and source distribution. Fresh PyPI installation outside the checkout verified
+  version, imports, CLI, and an authenticated staging read in **2.38 seconds**.
+- Wheel SHA-256: `b44e2ecd93eaff71be39dd145953dbb4bb739633dcd58b38a4b1e389c92a9fb0`.
+- Source SHA-256: `a25ceb19ba20f717e6f4506eb4b367d584eb815e964b3f63466218e3d0a34b20`.
+- RTD [v0.3.0 build 35081770](https://app.readthedocs.org/projects/ab-sdk/builds/35081770/)
+  and [stable build 35081758](https://app.readthedocs.org/projects/ab-sdk/builds/35081758/)
+  succeeded at the release commit. Latest also built successfully at that commit.
+- Ten key [versioned docs](https://ab-sdk.readthedocs.io/en/v0.3.0/) pages verified,
+  including onboarding, migration, packing, rates, booking, and typed models.
+  The [root URL](https://ab-sdk.readthedocs.io/) redirects to `/en/stable/`.
+- The upstream repository's Read the Docs push webhook was repaired and verified
+  with HTTP 200. Exact version activation and stable default routing are configured.
+
+The earlier fixture incident's branch history is corrected. GitHub cache purging
+is a separate support operation; replacing a branch head does not establish that
+unreferenced commit data has been purged from GitHub storage.

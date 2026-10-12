@@ -28,6 +28,6 @@ The user authorized all staging data as disposable. See [validation.md](validati
 for observed results, retained test records, and the distinction between failed
 normal carrier cancellation and successful forced ABConnect removal.
 
-- [ ] Hosted release closure: Python CI matrix, PyPI upload/fresh install, mirrored
-  tag, exact Read the Docs build, and stable/root routing. Record completion in the
-  GitHub release after deployment verification.
+- [x] Hosted release closure: Python CI matrix, PyPI upload/fresh install, mirrored
+  tag, exact Read the Docs build, and stable/root routing. Verified; see the
+  GitHub release and validation.md for URLs and exact commits.

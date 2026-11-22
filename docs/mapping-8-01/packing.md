@@ -163,6 +163,12 @@ Fields with no legacy source that the model also accepts and tools can leave uns
 `fill_id`, `fill_rate`, `inches_to_add`, `container_thickness`, `labor_minutes`,
 `container_handling_unit_material_id`, `materials`, `content_handling_units`.
 
+**Generated names on an existing unit.** The server generates a name only when it creates a
+unit. Sending `name: null, has_custom_name: false` for a unit that already exists clears its
+generated name and nothing regenerates it (observed by tools on staging job 5576698 [S]). To
+keep a reused unit's name, leave `name` and `has_custom_name` out of that unit (the SDK then
+fills them from the current unit) or send the current name back.
+
 ### 2.3 How "replace all" works in `manage` — read this before coding
 
 `POST /job/{id}/handlingUnit/manage` [C `HandlingUnitService.ManageHandlingUnits` and its helpers

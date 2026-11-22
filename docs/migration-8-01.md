@@ -1,6 +1,6 @@
 # Migrating to ABConnect 8_01
 
-SDK **0.3.0** targets ABConnect **8_01**. Inventory describes the goods, handling
+SDK **0.3.x** targets ABConnect **8_01**. Inventory describes the goods, handling
 units describe their packing, and each job can have multiple active shipments.
 The examples below use provisioned staging credentials and operator-selected IDs.
 
@@ -32,12 +32,20 @@ unit = api.jobs.handling_units.create(
     quantity=1,
     is_active=True,
     sequence_no=0,
+    is_locked=False,
+    is_container_changed=False,
+    is_fill_changed=False,
     inventory_items=[{
         "id": int(os.environ["AB_TEST_INVENTORY_ITEM_ID"]),
         "count": 1,
     }],
 )
 ```
+
+From 0.3.1, `is_locked`, `is_container_changed` and `is_fill_changed` are required
+on `create`. The server stores them as plain booleans and writes `false` for any
+that a request leaves out, which would unlock a unit or discard a user's container
+or fill choice.
 
 Use `add_inventory`, `update_inventory`, and `delete_inventory` to change one
 content relationship. The corresponding `*_content_unit` methods manage nested
@@ -49,7 +57,27 @@ and retain the current arrangement before using those operations.
 Nullable write fields preserve explicit `None`, allowing a relationship or value
 to be cleared. Omitted fields stay omitted in the JSON body. A server PUT can
 still replace fields: consult its contract and include the values to retain.
-The SDK does not perform a hidden read/merge/write or force a concurrency override.
+The SDK never forces a concurrency override.
+
+One exception to "no hidden read", from 0.3.1: the server overwrites a handling
+unit with whatever `handling_units.update` or `manage` sends, so an omitted scalar
+becomes null, an omitted flag `false`, and an omitted inventory, nested-unit or
+material list empty. For an existing unit the SDK therefore reads the job's units
+(one `get_all`) and sends back every field you left out. A `container_type_id` or
+`fill_id` different from the stored one turns `is_container_changed` /
+`is_fill_changed` on. Values you pass always win; pass `None` or `[]` to clear.
+
+`manage` is the **whole job's** arrangement. The server deletes every unit the
+list leaves out, with its nesting, inventory links, materials, documents and
+shipping contents. The SDK refuses such a call unless you pass
+`delete_omitted=True`. Use a positive `id` for an existing unit and distinct
+negative IDs for new ones; new units must name the three flags and
+`inventory_items`.
+
+Migrating option-index quotes, final overrides and booking, or parcel and freight
+item writes? See the field-level mappings in
+[quotes and booking](mapping-8-01/quotes-booking.md) and
+[packing](mapping-8-01/packing.md).
 
 ## Select the intended shipping record
 

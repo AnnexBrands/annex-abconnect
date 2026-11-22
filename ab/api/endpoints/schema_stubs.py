@@ -421,6 +421,7 @@ SCHEMA_STUBS: dict[str, tuple[SchemaStubSpec, ...]] = {
     "webhooks": (
         SchemaStubSpec("post_webhooks_stripe_handle", "POST", "/webhooks/stripe/handle", "acportal"),
         SchemaStubSpec("post_webhooks_stripe_connect_handle", "POST", "/webhooks/stripe/connect/handle", "acportal"),
+        SchemaStubSpec("post_webhooks_btx_tracking", "POST", "/webhooks/btx/tracking", "acportal"),
         SchemaStubSpec(
             "post_webhooks_twilio_sms_status_callback",
             "POST",

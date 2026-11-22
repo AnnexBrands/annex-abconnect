@@ -4,6 +4,47 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
+## [0.3.1] - Unreleased
+
+Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
+(server `release` through 2026-11-20; contract taken from the staging Swagger).
+
+### Fixed
+
+- `jobs.handling_units.update` and `manage` no longer wipe what the caller did not
+  mention. The server overwrites a unit with the request: an omitted scalar becomes
+  null, an omitted `isLocked` / `isContainerChanged` / `isFillChanged` becomes
+  `false`, and on `manage` an omitted inventory, nested-unit or material list
+  becomes empty. For an existing unit the SDK now reads its current state (one
+  `get_all`) and sends back every field the caller left out. Pass `None` or `[]`
+  to clear a field deliberately.
+
+### Changed
+
+- **Breaking:** `is_locked`, `is_container_changed` and `is_fill_changed` are
+  required on `jobs.handling_units.create` and on new units in `manage`. On an
+  existing unit they keep their stored value, and a changed `container_type_id` /
+  `fill_id` turns the matching flag on.
+- **Breaking:** `manage` requires `handling_units`, an `id` on every unit
+  (positive: existing; negative: new; zero is rejected), and `inventory_items` on
+  new units.
+- **Breaking:** `manage` replaces the whole job's arrangement, and the server
+  deletes every unit the list leaves out. The SDK now refuses such a call before
+  any write unless `delete_omitted=True` is passed, and rejects positive IDs that
+  are not units of the job.
+
+### Added
+
+- Handling-unit responses expose `is_locked`, `is_container_changed`, `is_fill_changed`.
+- Pack-inventory requests accept `requested_container_type_id`,
+  `requested_container_material_id` and `requested_fill_id`; suggestions report
+  `container_validation_message`; handling-unit materials report `fill_rate`.
+- `jobs.freight_providers.save_final_quote` accepts `handling_units`, which makes
+  the quote's shipping take over exactly those units.
+- Field-level migration mappings from the 7_11 contracts:
+  [quotes and booking](docs/mapping-8-01/quotes-booking.md) and
+  [packing](docs/mapping-8-01/packing.md).
+
 ## [0.3.0] - 2026-10-11
 
 Targets ABConnect 8_01. See the [migration guide](docs/migration-8-01.md).

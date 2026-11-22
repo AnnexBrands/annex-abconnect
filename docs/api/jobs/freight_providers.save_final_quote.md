@@ -26,6 +26,7 @@ Uses explicit 8_01 identifiers and validates the complete request.
 | `jobModifiedDate` | `Optional[datetime]` | no | Job modified date. |
 | `forceUpdate` | `Optional[bool]` | no | Force update. |
 | `quote` | `Optional[TransportationQuoteInput]` | no | Quote. |
+| `handlingUnits` | `Optional[list[JobTransportationHandlingUnitInput]]` | no | Handling units the quote covers. When given, the quote's shipping takes over exactly these units and quantities; omit to leave the shipping's contents unchanged. |
 
 ## Response
 

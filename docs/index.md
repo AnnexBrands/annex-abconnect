@@ -13,6 +13,8 @@ to build your integration. Requires Python 3.11 or newer.
 quickstart
 whats-new
 migration-8-01
+mapping-8-01/quotes-booking
+mapping-8-01/packing
 troubleshooting
 ```
 

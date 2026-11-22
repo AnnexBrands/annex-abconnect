@@ -53,6 +53,9 @@ Returns a list of `List[JobHandlingUnitDetails]`.
 | `materialTotalCost` | `Optional[float]` | no | Material total cost. |
 | `isUsedInShipment` | `Optional[bool]` | no | Is used in shipment. |
 | `cubicFeet` | `Optional[float]` | no | Cubic feet. |
+| `isContainerChanged` | `Optional[bool]` | no | Whether the container was chosen by a user rather than by automatic packing. |
+| `isFillChanged` | `Optional[bool]` | no | Whether the fill was chosen by a user rather than by automatic packing. |
+| `isLocked` | `Optional[bool]` | no | Whether a user locked this unit; only its content may still change. |
 
 ---
 

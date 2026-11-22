@@ -152,7 +152,7 @@ def test_export_reads_convert_to_booking_international_params():
     read = {
         "exportData": None,
         "valuesSpecified": None,
-        "soldToContactDetails": {"synthetic": True},
+        "soldToContactDetails": {},
         "customsValue": 100.0,
         "invoiceNumber": None,
         "commodities": [

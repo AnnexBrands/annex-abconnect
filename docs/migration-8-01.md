@@ -69,8 +69,9 @@ material list empty. For an existing unit the SDK therefore reads the job's unit
 
 `manage` is the **whole job's** arrangement. The server deletes every unit the
 list leaves out, with its nesting, inventory links, materials, documents and
-shipping contents. The SDK refuses such a call unless you pass
-`delete_omitted=True`. Use a positive `id` for an existing unit and distinct
+shipping contents. The SDK refuses such a call unless `delete_omitted` allows it:
+pass the exact set of unit IDs you mean to delete (the call is refused if the job
+no longer matches), or `True`. Use a positive `id` for an existing unit and distinct
 negative IDs for new ones; new units must name the three flags and
 `inventory_items`.
 

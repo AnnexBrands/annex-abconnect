@@ -50,7 +50,7 @@ class ABConnectSettings(BaseSettings):
         description=(
             "Partner this client acts for on Catalog API calls that need one. Required for a "
             "corporate login, whose token carries no partner; optional for a partner login, "
-            "whose token names it (see ABConnectAPI.partner_id)."
+            "whose token names it (see ABConnectAPI.resolve_partner_id)."
         ),
     )
     scopes: Optional[str] = Field(

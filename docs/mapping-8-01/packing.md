@@ -188,7 +188,7 @@ Fields with no legacy source that the model also accepts and tools can leave uns
 5. **An empty or missing `handlingUnits` deletes every unit on the job** [C: point 1 with an
    empty request; A that a missing list binds as empty rather than failing]. SDK 0.3.1 requires
    `handling_units`, and refuses any call that would delete existing units unless
-   `delete_omitted=True` is passed.
+   `delete_omitted` allows it (`True`, or the exact set of unit ids to delete).
 6. **Not atomic.** The delete step commits its own transaction before the update and create
    steps run [C `DeleteManagedHandlingUnits`]. A request that fails later (for example an
    unknown freight class) has already deleted the omitted units.
@@ -354,7 +354,9 @@ def save_packing(api, job_id, boxes, job_modified_date=None):
     # Units in `current` that are not listed are deleted by the server; the SDK refuses
     # that unless delete_omitted=True.
 
-    request = {"handling_units": units, "delete_omitted": not KEEP_OTHER_UNITS or len(old_boxes) > len(boxes)}
+    listed = {u["id"] for u in units}
+    # Name exactly the units this save means to delete; the SDK refuses if the job differs.
+    request = {"handling_units": units, "delete_omitted": {u.id for u in current if u.id not in listed}}
     if job_modified_date is not None:
         request["job_modified_date"] = job_modified_date      # stale → HTTP 400 refreshRequired
     result = api.jobs.handling_units.manage(job_id, **request)

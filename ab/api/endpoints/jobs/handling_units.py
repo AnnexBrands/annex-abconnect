@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from typing import Any
 
 from pydantic import BaseModel
@@ -186,7 +187,7 @@ class JobHandlingUnitsEndpoint(BaseEndpoint):
         return self._request(_CREATE.bind(jobDisplayId=job_display_id), json=kwargs)
 
     def manage(
-        self, job_display_id: int, *, delete_omitted: bool = False, **kwargs: Any
+        self, job_display_id: int, *, delete_omitted: bool | Iterable[int] = False, **kwargs: Any
     ) -> ManageHandlingUnitsResponse:
         """``POST /job/{jobDisplayId}/handlingUnit/manage`` — replaces the job's handling-unit arrangement.
 
@@ -194,7 +195,7 @@ class JobHandlingUnitsEndpoint(BaseEndpoint):
 
         - A unit of the job that the list leaves out is **deleted** by the server, with
           its nesting, inventory links, materials, documents and shipping contents. The
-          SDK refuses that before any write unless ``delete_omitted=True``.
+          SDK refuses that before any write unless ``delete_omitted`` allows it.
         - A unit with a positive ``id`` is updated. Every field you leave out keeps its
           current value (see below); pass ``None`` or ``[]`` to clear one.
         - A unit with a negative ``id`` is created; use distinct negative IDs and refer
@@ -209,12 +210,16 @@ class JobHandlingUnitsEndpoint(BaseEndpoint):
 
         Args:
             job_display_id: Job display ID.
-            delete_omitted: Allow the server to delete the job's units that
-                ``handling_units`` does not list. Defaults to ``False``.
+            delete_omitted: Which of the job's units the server may delete because
+                ``handling_units`` does not list them. ``False`` (default): none.
+                A collection of unit IDs: exactly those -- the call is refused if
+                the units that would be deleted differ from it in either
+                direction, for example because the job changed after you planned
+                the request. ``True``: whatever is unlisted.
 
         Raises:
-            ValueError: A listed positive ``id`` is not a unit of the job, or existing
-                units would be deleted and ``delete_omitted`` is not set.
+            ValueError: A listed positive ``id`` is not a unit of the job, or the
+                units that would be deleted are not the ones ``delete_omitted`` allows.
 
         Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/handling_units.manage.html
         Request model: ManageHandlingUnitsModel
@@ -233,11 +238,18 @@ class JobHandlingUnitsEndpoint(BaseEndpoint):
                     f"{job_display_id}. Use a negative id for a new unit."
                 )
             omitted = sorted(current.keys() - listed)
-            if omitted and not delete_omitted:
+            if isinstance(delete_omitted, bool):
+                refused = omitted if not delete_omitted else []
+                expected = None
+            else:
+                expected = sorted(set(delete_omitted))
+                refused = omitted if expected != omitted else []
+            if refused or (expected is not None and expected != omitted):
+                detail = "" if expected is None else f" delete_omitted names {expected}."
                 raise ValueError(
                     f"jobs.handling_units.manage replaces the whole job's arrangement: unit ID(s) {omitted} "
-                    f"of job {job_display_id} are not listed and would be deleted. List them to keep them, "
-                    "or pass delete_omitted=True to delete them."
+                    f"of job {job_display_id} are not listed and would be deleted.{detail} List units to keep "
+                    "them, or pass delete_omitted with exactly the IDs to delete (or True)."
                 )
             kwargs = {
                 **kwargs,

@@ -6,7 +6,7 @@
 **Python**
 
 ```python
-api.jobs.handling_units.manage(job_display_id: int, *, delete_omitted: bool = False, **kwargs: Any) -> ManageHandlingUnitsResponse
+api.jobs.handling_units.manage(job_display_id: int, *, delete_omitted: bool | Iterable[int] = False, **kwargs: Any) -> ManageHandlingUnitsResponse
 ```
 
 **CLI**
@@ -21,7 +21,7 @@ ab jobs handling_units manage <job_display_id> [--delete-omitted ...] [--body ..
 
 - A unit of the job that the list leaves out is **deleted** by the server, with
   its nesting, inventory links, materials, documents and shipping contents. The
-  SDK refuses that before any write unless ``delete_omitted=True``.
+  SDK refuses that before any write unless ``delete_omitted`` allows it.
 - A unit with a positive ``id`` is updated. Every field you leave out keeps its
   current value (see below); pass ``None`` or ``[]`` to clear one.
 - A unit with a negative ``id`` is created; use distinct negative IDs and refer
@@ -36,12 +36,16 @@ omits. A ``container_type_id`` or ``fill_id`` different from the stored one turn
 
 Args:
     job_display_id: Job display ID.
-    delete_omitted: Allow the server to delete the job's units that
-        ``handling_units`` does not list. Defaults to ``False``.
+    delete_omitted: Which of the job's units the server may delete because
+        ``handling_units`` does not list them. ``False`` (default): none.
+        A collection of unit IDs: exactly those -- the call is refused if
+        the units that would be deleted differ from it in either
+        direction, for example because the job changed after you planned
+        the request. ``True``: whatever is unlisted.
 
 Raises:
-    ValueError: A listed positive ``id`` is not a unit of the job, or existing
-        units would be deleted and ``delete_omitted`` is not set.
+    ValueError: A listed positive ``id`` is not a unit of the job, or the
+        units that would be deleted are not the ones ``delete_omitted`` allows.
 
 ## Request body — `ManageHandlingUnitsModel`
 

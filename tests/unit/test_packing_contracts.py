@@ -262,6 +262,27 @@ def test_manage_refuses_to_delete_unlisted_units_unless_told_to():
     assert [u["id"] for u in _written(client)["handlingUnits"]] == [-1]
 
 
+@pytest.mark.parametrize("named", [[], [99], [20, 99]])
+def test_manage_refuses_when_the_named_deletions_are_not_exactly_the_omitted_units(named):
+    client = _client(write_response={"success": True, "handlingUnits": []})
+    new = {"id": -1, **_BASE, **_FLAGS, "inventoryItems": []}
+    with pytest.raises(ValueError, match="would be deleted"):
+        JobHandlingUnitsEndpoint(client).manage(123, handling_units=[new], delete_omitted=named)
+    assert all(c.args[0] == "GET" for c in client.request.call_args_list)
+
+
+def test_manage_deletes_exactly_the_named_units_and_rejects_names_when_nothing_is_omitted():
+    client = _client(write_response={"success": True, "handlingUnits": []})
+    endpoint = JobHandlingUnitsEndpoint(client)
+    new = {"id": -1, **_BASE, **_FLAGS, "inventoryItems": []}
+    endpoint.manage(123, handling_units=[new], delete_omitted={20})
+    assert [u["id"] for u in _written(client)["handlingUnits"]] == [-1]
+    client.reset_mock()
+    with pytest.raises(ValueError, match=r"delete_omitted names \[20\]"):
+        endpoint.manage(123, handling_units=[{"id": 20}], delete_omitted=[20])
+    endpoint.manage(123, handling_units=[{"id": 20}], delete_omitted=[])
+
+
 def test_manage_rejects_unknown_and_zero_ids_and_a_missing_list_before_any_write():
     client = _client()
     endpoint = JobHandlingUnitsEndpoint(client)

@@ -35,8 +35,9 @@ Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
   new units.
 - **Breaking:** `manage` replaces the whole job's arrangement, and the server
   deletes every unit the list leaves out. The SDK now refuses such a call before
-  any write unless `delete_omitted=True` is passed, and rejects positive IDs that
-  are not units of the job.
+  any write unless `delete_omitted` allows it -- `True`, or better the exact set
+  of unit IDs to delete, which is refused when the job no longer matches it -- and
+  rejects positive IDs that are not units of the job.
 
 ### Added
 
@@ -46,11 +47,12 @@ Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
   `container_validation_message`; handling-unit materials report `fill_rate`.
 - `jobs.freight_providers.save_final_quote` accepts `handling_units`, which makes
   the quote's shipping take over exactly those units.
-- `partner_id` setting (`ABCONNECT_PARTNER_ID` or `ABConnectAPI(partner_id=...)`) and
-  `api.partner_id`. A partner login takes its partner from the token; a corporate
-  login must be given one; a configured partner that contradicts the token is an
-  error. `lots.item_data` fills in an omitted `partner_id` from it. Catalog and lot
-  reads are not filtered by it.
+- `partner_id` setting (`ABCONNECT_PARTNER_ID` or `ABConnectAPI(partner_id=...)`),
+  readable as `api.partner_id` (plain configuration; never raises or logs in), and
+  `api.resolve_partner_id()`. A partner login takes its partner from the token; a
+  corporate login must be given one; a configured partner that contradicts the
+  token is an error. `lots.item_data` fills in an omitted `partner_id` from it.
+  Catalog and lot reads are not filtered by it.
 - `jobs.form.bol`, `hbl`, `pbl` and `dbl` accept `quote_id`.
 - Field-level migration mappings from the 7_11 contracts:
   [quotes and booking](docs/mapping-8-01/quotes-booking.md),

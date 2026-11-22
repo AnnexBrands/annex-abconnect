@@ -80,3 +80,19 @@ def test_item_data_without_any_partner_fails_before_the_request():
     with pytest.raises(ConfigurationError):
         LotsEndpoint(client).item_data(data={"customer_item_ids": ["synthetic"]})
     client.request.assert_not_called()
+
+
+def test_reading_the_client_partner_attribute_is_side_effect_free(monkeypatch):
+    from ab import ABConnectAPI
+
+    for name in ("ABCONNECT_PARTNER_ID", "ABCONNECT_USERNAME", "ABCONNECT_PASSWORD"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("ABCONNECT_CLIENT_ID", "synthetic")
+    monkeypatch.setenv("ABCONNECT_CLIENT_SECRET", "synthetic")
+    monkeypatch.chdir("/")
+    api = ABConnectAPI(anonymous=True)
+    api._catalog._ensure_token = lambda: pytest.fail("reading partner_id must not obtain a token")
+    assert api.partner_id is None
+    assert hasattr(api, "partner_id")
+    assert ABConnectAPI(anonymous=True, partner_id=5).partner_id == 5
+    assert callable(api.resolve_partner_id)

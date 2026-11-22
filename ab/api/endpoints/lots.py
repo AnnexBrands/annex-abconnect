@@ -175,7 +175,7 @@ class LotsEndpoint(BaseEndpoint):
                 ``customer_comments`` and ``other_ref_no``. Accepts a
                 :class:`GetLotsItemDataQuery` instance or a dict. A dict that
                 omits ``partner_id`` gets the client's partner
-                (:attr:`ab.client.ABConnectAPI.partner_id`): the token's for a
+                (:meth:`ab.client.ABConnectAPI.resolve_partner_id`): the token's for a
                 partner login, the configured one for a corporate login.
 
         Raises:

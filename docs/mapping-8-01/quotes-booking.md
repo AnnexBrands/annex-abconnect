@@ -179,6 +179,15 @@ Answers to the open assumptions in `expectations.md`:
   rated. **[source]** `TransportationQuoteValidator`, `JobShipmentPlanService`
 - `book_v2` returns `success`, `error_message`, `shipment_id` (a carrier id, not a shipping id) and
   `job_modified_date`. HTTP 200 with `success=false` is a failed booking.
+- `book_v2` returns no documents. The label is filed on the job afterwards as a document of type 1
+  (`Label`); read it with `api.documents.list(...)` and download it. **[staging]** job 5483351
+  (reported by the annex-shipping migration)
+- Staging UPS bookings return the placeholder tracking number `1ZXXXXXXXXXXXXXXXX`. **[staging]**
+- **Cost and sell at rating time.** Each service in the `rates.request` response carries both
+  `net_amount` (carrier cost) and `total_sell`. On 7_11 the `price` of `shipment/ratequotes` was the
+  **sell** (`TotalSell`), so `total_sell` is the like-for-like figure for a rate list. Once a rate is
+  saved as a quote only cost remains on it (`freight_amount`, `accessorial_amount`); see
+  [reads](reads.md) section 2. **[source]** 7_11 `JobCarrierRatesModel`; **[staging]** job 5483351
 - `cancel` returns `success`, `error_message`, `override_error`. When the carrier refuses,
   `force_delete=True` removes ABConnect's booking state only; the carrier still holds the booking.
 - The legacy `shipment.book`, `shipment.delete` and job-level export calls still work on a job

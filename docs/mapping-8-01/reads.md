@@ -160,3 +160,62 @@ pdf = api.jobs.form.bill_of_lading(
 
 `bill_of_lading(job_id, quote_id=...)` alone also works and emits no warning;
 `bill_of_lading(job_id)` emits `LegacyRequestWarning` and returns the non-carrier document.
+
+## 5. Telling an estimate from a selected rate
+
+**Answer.** No field marks a quote as "the estimate the job came with" or as "a rate someone
+selected". Both are ordinary quotes. What the data does record is whether a quote has been
+**superseded, touched or acted on** since it was created, and that is enough to recognise an
+untouched estimate in every case except one: a rate selected into a brand-new shipping looks
+exactly like an estimate until something else happens to it. A client that needs that case must
+keep its own record of what it selected.
+
+### What exists before anyone selects a rate
+
+| Job | State | Evidence |
+|---|---|---|
+| Created on 8_01 from a quote | One shipping, holding one **active, non-overridden** quote: the carrier and amounts the job was priced with. Created by the server during job creation, stamped with the creating user. | [source] `JobService` (job creation builds a `TransportationQuote` with `Active = true`, `IsOverridden = false`, then `SaveQuoteAsync`). No natively created 8_01 job was available on staging to confirm. |
+| Migrated from 7_11, initial option only | One shipping with that quote active, `order_in_shipping` 1. | [staging] jobs 5506118, 5523070 before any write |
+| Migrated from 7_11, initial and final of one family | Same shipping; the final is active with the higher `order_in_shipping`, the initial inactive below it. | [source] migration step 19a; [staging] jobs 14423857, 12679699 (order 1 inactive, order 2 active and shipped) |
+
+### What each field can and cannot tell you
+
+| Field | Meaning | Use |
+|---|---|---|
+| `shipment_accepted` | Booked, or an override with a PRO. | True: not an estimate. |
+| `is_overridden` | Entered by hand (final override). | True: not an estimate. |
+| `order_in_shipping` | Sequence within the shipping; each new quote is max + 1. | Greater than 1: this quote replaced an earlier one in the same shipping, so it is a selection. |
+| other quotes in the same shipping | History. | Any present: the active one is a selection. |
+| `modified_date` versus `created_date` | `save_final_quote` updates the quote in place and restamps `modified_by` / `modified_date`. A new quote has both stamps set at the same moment. | Modified later than created: someone saved it as final. [staging] job 5506118 |
+| `created_by` | User who created the quote through the 8_01 API. **Null on every quote migrated from 7_11.** | Null means "migrated", nothing more. |
+| `created_date` on a migrated quote | The server substitutes the **current time** on every read when the stored value is null. | Never compare it for a quote whose `created_by` is null. [staging]: the value changed between reads. |
+| `quote_snapshot`, `active`, amounts | Same on an estimate and a selection. | No use. |
+| old option index | Kept in the database as `ObsoleteOptionIndex`; not returned by any endpoint. | Not available. |
+
+### What a write leaves behind
+
+| Write | Trace |
+|---|---|
+| `select_rate_quote` with `shippingId` | A new quote, `order_in_shipping` = previous max + 1; the others in the shipping become inactive. [staging] job 12679699 |
+| `select_rate_quote` without `shippingId` | A new shipping with one quote, `order_in_shipping` 1. **Indistinguishable from an estimate.** [staging] job 5523070 |
+| `save_final_quote` on an existing quote | Same quote id; `modified_by` and `modified_date` restamped; the others inactive. [staging] job 5506118 |
+| `create_final_override` | A new quote with `is_overridden` true, next order. [staging] job 5506118 |
+| `book_v2` | `shipment_accepted` true and a PRO. [staging] job 5523070 |
+
+### A rule that follows from this
+
+Treat the active quote of a shipping as an **untouched estimate** only when all of these hold;
+otherwise it is a selection:
+
+- it is the only quote in its shipping, with `order_in_shipping` 1;
+- `is_overridden` is false and `shipment_accepted` is false;
+- it has not been modified after creation: `modified_by` is null (migrated quote), or
+  `modified_date` equals `created_date` to within a few seconds (quote created on 8_01).
+
+Known blind spot: a rate selected into a **new** shipping satisfies all three. The portal's rates
+window passes the shipping it was opened for when it has one, so a person re-selecting a rate for
+an existing shipping produces `order_in_shipping` above 1 and is recognised; it sends no
+`shippingId` only when the shipping does not exist yet. On jobs that are not third-party-logistics
+the portal previews the rate and persists the quote with the job save instead.
+[source] `rates-window.component.ts`, `transportation-quotes.service.ts`. A client's own
+selections into new shippings are the case it must record for itself.

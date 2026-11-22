@@ -1,7 +1,32 @@
 # What's New
 
-SDK **0.3.0** targets **ABConnect 8_01**. SDK and server version numbers are separate.
+SDK **0.3.x** targets **ABConnect 8_01**. SDK and server version numbers are separate.
 Read the [migration guide](migration-8-01.md) before upgrading an existing integration.
+
+## 0.3.1 — Handling-unit writes that keep what you did not mention
+
+After 0.3.0, the 8_01 server changed how handling units are written: a write now
+overwrites the whole unit, and `manage` replaces the whole job's arrangement.
+0.3.0 could not send the new fields, so those writes lost data without an error.
+Upgrade before writing handling units against 8_01.
+
+| Change | What it means for your integration |
+|---|---|
+| Existing units keep omitted fields | `handling_units.update` and `manage` read the unit and send back every field you left out: dimensions, flags, inventory, nested units, materials. Pass `None` or `[]` to clear. |
+| Lock and choice flags | `is_locked`, `is_container_changed`, `is_fill_changed` are typed, required on new units, and preserved on existing ones. A changed container type or fill turns its flag on. |
+| `manage` is the whole job | The server deletes every unit the request leaves out. The SDK refuses that unless `delete_omitted` names exactly the units to delete (or is `True`). New units use negative IDs. |
+| Bill-of-lading helpers | `form.bol`, `hbl`, `pbl`, `dbl` work against 8_01 again and accept `quote_id`. |
+| International booking | `export.to_international_params()` turns an export-data read into the parameters `shipment.validate` and `book_v2` need for a cross-border quote. |
+| Partner selection | `partner_id` setting and `api.resolve_partner_id()`: from the token for a partner login, required for a corporate login. |
+| Explicit settings | `ABConnectAPI(settings=ABConnectSettings.explicit(...))` builds a client without reading process environment, so one process can hold several logins. |
+| Migration mappings | Field-level mappings from the 7_11 parcel, freight-item and option-index contracts: [packing](mapping-8-01/packing.md), [quotes and booking](mapping-8-01/quotes-booking.md), [reads](mapping-8-01/reads.md). |
+
+These were exercised by writes on staging: unit updates and whole-job `manage`, final
+overrides with amounts and PRO, and rating, selecting, validating, booking and
+cancelling a unit with no inventory. Three server behaviours to design for: an
+inactive unit is refused only at booking validation, not at rating; a quote must be
+rated with the unit exactly as stored; and per-shipping export data is empty until
+saved. The bundled portal Swagger now contains 364 operations.
 
 ## 0.3.0 — Unified packing and multiple shipments
 

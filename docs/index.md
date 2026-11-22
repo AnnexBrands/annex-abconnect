@@ -15,6 +15,7 @@ whats-new
 migration-8-01
 mapping-8-01/quotes-booking
 mapping-8-01/packing
+mapping-8-01/reads
 troubleshooting
 ```
 

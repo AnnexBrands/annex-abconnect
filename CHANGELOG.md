@@ -19,6 +19,11 @@ Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
   `get_all`) and sends back every field the caller left out. Pass `None` or `[]`
   to clear a field deliberately.
 
+- `jobs.form.bol`, `hbl`, `pbl` and `dbl` work against 8_01 again. They matched
+  7_11 leg names (`LTL`), which 8_01 replaced with `PickUp (LTL)` /
+  `PickUp (PARCEL)`, so every call raised. `bol` now renders the carrier BOL of
+  the leg's active quote and asks for `quote_id` when a job has several.
+
 ### Changed
 
 - **Breaking:** `is_locked`, `is_container_changed` and `is_fill_changed` are
@@ -41,9 +46,16 @@ Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
   `container_validation_message`; handling-unit materials report `fill_rate`.
 - `jobs.freight_providers.save_final_quote` accepts `handling_units`, which makes
   the quote's shipping take over exactly those units.
+- `partner_id` setting (`ABCONNECT_PARTNER_ID` or `ABConnectAPI(partner_id=...)`) and
+  `api.partner_id`. A partner login takes its partner from the token; a corporate
+  login must be given one; a configured partner that contradicts the token is an
+  error. `lots.item_data` fills in an omitted `partner_id` from it. Catalog and lot
+  reads are not filtered by it.
+- `jobs.form.bol`, `hbl`, `pbl` and `dbl` accept `quote_id`.
 - Field-level migration mappings from the 7_11 contracts:
-  [quotes and booking](docs/mapping-8-01/quotes-booking.md) and
-  [packing](docs/mapping-8-01/packing.md).
+  [quotes and booking](docs/mapping-8-01/quotes-booking.md),
+  [packing](docs/mapping-8-01/packing.md) and
+  [reads](docs/mapping-8-01/reads.md).
 
 ## [0.3.0] - 2026-10-11
 

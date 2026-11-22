@@ -120,10 +120,15 @@ class ABConnectAPI:
         allow_password_fallback: Optional[bool] = None,
         anonymous: bool = False,
         extra_headers: Optional[Any] = None,
+        partner_id: Optional[int] = None,
     ) -> None:
         """See class docstring. Additional keyword args:
 
         Args:
+            partner_id: Partner this client acts for on the Catalog API calls
+                that need one; overrides ``ABCONNECT_PARTNER_ID``. Required for a
+                corporate login, optional for a partner login. See
+                :attr:`partner_id`.
             anonymous: Build a client with no credentials and no persisted
                 token. Only routes marked ``auth_optional`` (e.g. the
                 AccessKey-authenticated ``api.autoprice`` quote endpoints)
@@ -146,6 +151,8 @@ class ABConnectAPI:
             env_file=env_file,
             require_credentials=not external_storage,
         )
+        if partner_id is not None:
+            self._settings = self._settings.model_copy(update={"partner_id": int(partner_id)})
         self._allow_password_fallback = (
             True if allow_password_fallback is None else allow_password_fallback
         )
@@ -235,6 +242,26 @@ class ABConnectAPI:
             seen.add(id(value))
             names.append(name)
         return sorted(names)
+
+    @property
+    def partner_id(self) -> int:
+        """The partner this client acts for on the Catalog API.
+
+        A partner login takes it from its token's ``partnerIds`` claim. A
+        corporate login has no such claim and must be given one, by
+        ``ABCONNECT_PARTNER_ID`` or ``ABConnectAPI(partner_id=...)``. A configured
+        partner that contradicts a partner login's token is an error.
+
+        Only calls that take a partner use it: ``lots.item_data`` fills in an
+        omitted ``partner_id``, and ``platforms.list(partner_id=api.partner_id)``
+        gives the platform to name on ``catalog.bulk_upsert``. The server scopes a
+        partner login's catalog and lot reads by its token; a corporate login's
+        reads are unscoped and this setting does not filter them.
+
+        Raises:
+            ConfigurationError: No partner can be determined.
+        """
+        return self._catalog.resolve_partner_id()
 
     def __repr__(self) -> str:
         env = getattr(self._settings, "environment", None)

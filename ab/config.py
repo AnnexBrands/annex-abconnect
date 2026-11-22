@@ -45,6 +45,14 @@ class ABConnectSettings(BaseSettings):
         default="production", description="Target environment"
     )
     access_key: Optional[str] = Field(default=None, description="ABC API access key")
+    partner_id: Optional[int] = Field(
+        default=None,
+        description=(
+            "Partner this client acts for on Catalog API calls that need one. Required for a "
+            "corporate login, whose token carries no partner; optional for a partner login, "
+            "whose token names it (see ABConnectAPI.partner_id)."
+        ),
+    )
     scopes: Optional[str] = Field(
         default=None,
         description=(

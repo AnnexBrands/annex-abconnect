@@ -24,10 +24,16 @@ because the ID list can be long.
 Replaces the retired ``POST /Lot/get-overrides``.
 
 Args:
-    data: Query payload with ``partner_id`` (required),
-        ``customer_item_ids``, ``customer_comments`` and
-        ``other_ref_no``. Accepts a :class:`GetLotsItemDataQuery`
-        instance or a dict.
+    data: Query payload with ``partner_id``, ``customer_item_ids``,
+        ``customer_comments`` and ``other_ref_no``. Accepts a
+        :class:`GetLotsItemDataQuery` instance or a dict. A dict that
+        omits ``partner_id`` gets the client's partner
+        (:attr:`ab.client.ABConnectAPI.partner_id`): the token's for a
+        partner login, the configured one for a corporate login.
+
+Raises:
+    ConfigurationError: ``partner_id`` is omitted and the client has no
+        partner. Raised before any request.
 
 Returns:
     list[LotItemDataDto]: Item data for the matched lots.

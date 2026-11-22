@@ -212,6 +212,8 @@ otherwise it is a selection:
 - it has not been modified after creation: `modified_by` is null (migrated quote), or
   `modified_date` equals `created_date` to within a few seconds (quote created on 8_01).
 
+SDK 0.3.1 implements this rule as `ab.api.selection.is_untouched_estimate(quote, quotes)`.
+
 Known blind spot: a rate selected into a **new** shipping satisfies all three. The portal's rates
 window passes the shipping it was opened for when it has one, so a person re-selecting a rate for
 an existing shipping produces `order_in_shipping` above 1 and is recognised; it sends no

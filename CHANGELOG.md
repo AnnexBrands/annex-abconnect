@@ -60,6 +60,8 @@ Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
   `ShippingExportData.to_international_params()`: turn an export-data read into the
   `international_params` that `shipment.validate` / `book_v2` require for a
   cross-border quote. The job-level export read now types `soldToContactDetails`.
+- `ab.api.selection.is_untouched_estimate(quote, quotes)`: whether a shipping's quote is
+  still the estimate it started with, now that 8_01 has no initial/final option index.
 - `jobs.form.bol`, `hbl`, `pbl` and `dbl` accept `quote_id`.
 - Field-level migration mappings from the 7_11 contracts:
   [quotes and booking](docs/mapping-8-01/quotes-booking.md),

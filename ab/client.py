@@ -9,7 +9,7 @@ from ab.auth.base import Token, TokenStorage
 from ab.auth.file import FileTokenStorage
 from ab.auth.session import SessionTokenStorage
 from ab.cache import CodeResolver
-from ab.config import load_settings
+from ab.config import ABConnectSettings, load_settings
 from ab.http import HttpClient
 
 if TYPE_CHECKING:
@@ -121,10 +121,17 @@ class ABConnectAPI:
         anonymous: bool = False,
         extra_headers: Optional[Any] = None,
         partner_id: Optional[int] = None,
+        settings: Optional[ABConnectSettings] = None,
     ) -> None:
         """See class docstring. Additional keyword args:
 
         Args:
+            settings: Ready-made settings to use instead of loading them from
+                environment variables and ``.env`` files; ``env`` and
+                ``env_file`` are then ignored. Use
+                ``ABConnectSettings.explicit(environment=..., username=..., ...)``
+                to give each client its own login without touching the process
+                environment, for example one client per partner.
             partner_id: Partner this client acts for on the Catalog API calls
                 that need one; overrides ``ABCONNECT_PARTNER_ID``. Required for a
                 corporate login, optional for a partner login. See
@@ -146,11 +153,16 @@ class ABConnectAPI:
             if allow_password_fallback is None:
                 allow_password_fallback = False
         external_storage = token_storage is not None or request is not None
-        self._settings = load_settings(
-            env=env,
-            env_file=env_file,
-            require_credentials=not external_storage,
-        )
+        if settings is not None:
+            if env is not None or env_file is not None:
+                raise ValueError("Pass either settings= or env=/env_file=, not both.")
+            self._settings = settings
+        else:
+            self._settings = load_settings(
+                env=env,
+                env_file=env_file,
+                require_credentials=not external_storage,
+            )
         if partner_id is not None:
             self._settings = self._settings.model_copy(update={"partner_id": int(partner_id)})
         self._allow_password_fallback = (

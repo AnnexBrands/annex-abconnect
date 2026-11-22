@@ -461,6 +461,16 @@ class ShippingExportData(ResponseModel):
             commodity.pop("fullDescription", None)
         return ShippingExportRequest.model_validate(payload)
 
+    def to_international_params(self) -> JobExportDataInput:
+        """This export data as the ``international_params`` of ``shipment.validate`` / ``book_v2``.
+
+        Like :meth:`to_request`, minus ``soldToContactDetails``, which the booking
+        contract does not accept.
+        """
+        payload = self.to_request().model_dump(by_alias=True, exclude_unset=True, mode="json")
+        payload.pop("soldToContactDetails", None)
+        return JobExportDataInput.model_validate(payload)
+
 
 class ShipmentBookingResult(ResponseModel):
     """BookShipmentResponseModel response contract (8_01)."""

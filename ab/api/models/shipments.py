@@ -138,6 +138,31 @@ class ShipmentExportData(ResponseModel):
     usps_specific: Optional[dict] = Field(None, alias="uspsSpecific", description="USPS-specific export fields")
     fed_ex_specific: Optional[dict] = Field(None, alias="fedExSpecific", description="FedEx-specific export fields")
     ups_specific: Optional[dict] = Field(None, alias="upsSpecific", description="UPS-specific export fields")
+    sold_to_contact_details: Optional[dict] = Field(
+        None, alias="soldToContactDetails", description="Sold-to contact details (read only)"
+    )
+
+    def to_international_params(self):
+        """This export data as the ``international_params`` of ``shipment.validate`` / ``book_v2``.
+
+        Drops what the server computes and does not accept back (``exportData``,
+        ``valuesSpecified``, ``soldToContactDetails`` and each commodity's
+        ``fullDescription``). Everything else, including commodity ``jobItemId``
+        and explicit nulls, is kept. Unknown server fields fail validation rather
+        than being dropped silently from a booking.
+
+        Returns:
+            JobExportDataInput
+        """
+        from ab.api.models.transportation import JobExportDataInput
+
+        payload = self.model_dump(by_alias=True, exclude_unset=True, mode="json")
+        for computed in ("exportData", "valuesSpecified", "soldToContactDetails"):
+            payload.pop(computed, None)
+        for commodity in payload.get("commodities") or []:
+            if isinstance(commodity, dict):
+                commodity.pop("fullDescription", None)
+        return JobExportDataInput.model_validate(payload)
 
 
 class RatesState(ResponseModel):

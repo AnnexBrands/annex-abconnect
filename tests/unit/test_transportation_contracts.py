@@ -143,3 +143,37 @@ def test_export_edit_helper_removes_only_computed_description():
     result.model_extra["unknownFutureField"] = 1
     with pytest.raises(ValidationError):
         result.to_request()
+
+
+def test_export_reads_convert_to_booking_international_params():
+    from ab.api.models.shipments import ShipmentExportData
+    from ab.api.models.transportation import BookShipmentRequestV2, ShippingExportData
+
+    read = {
+        "exportData": None,
+        "valuesSpecified": None,
+        "soldToContactDetails": {"synthetic": True},
+        "customsValue": 100.0,
+        "invoiceNumber": None,
+        "commodities": [
+            {
+                "jobItemId": QUOTE,
+                "description": "synthetic",
+                "fullDescription": "synthetic - computed",
+                "quantity": 1,
+                "weight": 2.0,
+                "unitPrice": 100.0,
+            }
+        ],
+    }
+    for model in (ShipmentExportData, ShippingExportData):
+        per_shipping = {k: v for k, v in read.items() if k not in ("exportData", "valuesSpecified")}
+        export = model.model_validate(read if model is ShipmentExportData else per_shipping)
+        assert not export.model_extra
+        params = export.to_international_params().model_dump(by_alias=True, exclude_unset=True, mode="json")
+        assert params["customsValue"] == 100.0 and params["invoiceNumber"] is None
+        commodity = params["commodities"][0]
+        assert commodity["jobItemId"] == QUOTE and "fullDescription" not in commodity
+        assert not {"exportData", "valuesSpecified", "soldToContactDetails"} & params.keys()
+        body = BookShipmentRequestV2.check({"quoteId": QUOTE, "internationalParams": params})
+        assert body["internationalParams"]["commodities"][0]["jobItemId"] == QUOTE

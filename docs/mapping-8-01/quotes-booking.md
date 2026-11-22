@@ -184,6 +184,38 @@ Answers to the open assumptions in `expectations.md`:
 - The legacy `shipment.book`, `shipment.delete` and job-level export calls still work on a job
   with exactly one active shipping and fail locally when there are two.
 
+### Verified on staging (2026-11-22)
+
+- A top-level `BOXES` unit with **no inventory** was rated, selected, validated and booked.
+- **Rate with the unit as stored.** The `handling_units` sent to `rates.request` must carry the same
+  values as the stored unit, including `declared_value`. A quote rated without the unit's declared
+  value was selected without complaint and then failed validation with "Some handling units have
+  been changed".
+- **An inactive unit is not refused at rating.** `rates.request` returned services for an inactive
+  unit and `select_rate_quote` saved the quote into a new shipping; only `shipment.validate`
+  rejected it ("Requested handling units were not found"). Check `is_active` yourself before rating.
+- A nested unit, or a unit with a packing-only container type, is refused at rating
+  ("Requested carriers are not allowed for the selected handling units").
+- Deleting a unit that is in a shipping leaves that shipping in place with no units and its quotes.
+
+### International shipments
+
+- `shipment.validate` and `book_v2` return "International parameters are required" for a
+  cross-border quote unless `international_params` is sent.
+- `shipment.get_shipping_export_data(job, shipping_id)` returns `None` until export data has been
+  saved for that shipping. The job-level `shipment.get_export_data(job)` returns the job's export
+  data with its commodities (seeded from the job's inventory list, not from inventory on units).
+- Convert either read with `.to_international_params()` (SDK 0.3.1) and pass it on:
+
+```python
+export = api.jobs.shipment.get_export_data(job_id)       # or get_shipping_export_data(...) once saved
+params = export.to_international_params().model_dump(by_alias=True, exclude_unset=True, mode="json")
+check = api.jobs.shipment.validate(job_id, quote_id=quote_id, ship_out_date=ship_out,
+                                   international_params=params)
+```
+
+  Validated on staging for a cross-border UPS quote on a unit with no inventory; not booked.
+
 ## 6. Shipment type UUIDs **[source]** `JobConstants.TransportationMode`
 
 | Mode | UUID |

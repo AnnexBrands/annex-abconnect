@@ -53,6 +53,13 @@ Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
   corporate login must be given one; a configured partner that contradicts the
   token is an error. `lots.item_data` fills in an omitted `partner_id` from it.
   Catalog and lot reads are not filtered by it.
+- `ABConnectAPI(settings=...)` and `ABConnectSettings.explicit(environment=..., ...)`:
+  build a client from explicit values only, with nothing read from process
+  environment or `.env` files, so one process can hold several logins.
+- `ShipmentExportData.to_international_params()` and
+  `ShippingExportData.to_international_params()`: turn an export-data read into the
+  `international_params` that `shipment.validate` / `book_v2` require for a
+  cross-border quote. The job-level export read now types `soldToContactDetails`.
 - `jobs.form.bol`, `hbl`, `pbl` and `dbl` accept `quote_id`.
 - Field-level migration mappings from the 7_11 contracts:
   [quotes and booking](docs/mapping-8-01/quotes-booking.md),

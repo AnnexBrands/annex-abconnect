@@ -96,3 +96,29 @@ def test_reading_the_client_partner_attribute_is_side_effect_free(monkeypatch):
     assert hasattr(api, "partner_id")
     assert ABConnectAPI(anonymous=True, partner_id=5).partner_id == 5
     assert callable(api.resolve_partner_id)
+
+
+def test_explicit_settings_ignore_the_process_environment_and_env_files(monkeypatch, tmp_path):
+    from ab import ABConnectAPI
+    from ab.auth.memory import MemoryTokenStorage
+
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / ".env").write_text("ABCONNECT_USERNAME=from-file\nABCONNECT_PARTNER_ID=3\n")
+    env = {"USERNAME": "from-env", "PASSWORD": "x", "CLIENT_ID": "env-client", "ENVIRONMENT": "production"}
+    for name, value in env.items():
+        monkeypatch.setenv(f"ABCONNECT_{name}", value)
+
+    def settings(user):
+        return ABConnectSettings.explicit(
+            environment="staging", username=user, password="synthetic", client_id="synthetic", client_secret="synthetic"
+        )
+
+    one = ABConnectAPI(settings=settings("partner-a"), token_storage=MemoryTokenStorage(), partner_id=5)
+    two = ABConnectAPI(settings=settings("partner-b"), token_storage=MemoryTokenStorage())
+    assert (one._settings.username, one._settings.environment, one.partner_id) == ("partner-a", "staging", 5)
+    assert (two._settings.username, two._settings.client_id, two.partner_id) == ("partner-b", "synthetic", None)
+    assert one._catalog._base_url.startswith("https://catalog-api.staging.")
+    with pytest.raises(ValueError, match="either settings= or env="):
+        ABConnectAPI(settings=settings("partner-a"), env="staging")
+    with pytest.raises(TypeError):
+        ABConnectSettings.explicit(username="no-environment")

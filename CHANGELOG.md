@@ -4,6 +4,88 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
+## [0.3.1] - 2026-11-23
+
+Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
+(server `release` through 2026-11-20; contract taken from the staging Swagger).
+
+### Fixed
+- `dashboard.get`: grid views that send `step` as a number (19, 28 and 49 on 8_01
+  staging) no longer fail validation; the value is kept as its text label.
+- An error response with no body now names the call
+  (`HTTP 500: empty response body from GET /api/dashboard`) instead of `HTTP 500: `.
+
+- `jobs.handling_units.update` and `manage` no longer wipe what the caller did not
+  mention. The server overwrites a unit with the request: an omitted scalar becomes
+  null, an omitted `isLocked` / `isContainerChanged` / `isFillChanged` becomes
+  `false`, and on `manage` an omitted inventory, nested-unit or material list
+  becomes empty. For an existing unit the SDK now reads its current state (one
+  `get_all`) and sends back every field the caller left out. Pass `None` or `[]`
+  to clear a field deliberately.
+
+- `jobs.form.bol`, `hbl`, `pbl` and `dbl` work against 8_01 again. They matched
+  7_11 leg names (`LTL`), which 8_01 replaced with `PickUp (LTL)` /
+  `PickUp (PARCEL)`, so every call raised. `bol` now renders the carrier BOL of
+  the leg's active quote and asks for `quote_id` when a job has several.
+
+### Added (quote flow, from the tools migration)
+- `jobs.freight_providers.save_new_final_override(...)`: creates a final override with
+  its amounts, and optionally its PRO, in one request, and returns the new quote id.
+  `create_final_override` takes no amounts, so an approval made with it needed a second
+  write and could leave an active override at 0.
+- `jobs.freight_providers.mark_selected(job, quote)`: records that a quote is a
+  deliberate selection, so a rate selected into a new shipping stops reading as an
+  untouched estimate.
+- `ab.JobModifiedConflictError` (a `RequestError`): raised for the HTTP 400 a stale
+  `jobModifiedDate` gets, with `modified_by`, `refresh_required` and
+  `force_update_required`.
+- `ab.api.selection.is_recorded_override` and `is_carrier_booked`: an override with a
+  PRO reads `shipment_accepted = true` without a carrier booking; these tell the two apart.
+
+### Changed
+
+- **Breaking:** `is_locked`, `is_container_changed` and `is_fill_changed` are
+  required on `jobs.handling_units.create` and on new units in `manage`. On an
+  existing unit they keep their stored value, and a changed `container_type_id` /
+  `fill_id` turns the matching flag on.
+- **Breaking:** `manage` requires `handling_units`, an `id` on every unit
+  (positive: existing; negative: new; zero is rejected), and `inventory_items` on
+  new units.
+- **Breaking:** `manage` replaces the whole job's arrangement, and the server
+  deletes every unit the list leaves out. The SDK now refuses such a call before
+  any write unless `delete_omitted` allows it -- `True`, or better the exact set
+  of unit IDs to delete, which is refused when the job no longer matches it -- and
+  rejects positive IDs that are not units of the job.
+
+### Added
+
+- Handling-unit responses expose `is_locked`, `is_container_changed`, `is_fill_changed`.
+- Pack-inventory requests accept `requested_container_type_id`,
+  `requested_container_material_id` and `requested_fill_id`; suggestions report
+  `container_validation_message`; handling-unit materials report `fill_rate`.
+- `jobs.freight_providers.save_final_quote` accepts `handling_units`, which makes
+  the quote's shipping take over exactly those units.
+- `partner_id` setting (`ABCONNECT_PARTNER_ID` or `ABConnectAPI(partner_id=...)`),
+  readable as `api.partner_id` (plain configuration; never raises or logs in), and
+  `api.resolve_partner_id()`. A partner login takes its partner from the token; a
+  corporate login must be given one; a configured partner that contradicts the
+  token is an error. `lots.item_data` fills in an omitted `partner_id` from it.
+  Catalog and lot reads are not filtered by it.
+- `ABConnectAPI(settings=...)` and `ABConnectSettings.explicit(environment=..., ...)`:
+  build a client from explicit values only, with nothing read from process
+  environment or `.env` files, so one process can hold several logins.
+- `ShipmentExportData.to_international_params()` and
+  `ShippingExportData.to_international_params()`: turn an export-data read into the
+  `international_params` that `shipment.validate` / `book_v2` require for a
+  cross-border quote. The job-level export read now types `soldToContactDetails`.
+- `ab.api.selection.is_untouched_estimate(quote, quotes)`: whether a shipping's quote is
+  still the estimate it started with, now that 8_01 has no initial/final option index.
+- `jobs.form.bol`, `hbl`, `pbl` and `dbl` accept `quote_id`.
+- Field-level migration mappings from the 7_11 contracts:
+  [quotes and booking](docs/mapping-8-01/quotes-booking.md),
+  [packing](docs/mapping-8-01/packing.md) and
+  [reads](docs/mapping-8-01/reads.md).
+
 ## [0.3.0] - 2026-10-11
 
 Targets ABConnect 8_01. See the [migration guide](docs/migration-8-01.md).

@@ -17,6 +17,12 @@ ab jobs handling_units update <job_display_id> <handling_unit_id> [--body ...]
 
 ``PUT /job/{jobDisplayId}/handlingUnit/{id}``
 
+The server overwrites the unit with the request. Every field you leave out
+keeps its current value, read with one ``get_all`` (skipped when you name every
+field); pass ``None`` to clear one. A ``container_type_id`` or ``fill_id``
+different from the stored one turns ``is_container_changed`` /
+``is_fill_changed`` on.
+
 ## Request body — `JobHandlingUnitModel`
 
 | Field | Type | Required | Description |
@@ -39,6 +45,9 @@ ab jobs handling_units update <job_display_id> <handling_unit_id> [--body ...]
 | `declaredValue` | `Optional[float]` | no | Declared handling-unit value. |
 | `name` | `Optional[str]` | no | Display name. |
 | `hasCustomName` | `bool` | no | Whether the display name was supplied by the caller. |
+| `isContainerChanged` | `bool` | yes | Whether the container was chosen by a user rather than by automatic packing. |
+| `isFillChanged` | `bool` | yes | Whether the fill was chosen by a user rather than by automatic packing. |
+| `isLocked` | `bool` | yes | Whether a user locked this unit; only its content may still change. |
 
 ## Response
 

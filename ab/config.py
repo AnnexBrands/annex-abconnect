@@ -45,6 +45,14 @@ class ABConnectSettings(BaseSettings):
         default="production", description="Target environment"
     )
     access_key: Optional[str] = Field(default=None, description="ABC API access key")
+    partner_id: Optional[int] = Field(
+        default=None,
+        description=(
+            "Partner this client acts for on Catalog API calls that need one. Required for a "
+            "corporate login, whose token carries no partner; optional for a partner login, "
+            "whose token names it (see ABConnectAPI.resolve_partner_id)."
+        ),
+    )
     scopes: Optional[str] = Field(
         default=None,
         description=(
@@ -121,6 +129,33 @@ class ABConnectSettings(BaseSettings):
         if self.environment == "staging":
             return "https://api.staging.abconnect.co/api"
         return "https://api.abconnect.co/api"
+
+
+class ExplicitABConnectSettings(ABConnectSettings):
+    """Settings taken only from the values passed in.
+
+    Nothing is read from process environment variables or ``.env`` files, so
+    two clients in one process can hold different logins, clients or
+    environments without touching ``os.environ``. Build one with
+    :meth:`ABConnectSettings.explicit`.
+    """
+
+    @classmethod
+    def settings_customise_sources(cls, settings_cls, init_settings, **other_sources):
+        return (init_settings,)
+
+
+def _explicit(cls, *, environment: Literal["staging", "production"], **values) -> ABConnectSettings:
+    """Build settings from explicit values only; see :class:`ExplicitABConnectSettings`.
+
+    ``environment`` is required: an omitted environment would silently mean
+    production. Pass ``require_credentials=False`` when the client will be
+    given a token (``token_storage=`` or ``request=``) instead of logging in.
+    """
+    return ExplicitABConnectSettings(environment=environment, **values)
+
+
+ABConnectSettings.explicit = classmethod(_explicit)  # type: ignore[attr-defined]
 
 
 def load_settings(

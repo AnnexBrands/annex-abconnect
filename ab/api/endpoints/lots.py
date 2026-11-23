@@ -171,10 +171,16 @@ class LotsEndpoint(BaseEndpoint):
         Replaces the retired ``POST /Lot/get-overrides``.
 
         Args:
-            data: Query payload with ``partner_id`` (required),
-                ``customer_item_ids``, ``customer_comments`` and
-                ``other_ref_no``. Accepts a :class:`GetLotsItemDataQuery`
-                instance or a dict.
+            data: Query payload with ``partner_id``, ``customer_item_ids``,
+                ``customer_comments`` and ``other_ref_no``. Accepts a
+                :class:`GetLotsItemDataQuery` instance or a dict. A dict that
+                omits ``partner_id`` gets the client's partner
+                (:meth:`ab.client.ABConnectAPI.resolve_partner_id`): the token's for a
+                partner login, the configured one for a corporate login.
+
+        Raises:
+            ConfigurationError: ``partner_id`` is omitted and the client has no
+                partner. Raised before any request.
 
         Returns:
             list[LotItemDataDto]: Item data for the matched lots.
@@ -185,6 +191,8 @@ class LotsEndpoint(BaseEndpoint):
         Request model: GetLotsItemDataQuery
         Response model: List[LotItemDataDto]
         """
+        if isinstance(data, dict) and "partner_id" not in data and "partnerId" not in data:
+            data = {**data, "partnerId": self._client.resolve_partner_id()}
         return self._request(_ITEM_DATA, json=data)
 
     def create_client_item_data(

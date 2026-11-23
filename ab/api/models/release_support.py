@@ -100,6 +100,21 @@ class PackInventoryItemModelInput(PackingRequestModel):
     value: float | None = Field(default=None, alias="value", description="Value.", ge=0, le=9999999.99)
     name: str | None = Field(default=None, alias="name", description="Name.", max_length=250)
     quantity: int = Field(alias="quantity", description="Quantity.", ge=1, le=9999999)
+    requested_container_type_id: int | None = Field(
+        default=None,
+        alias="requestedContainerTypeId",
+        description="Container type to pack into instead of the one automatic packing would pick.",
+    )
+    requested_container_material_id: int | None = Field(
+        default=None,
+        alias="requestedContainerMaterialId",
+        description="Container material used as given when a container type is requested.",
+    )
+    requested_fill_id: int | None = Field(
+        default=None,
+        alias="requestedFillId",
+        description="Fill to use instead of the one automatic packing would pick.",
+    )
 
 
 class PendingHandlingUnitMaterialResult(ResponseModel):
@@ -146,6 +161,11 @@ class SuggestedHandlingUnitResult(ResponseModel):
         default=None, alias="containerMaterialId", description="Container material id."
     )
     freight_class_id: UUID | None = Field(default=None, alias="freightClassId", description="Freight class id.")
+    container_validation_message: str | None = Field(
+        default=None,
+        alias="containerValidationMessage",
+        description="Why the requested container does not meet the packing rules, when it was kept anyway.",
+    )
 
 
 class SuggestedHandlingUnitServiceResponseResult(ResponseModel):
@@ -195,6 +215,16 @@ class PendingPackItemResult(ResponseModel):
     c_pack_name: str | None = Field(default=None, alias="cPackName", description="C pack name.")
     name: str | None = Field(default=None, alias="name", description="Name.")
     quantity: int | None = Field(default=None, alias="quantity", description="Quantity.")
+    requested_container_type_id: int | None = Field(
+        default=None, alias="requestedContainerTypeId", description="Requested container type id."
+    )
+    requested_container_material_id: int | None = Field(
+        default=None, alias="requestedContainerMaterialId", description="Requested container material id."
+    )
+    requested_fill_id: int | None = Field(default=None, alias="requestedFillId", description="Requested fill id.")
+    has_requested_container: bool | None = Field(
+        default=None, alias="hasRequestedContainer", description="Whether a container type was requested."
+    )
 
 
 class ContentHandlingUnitResult(ResponseModel):
@@ -234,6 +264,11 @@ class SuggestedHierarchyHandlingUnitResult(ResponseModel):
         default=None, alias="containerMaterialId", description="Container material id."
     )
     freight_class_id: UUID | None = Field(default=None, alias="freightClassId", description="Freight class id.")
+    container_validation_message: str | None = Field(
+        default=None,
+        alias="containerValidationMessage",
+        description="Why the requested container does not meet the packing rules, when it was kept anyway.",
+    )
     id: int | None = Field(default=None, alias="id", description="Id.")
     inventory_items: list[PendingPackItemResult] | None = Field(
         default=None, alias="inventoryItems", description="Inventory items."
@@ -288,6 +323,11 @@ class SuggestedCombinedHandlingUnitResult(ResponseModel):
         default=None, alias="containerMaterialId", description="Container material id."
     )
     freight_class_id: UUID | None = Field(default=None, alias="freightClassId", description="Freight class id.")
+    container_validation_message: str | None = Field(
+        default=None,
+        alias="containerValidationMessage",
+        description="Why the requested container does not meet the packing rules, when it was kept anyway.",
+    )
     inventory_items: list[AddedPendingPackItemResult] | None = Field(
         default=None, alias="inventoryItems", description="Inventory items."
     )
@@ -360,6 +400,7 @@ class HandlingUnitMaterialsResponseResult(ResponseModel):
     materials: list[PendingHandlingUnitMaterialResult] | None = Field(
         default=None, alias="materials", description="Materials."
     )
+    fill_rate: float | None = Field(default=None, alias="fillRate", description="Fill rate.")
     validation_result: ValidateHandlingUnitBaseResultResult | None = Field(
         default=None, alias="validationResult", description="Validation result."
     )
@@ -672,6 +713,14 @@ class SaveFinalQuoteRequest(PackingRequestModel):
     job_modified_date: datetime | None = Field(default=None, alias="jobModifiedDate", description="Job modified date.")
     force_update: bool | None = Field(default=None, alias="forceUpdate", description="Force update.")
     quote: TransportationQuoteInput | None = Field(default=None, alias="quote", description="Quote.")
+    handling_units: list[JobTransportationHandlingUnitInput] | None = Field(
+        default=None,
+        alias="handlingUnits",
+        description=(
+            "Handling units the quote covers. When given, the quote's shipping takes over exactly "
+            "these units and quantities; omit to leave the shipping's contents unchanged."
+        ),
+    )
 
 
 class JobModifiedDateServiceResponseResult(ResponseModel):

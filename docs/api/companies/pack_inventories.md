@@ -32,6 +32,9 @@ Uses explicit 8_01 identifiers and validates the complete request.
 | `value` | `Optional[float]` | no | Value. |
 | `name` | `Optional[str]` | no | Name. |
 | `quantity` | `int` | yes | Quantity. |
+| `requestedContainerTypeId` | `Optional[int]` | no | Container type to pack into instead of the one automatic packing would pick. |
+| `requestedContainerMaterialId` | `Optional[int]` | no | Container material used as given when a container type is requested. |
+| `requestedFillId` | `Optional[int]` | no | Fill to use instead of the one automatic packing would pick. |
 
 ## Response
 

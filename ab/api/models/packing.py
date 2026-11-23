@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from ab.api.models.base import RequestModel, ResponseModel
 
@@ -199,6 +199,23 @@ class JobHandlingUnitModel(PackingRequestModel):
     has_custom_name: bool = Field(
         default=False, alias="hasCustomName", description="Whether the display name was supplied by the caller."
     )
+    # The server stores these as non-nullable booleans and writes ``false`` when a
+    # request omits them, which would silently unlock a unit or discard a user's
+    # container/fill choice. They are therefore required here. ``update`` and
+    # ``manage`` complete an existing unit's entry from its current state
+    # (see ``JobHandlingUnitsEndpoint``); a new unit has nothing to infer from.
+    is_container_changed: bool = Field(
+        alias="isContainerChanged",
+        description="Whether the container was chosen by a user rather than by automatic packing.",
+    )
+    is_fill_changed: bool = Field(
+        alias="isFillChanged",
+        description="Whether the fill was chosen by a user rather than by automatic packing.",
+    )
+    is_locked: bool = Field(
+        alias="isLocked",
+        description="Whether a user locked this unit; only its content may still change.",
+    )
 
 
 class AddJobHandlingUnitModel(JobHandlingUnitModel):
@@ -335,6 +352,21 @@ class JobHandlingUnit(ResponseModel):
     )
     is_used_in_shipment: bool | None = Field(default=None, alias="isUsedInShipment", description="Is used in shipment.")
     cubic_feet: float | None = Field(default=None, alias="cubicFeet", description="Cubic feet.")
+    is_container_changed: bool | None = Field(
+        default=None,
+        alias="isContainerChanged",
+        description="Whether the container was chosen by a user rather than by automatic packing.",
+    )
+    is_fill_changed: bool | None = Field(
+        default=None,
+        alias="isFillChanged",
+        description="Whether the fill was chosen by a user rather than by automatic packing.",
+    )
+    is_locked: bool | None = Field(
+        default=None,
+        alias="isLocked",
+        description="Whether a user locked this unit; only its content may still change.",
+    )
 
 
 class JobHandlingUnitDetails(JobHandlingUnit):
@@ -366,7 +398,20 @@ class ManageableHandlingUnitMaterialModel(HandlingUnitMaterialModel):
 class ManageableJobHandlingUnitModel(JobHandlingUnitModel):
     """ManageableJobHandlingUnitModel contract from server release 8_01."""
 
-    id: int = Field(default=0, alias="id", description="Identifier of this record; scoped to the job.")
+    id: int = Field(
+        alias="id",
+        description=(
+            "Positive: an existing handling unit of the job, which is updated. Negative: a new unit; "
+            "use distinct negative IDs. Zero is rejected (the server cannot process it)."
+        ),
+    )
+
+    @field_validator("id")
+    @classmethod
+    def _id_is_not_zero(cls, value: int) -> int:
+        if value == 0:
+            raise ValueError("id 0 is not valid: use a positive id for an existing unit or a negative id for a new one")
+        return value
     container_handling_unit_material_id: int | None = Field(
         default=None,
         alias="containerHandlingUnitMaterialId",
@@ -377,6 +422,16 @@ class ManageableJobHandlingUnitModel(JobHandlingUnitModel):
     )
     content_handling_units: list[AddContentHandlingUnitModel] | None = Field(
         default=None, alias="contentHandlingUnits", description="Nested handling units and their assigned quantities."
+    )
+    # The server replaces the unit's inventory with this list and treats an omitted
+    # list as empty, so leaving it out would silently detach everything. Required
+    # here; ``manage`` completes an existing unit's entry from its current state.
+    inventory_items: list[AddInventoryModel] = Field(
+        alias="inventoryItems",
+        description=(
+            "Complete inventory of this unit: the server replaces the unit's inventory with this "
+            "list. Pass an empty list to detach all inventory."
+        ),
     )
 
 
@@ -393,8 +448,12 @@ class ManageHandlingUnitsModel(PackingRequestModel):
         alias="forceUpdate",
         description="Override a modification conflict only when explicitly intended.",
     )
-    handling_units: list[ManageableJobHandlingUnitModel] | None = Field(
-        default=None, alias="handlingUnits", description="Complete handling-unit arrangement to manage."
+    handling_units: list[ManageableJobHandlingUnitModel] = Field(
+        alias="handlingUnits",
+        description=(
+            "The whole job's handling-unit arrangement. The server deletes every unit of the job "
+            "that this list leaves out; an empty list deletes them all."
+        ),
     )
 
 

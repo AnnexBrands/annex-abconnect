@@ -17,6 +17,9 @@ ab jobs handling_units create <job_display_id> [--body ...]
 
 ``POST /job/{jobDisplayId}/handlingUnit``
 
+``is_locked``, ``is_container_changed`` and ``is_fill_changed`` are required:
+a new unit has no stored state to take them from.
+
 ## Request body — `AddJobHandlingUnitModel`
 
 | Field | Type | Required | Description |
@@ -39,6 +42,9 @@ ab jobs handling_units create <job_display_id> [--body ...]
 | `declaredValue` | `Optional[float]` | no | Declared handling-unit value. |
 | `name` | `Optional[str]` | no | Display name. |
 | `hasCustomName` | `bool` | no | Whether the display name was supplied by the caller. |
+| `isContainerChanged` | `bool` | yes | Whether the container was chosen by a user rather than by automatic packing. |
+| `isFillChanged` | `bool` | yes | Whether the fill was chosen by a user rather than by automatic packing. |
+| `isLocked` | `bool` | yes | Whether a user locked this unit; only its content may still change. |
 | `contentHandlingUnits` | `Optional[list[AddContentHandlingUnitModel]]` | no | Nested handling units and their assigned quantities. |
 | `inventoryItems` | `Optional[list[AddInventoryModel]]` | no | Inventory records and quantities contained by this handling unit. |
 
@@ -78,6 +84,9 @@ Returns `JobHandlingUnit`.
 | `materialTotalCost` | `Optional[float]` | no | Material total cost. |
 | `isUsedInShipment` | `Optional[bool]` | no | Is used in shipment. |
 | `cubicFeet` | `Optional[float]` | no | Cubic feet. |
+| `isContainerChanged` | `Optional[bool]` | no | Whether the container was chosen by a user rather than by automatic packing. |
+| `isFillChanged` | `Optional[bool]` | no | Whether the fill was chosen by a user rather than by automatic packing. |
+| `isLocked` | `Optional[bool]` | no | Whether a user locked this unit; only its content may still change. |
 
 ---
 

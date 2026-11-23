@@ -6,16 +6,46 @@
 **Python**
 
 ```python
-api.jobs.handling_units.manage(job_display_id: int, **kwargs: Any) -> ManageHandlingUnitsResponse
+api.jobs.handling_units.manage(job_display_id: int, *, delete_omitted: bool | Iterable[int] = False, **kwargs: Any) -> ManageHandlingUnitsResponse
 ```
 
 **CLI**
 
 ```bash
-ab jobs handling_units manage <job_display_id> [--body ...]
+ab jobs handling_units manage <job_display_id> [--delete-omitted ...] [--body ...]
 ```
 
-``POST /job/{jobDisplayId}/handlingUnit/manage`` — submits the complete handling-unit arrangement.
+``POST /job/{jobDisplayId}/handlingUnit/manage`` — replaces the job's handling-unit arrangement.
+
+``handling_units`` is the **whole job's** arrangement, not a patch:
+
+- A unit of the job that the list leaves out is **deleted** by the server, with
+  its nesting, inventory links, materials, documents and shipping contents. The
+  SDK refuses that before any write unless ``delete_omitted`` allows it.
+- A unit with a positive ``id`` is updated. Every field you leave out keeps its
+  current value (see below); pass ``None`` or ``[]`` to clear one.
+- A unit with a negative ``id`` is created; use distinct negative IDs and refer
+  to them from ``content_handling_units``. ``id`` 0 is rejected. A new unit must
+  name ``is_locked``, ``is_container_changed``, ``is_fill_changed`` and
+  ``inventory_items``.
+
+The server overwrites each submitted unit completely, so the SDK first reads the
+job's units (one ``get_all``) and fills in whatever an existing unit's entry
+omits. A ``container_type_id`` or ``fill_id`` different from the stored one turns
+``is_container_changed`` / ``is_fill_changed`` on.
+
+Args:
+    job_display_id: Job display ID.
+    delete_omitted: Which of the job's units the server may delete because
+        ``handling_units`` does not list them. ``False`` (default): none.
+        A collection of unit IDs: exactly those -- the call is refused if
+        the units that would be deleted differ from it in either
+        direction, for example because the job changed after you planned
+        the request. ``True``: whatever is unlisted.
+
+Raises:
+    ValueError: A listed positive ``id`` is not a unit of the job, or the
+        units that would be deleted are not the ones ``delete_omitted`` allows.
 
 ## Request body — `ManageHandlingUnitsModel`
 
@@ -23,7 +53,7 @@ ab jobs handling_units manage <job_display_id> [--body ...]
 |---|---|---|---|
 | `jobModifiedDate` | `Optional[datetime]` | no | Last observed job modification timestamp for conflict detection. |
 | `forceUpdate` | `bool` | no | Override a modification conflict only when explicitly intended. |
-| `handlingUnits` | `Optional[list[ManageableJobHandlingUnitModel]]` | no | Complete handling-unit arrangement to manage. |
+| `handlingUnits` | `list[ManageableJobHandlingUnitModel]` | yes | The whole job's handling-unit arrangement. The server deletes every unit of the job that this list leaves out; an empty list deletes them all. |
 
 ## Response
 

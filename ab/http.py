@@ -10,13 +10,14 @@ from __future__ import annotations
 import logging
 import time
 from typing import Any, Callable, Dict, Mapping, Optional, Union
+from urllib.parse import urlsplit
 
 import requests
 
 from ab.auth.base import Token, TokenStorage
 from ab.auth.claims import BearerClaims
 from ab.config import ABConnectSettings
-from ab.exceptions import AuthenticationError, RequestError
+from ab.exceptions import AuthenticationError, ConfigurationError, JobModifiedConflictError, RequestError
 
 logger = logging.getLogger(__name__)
 
@@ -178,6 +179,44 @@ class HttpClient:
         self._token_storage.save_token(token)
         return token
 
+    def resolve_partner_id(self) -> int:
+        """The partner this client acts for, from the bearer token or from configuration.
+
+        - A token that names partners (a partner login): the configured
+          ``partner_id`` when it is one of them, otherwise the token's single
+          partner. A configured partner the token does not carry is an error --
+          the server would act for the token's partner, not the configured one.
+        - A token that names none (a corporate login, or a token issued without
+          the ``catalog`` scope): the configured ``partner_id`` is required.
+
+        Raises:
+            ConfigurationError: No partner can be determined, or the configured
+                partner contradicts the token.
+        """
+        configured = self._settings.partner_id
+        claims = self.bearer_claims()
+        token_partners = claims.partner_ids if claims is not None else ()
+        if token_partners:
+            if configured is None:
+                if len(token_partners) == 1:
+                    return token_partners[0]
+                raise ConfigurationError(
+                    f"This login belongs to {len(token_partners)} partners. Choose one with "
+                    "ABCONNECT_PARTNER_ID or ABConnectAPI(partner_id=...)."
+                )
+            if configured not in token_partners:
+                raise ConfigurationError(
+                    f"partner_id {configured} is configured, but this login's token is for partner(s) "
+                    f"{sorted(token_partners)}. The server acts for the token's partner."
+                )
+            return configured
+        if configured is None:
+            raise ConfigurationError(
+                "This call needs a partner and the login's token names none (corporate logins never do). "
+                "Set ABCONNECT_PARTNER_ID or pass ABConnectAPI(partner_id=...)."
+            )
+        return configured
+
     def bearer_claims(self) -> Optional[BearerClaims]:
         """Return the claims carried by the bearer this client would send.
 
@@ -292,11 +331,31 @@ class HttpClient:
             return None
 
         if not (200 <= resp.status_code < 300):
+            error_info = None
             try:
                 error_info = resp.json()
                 message = error_info.get("message", resp.text)
             except Exception:
                 message = resp.text
+            if (
+                resp.status_code == 400
+                and isinstance(error_info, dict)
+                and (error_info.get("refreshRequired") is True or error_info.get("forceUpdateRequired") is True)
+            ):
+                raise JobModifiedConflictError(
+                    resp.status_code,
+                    message,
+                    modified_by=error_info.get("modifiedBy"),
+                    modified_by_system=error_info.get("modifiedBySystem"),
+                    refresh_required=error_info.get("refreshRequired") is True,
+                    force_update_required=error_info.get("forceUpdateRequired") is True,
+                )
+            if not (message or "").strip():
+                # Some server failures (an unhandled 500, for one) carry no body.
+                # Name the call so the error is not just "HTTP 500: ".
+                method = getattr(resp.request, "method", None) or "request"
+                path = urlsplit(getattr(resp, "url", "") or "").path
+                message = f"empty response body from {method} {path}".rstrip()
             raise RequestError(resp.status_code, message)
 
         content_type = resp.headers.get("Content-Type", "").lower()

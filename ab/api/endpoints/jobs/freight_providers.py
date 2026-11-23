@@ -15,8 +15,9 @@ Note: ``add_freight_items`` is tagged ``Job`` in swagger, not
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
-from uuid import UUID
+from datetime import datetime
+from typing import TYPE_CHECKING, Literal, NamedTuple
+from uuid import UUID, uuid4
 
 from ab.api.base import BaseEndpoint
 from ab.api.models.release_support import (
@@ -37,6 +38,13 @@ if TYPE_CHECKING:
         ShipmentPlanProvider,
     )
     from ab.api.models.shared import ServiceBaseResponse
+
+
+class NewFinalOverride(NamedTuple):
+    """Result of :meth:`JobFreightProvidersEndpoint.save_new_final_override`."""
+
+    quote_id: UUID
+    response: JobModifiedDateServiceResponseResult
 
 
 _LIST = Route(
@@ -249,6 +257,113 @@ class JobFreightProvidersEndpoint(BaseEndpoint):
         Response model: JobModifiedDateServiceResponseResult
         """
         return self._request(_CURRENT_SAVE_FINAL_QUOTE.bind(jobDisplayId=job_display_id), json=data)
+
+    def save_new_final_override(
+        self,
+        job_display_id: int,
+        *,
+        shipping_id: int,
+        shipment_type: UUID | str,
+        provider_id: UUID | str,
+        provider_company_name: str,
+        freight_amount: float,
+        accessorial_amount: float = 0.0,
+        provider_code: str | None = None,
+        pro_number: str | None = None,
+        quote_number: str | None = None,
+        service_days: int | None = None,
+        job_modified_date: datetime | str | None = None,
+        handling_units: list | None = None,
+    ) -> NewFinalOverride:
+        """Create a final override **with its amounts** in one write.
+
+        :meth:`create_final_override` takes no amounts, so an approval made with it
+        needs a second write and can leave an active override at 0 if that write
+        fails. ``POST .../freightproviders/final`` adds the posted quote when its id
+        is not stored yet, so this method posts a complete override under a new id:
+        the quote is created active with the given amounts and the other quotes of
+        the shipping are deactivated, all in the one request.
+
+        The shipping must exist; this call never creates one. A ``pro_number`` marks
+        the override shipped (see :func:`ab.api.selection.is_recorded_override`).
+
+        Args:
+            shipping_id: Shipping the override belongs to (``jobs.shippings.get_all``).
+            shipment_type: Shipment type UUID, as on an existing quote (``shipment_type``).
+            provider_id: Carrier company UUID.
+            provider_company_name: Name shown for the override.
+            freight_amount: Carrier cost.
+            accessorial_amount: Accessorial cost.
+            job_modified_date: The job's modified stamp. A stale one raises
+                :class:`~ab.exceptions.JobModifiedConflictError` and writes nothing.
+            handling_units: When given, the shipping takes over exactly these units.
+
+        Returns:
+            ``NewFinalOverride(quote_id, response)``. ``quote_id`` is the id the new
+            quote was created under; ``response.job_modified_date`` is the stamp for
+            the next write.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/freight_providers.save_final_quote.html
+        Request model: SaveFinalQuoteRequest
+        Response model: JobModifiedDateServiceResponseResult
+        """
+        new_id = uuid4()
+        quote = {
+            "id": str(new_id),
+            "isOverridden": True,
+            "active": True,
+            "shippingId": shipping_id,
+            "shipmentType": str(shipment_type),
+            "providerId": str(provider_id),
+            "providerCompanyName": provider_company_name,
+            "freightAmount": freight_amount,
+            "accessorialAmount": accessorial_amount,
+        }
+        optional = {
+            "providerCode": provider_code,
+            "proNumber": pro_number,
+            "quoteNumber": quote_number,
+            "serviceDays": service_days,
+        }
+        quote.update({key: value for key, value in optional.items() if value is not None})
+        data: dict = {"quote": quote}
+        if job_modified_date is not None:
+            data["jobModifiedDate"] = job_modified_date
+        if handling_units is not None:
+            data["handlingUnits"] = handling_units
+        response = self.save_final_quote(job_display_id, data=data)
+        return NewFinalOverride(new_id, response)
+
+    def mark_selected(
+        self,
+        job_display_id: int,
+        quote: TransportationQuoteResult,
+        *,
+        job_modified_date: datetime | str | None = None,
+    ) -> JobModifiedDateServiceResponseResult:
+        """Record that *quote* is a deliberate selection, not the shipping's first estimate.
+
+        A rate selected into a shipping that had no quote (which includes every
+        shipping ``select_rate_quote`` creates) is stored exactly like an estimate,
+        so :func:`ab.api.selection.is_untouched_estimate` cannot tell them apart.
+        This posts the quote back unchanged as the final quote of its shipping. The
+        server stamps it as modified, which is what the estimate test reads; the
+        amounts, PRO and accepted state are sent back as they are.
+
+        Pass the quote as just read from :meth:`get_quotes`. Like every final-quote
+        write, this leaves the quote active and deactivates the other quotes of its
+        shipping.
+
+        Docs: https://ab-sdk.readthedocs.io/en/latest/api/jobs/freight_providers.save_final_quote.html
+        Request model: SaveFinalQuoteRequest
+        Response model: JobModifiedDateServiceResponseResult
+        """
+        if quote.shipping_id is None:
+            raise ValueError("mark_selected needs a quote that belongs to a shipping")
+        data: dict = {"quote": quote.model_dump(by_alias=True, mode="json")}
+        if job_modified_date is not None:
+            data["jobModifiedDate"] = job_modified_date
+        return self.save_final_quote(job_display_id, data=data)
 
     def get_quotes(
         self,

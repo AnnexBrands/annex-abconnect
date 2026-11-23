@@ -13,6 +13,9 @@ to build your integration. Requires Python 3.11 or newer.
 quickstart
 whats-new
 migration-8-01
+mapping-8-01/quotes-booking
+mapping-8-01/packing
+mapping-8-01/reads
 troubleshooting
 ```
 
@@ -42,7 +45,7 @@ me = api.contacts.get_current_user()
 print(me.full_name)
 ```
 
-**SDK 0.3.0 targets ABConnect 8_01:** unified inventory and handling units,
+**SDK 0.3.x targets ABConnect 8_01:** unified inventory and handling units,
 explicit shipment selection, and migration notices for supported legacy calls.
 Read [What's New](whats-new.md) and the [migration guide](migration-8-01.md) before upgrading.
 

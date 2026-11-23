@@ -919,6 +919,24 @@
         }
       }
     },
+    "/api/webhooks/btx/tracking": {
+      "post": {
+        "tags": [
+          "BtxWebhook"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/api/company/{companyId}/calendar/{date}": {
       "get": {
         "tags": [
@@ -19008,7 +19026,7 @@
                   "type": "array",
                   "items": {
                     "type": "array",
-                    "items": { }
+                    "items": {}
                   }
                 }
               },
@@ -19017,7 +19035,7 @@
                   "type": "array",
                   "items": {
                     "type": "array",
-                    "items": { }
+                    "items": {}
                   }
                 }
               },
@@ -19026,7 +19044,7 @@
                   "type": "array",
                   "items": {
                     "type": "array",
-                    "items": { }
+                    "items": {}
                   }
                 }
               }
@@ -20733,6 +20751,15 @@
             "nullable": true
           },
           "hasCustomName": {
+            "type": "boolean"
+          },
+          "isContainerChanged": {
+            "type": "boolean"
+          },
+          "isFillChanged": {
+            "type": "boolean"
+          },
+          "isLocked": {
             "type": "boolean"
           },
           "contentHandlingUnits": {
@@ -25400,7 +25427,7 @@
           },
           "filter": {
             "type": "array",
-            "items": { },
+            "items": {},
             "nullable": true
           },
           "totalSummary": {
@@ -27640,7 +27667,7 @@
           },
           "filter": {
             "type": "array",
-            "items": { },
+            "items": {},
             "nullable": true
           },
           "totalSummary": {
@@ -28129,6 +28156,11 @@
             "items": {
               "$ref": "#/components/schemas/PendingHandlingUnitMaterial"
             },
+            "nullable": true
+          },
+          "fillRate": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "validationResult": {
@@ -28708,7 +28740,8 @@
           8,
           16,
           29,
-          31
+          31,
+          32
         ],
         "type": "integer",
         "format": "int32"
@@ -29103,6 +29136,15 @@
           "hasCustomName": {
             "type": "boolean"
           },
+          "isContainerChanged": {
+            "type": "boolean"
+          },
+          "isFillChanged": {
+            "type": "boolean"
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
           "inventoryItems": {
             "type": "array",
             "items": {
@@ -29248,6 +29290,15 @@
             "nullable": true
           },
           "hasCustomName": {
+            "type": "boolean"
+          },
+          "isContainerChanged": {
+            "type": "boolean"
+          },
+          "isFillChanged": {
+            "type": "boolean"
+          },
+          "isLocked": {
             "type": "boolean"
           },
           "inventoryItems": {
@@ -29429,6 +29480,15 @@
             "nullable": true
           },
           "hasCustomName": {
+            "type": "boolean"
+          },
+          "isContainerChanged": {
+            "type": "boolean"
+          },
+          "isFillChanged": {
+            "type": "boolean"
+          },
+          "isLocked": {
             "type": "boolean"
           }
         },
@@ -30739,7 +30799,7 @@
         "properties": {
           "data": {
             "type": "array",
-            "items": { },
+            "items": {},
             "nullable": true
           },
           "totalCount": {
@@ -30754,7 +30814,7 @@
           },
           "summary": {
             "type": "array",
-            "items": { },
+            "items": {},
             "nullable": true
           }
         },
@@ -31052,6 +31112,15 @@
           "hasCustomName": {
             "type": "boolean"
           },
+          "isContainerChanged": {
+            "type": "boolean"
+          },
+          "isFillChanged": {
+            "type": "boolean"
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
           "id": {
             "type": "integer",
             "format": "int32"
@@ -31072,6 +31141,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AddContentHandlingUnitModel"
+            },
+            "nullable": true
+          },
+          "inventoryItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddInventoryModel"
             },
             "nullable": true
           }
@@ -31559,7 +31635,7 @@
         "properties": {
           "data": {
             "type": "array",
-            "items": { },
+            "items": {},
             "nullable": true
           }
         },
@@ -32066,6 +32142,21 @@
             "minimum": 1,
             "type": "integer",
             "format": "int32"
+          },
+          "requestedContainerTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requestedContainerMaterialId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requestedFillId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -32618,6 +32709,25 @@
           "quantity": {
             "type": "integer",
             "format": "int32"
+          },
+          "requestedContainerTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requestedContainerMaterialId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requestedFillId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasRequestedContainer": {
+            "type": "boolean",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -32874,7 +32984,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "PropertyType": {
         "enum": [
@@ -34428,6 +34538,13 @@
           },
           "quote": {
             "$ref": "#/components/schemas/TransportationQuote"
+          },
+          "handlingUnits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobTransportationHandlingUnit"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -34826,7 +34943,7 @@
           },
           "filter": {
             "type": "array",
-            "items": { },
+            "items": {},
             "nullable": true
           },
           "totalSummary": {
@@ -35480,7 +35597,7 @@
           },
           "filter": {
             "type": "array",
-            "items": { },
+            "items": {},
             "nullable": true
           },
           "totalSummary": {
@@ -37197,6 +37314,10 @@
             "format": "uuid",
             "nullable": true
           },
+          "containerValidationMessage": {
+            "type": "string",
+            "nullable": true
+          },
           "inventoryItems": {
             "type": "array",
             "items": {
@@ -37337,6 +37458,10 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          },
+          "containerValidationMessage": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -37454,6 +37579,10 @@
             "format": "uuid",
             "nullable": true
           },
+          "containerValidationMessage": {
+            "type": "string",
+            "nullable": true
+          },
           "id": {
             "type": "integer",
             "format": "int32"
@@ -37562,7 +37691,7 @@
           },
           "filter": {
             "type": "array",
-            "items": { },
+            "items": {},
             "nullable": true
           },
           "totalSummary": {
@@ -39347,7 +39476,7 @@
           },
           "filter": {
             "type": "array",
-            "items": { },
+            "items": {},
             "nullable": true
           },
           "totalSummary": {
@@ -39513,7 +39642,7 @@
   },
   "security": [
     {
-      "bearerAuth": [ ]
+      "bearerAuth": []
     }
   ]
 }

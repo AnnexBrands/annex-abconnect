@@ -38,6 +38,7 @@ Returns `ShipmentExportData`.
 | `uspsSpecific` | `Optional[dict]` | no | USPS-specific export fields |
 | `fedExSpecific` | `Optional[dict]` | no | FedEx-specific export fields |
 | `upsSpecific` | `Optional[dict]` | no | UPS-specific export fields |
+| `soldToContactDetails` | `Optional[dict]` | no | Sold-to contact details (read only) |
 
 ---
 

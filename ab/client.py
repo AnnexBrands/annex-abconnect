@@ -9,7 +9,7 @@ from ab.auth.base import Token, TokenStorage
 from ab.auth.file import FileTokenStorage
 from ab.auth.session import SessionTokenStorage
 from ab.cache import CodeResolver
-from ab.config import load_settings
+from ab.config import ABConnectSettings, load_settings
 from ab.http import HttpClient
 
 if TYPE_CHECKING:
@@ -120,10 +120,22 @@ class ABConnectAPI:
         allow_password_fallback: Optional[bool] = None,
         anonymous: bool = False,
         extra_headers: Optional[Any] = None,
+        partner_id: Optional[int] = None,
+        settings: Optional[ABConnectSettings] = None,
     ) -> None:
         """See class docstring. Additional keyword args:
 
         Args:
+            settings: Ready-made settings to use instead of loading them from
+                environment variables and ``.env`` files; ``env`` and
+                ``env_file`` are then ignored. Use
+                ``ABConnectSettings.explicit(environment=..., username=..., ...)``
+                to give each client its own login without touching the process
+                environment, for example one client per partner.
+            partner_id: Partner this client acts for on the Catalog API calls
+                that need one; overrides ``ABCONNECT_PARTNER_ID``. Required for a
+                corporate login, optional for a partner login. See
+                :meth:`resolve_partner_id`.
             anonymous: Build a client with no credentials and no persisted
                 token. Only routes marked ``auth_optional`` (e.g. the
                 AccessKey-authenticated ``api.autoprice`` quote endpoints)
@@ -141,11 +153,18 @@ class ABConnectAPI:
             if allow_password_fallback is None:
                 allow_password_fallback = False
         external_storage = token_storage is not None or request is not None
-        self._settings = load_settings(
-            env=env,
-            env_file=env_file,
-            require_credentials=not external_storage,
-        )
+        if settings is not None:
+            if env is not None or env_file is not None:
+                raise ValueError("Pass either settings= or env=/env_file=, not both.")
+            self._settings = settings
+        else:
+            self._settings = load_settings(
+                env=env,
+                env_file=env_file,
+                require_credentials=not external_storage,
+            )
+        if partner_id is not None:
+            self._settings = self._settings.model_copy(update={"partner_id": int(partner_id)})
         self._allow_password_fallback = (
             True if allow_password_fallback is None else allow_password_fallback
         )
@@ -235,6 +254,38 @@ class ABConnectAPI:
             seen.add(id(value))
             names.append(name)
         return sorted(names)
+
+    @property
+    def partner_id(self) -> Optional[int]:
+        """The partner configured for this client, or ``None``.
+
+        Plain configuration: the value of ``ABCONNECT_PARTNER_ID`` or
+        ``ABConnectAPI(partner_id=...)``. Reading it never raises, never obtains
+        a token and never makes a request. It does not know a partner login's
+        token partner; :meth:`resolve_partner_id` does.
+        """
+        return self._settings.partner_id
+
+    def resolve_partner_id(self) -> int:
+        """The partner this client acts for on the Catalog API, from token or configuration.
+
+        A partner login takes it from its token's ``partnerIds`` claim. A
+        corporate login has no such claim and must be configured with one
+        (:attr:`partner_id`). A configured partner that contradicts a partner
+        login's token is an error. Obtains a token if the client has none yet.
+
+        Only calls that take a partner use it: ``lots.item_data`` fills in an
+        omitted ``partner_id``, and
+        ``platforms.list(partner_id=api.resolve_partner_id())`` gives the platform
+        to name on ``catalog.bulk_upsert``. The server scopes a partner login's
+        catalog and lot reads by its token; a corporate login's reads are
+        unscoped and this does not filter them.
+
+        Raises:
+            ConfigurationError: No partner can be determined, or the configured
+                partner contradicts the token.
+        """
+        return self._catalog.resolve_partner_id()
 
     def __repr__(self) -> str:
         env = getattr(self._settings, "environment", None)

@@ -28,6 +28,20 @@ Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
   `PickUp (PARCEL)`, so every call raised. `bol` now renders the carrier BOL of
   the leg's active quote and asks for `quote_id` when a job has several.
 
+### Added (quote flow, from the tools migration)
+- `jobs.freight_providers.save_new_final_override(...)`: creates a final override with
+  its amounts, and optionally its PRO, in one request, and returns the new quote id.
+  `create_final_override` takes no amounts, so an approval made with it needed a second
+  write and could leave an active override at 0.
+- `jobs.freight_providers.mark_selected(job, quote)`: records that a quote is a
+  deliberate selection, so a rate selected into a new shipping stops reading as an
+  untouched estimate.
+- `ab.JobModifiedConflictError` (a `RequestError`): raised for the HTTP 400 a stale
+  `jobModifiedDate` gets, with `modified_by`, `refresh_required` and
+  `force_update_required`.
+- `ab.api.selection.is_recorded_override` and `is_carrier_booked`: an override with a
+  PRO reads `shipment_accepted = true` without a carrier booking; these tell the two apart.
+
 ### Changed
 
 - **Breaking:** `is_locked`, `is_container_changed` and `is_fill_changed` are

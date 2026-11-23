@@ -107,3 +107,23 @@ def is_untouched_estimate(quote, quotes_in_shipping) -> bool:
     except TypeError:  # one stamp timezone-aware, the other naive
         return False
     return elapsed <= _UNTOUCHED_TOLERANCE_SECONDS
+
+
+def is_recorded_override(quote) -> bool:
+    """Whether *quote* is a final override that someone marked shipped by typing a PRO in.
+
+    8_01 sets ``shipment_accepted`` on an override as soon as it has a PRO number
+    and clears it when the PRO is removed. No carrier booking stands behind it, so
+    ``shipment_accepted`` alone does not mean "booked through ABConnect".
+    """
+    return bool(quote.is_overridden and quote.shipment_accepted)
+
+
+def is_carrier_booked(quote) -> bool:
+    """Whether *quote* was booked with the carrier through ABConnect.
+
+    True for a rated (not overridden) quote whose shipment is accepted. A final
+    override with a PRO also reads ``shipment_accepted``; see
+    :func:`is_recorded_override` for that case.
+    """
+    return bool(quote.shipment_accepted and not quote.is_overridden)

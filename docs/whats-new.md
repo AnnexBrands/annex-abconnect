@@ -28,6 +28,14 @@ inactive unit is refused only at booking validation, not at rating; a quote must
 rated with the unit exactly as stored; and per-shipping export data is empty until
 saved. The bundled portal Swagger now contains 364 operations.
 
+**Quote flow additions.** `save_new_final_override` creates a final override with its
+amounts in one write. `mark_selected` makes a rate selected into a new shipping read as a
+selection rather than an estimate. A stale `jobModifiedDate` now raises
+`JobModifiedConflictError`, and `is_recorded_override` / `is_carrier_booked` separate an
+override that was marked shipped by its PRO from a carrier booking. 8_01 has no call that
+deactivates a quote or creates an empty shipping; see
+[the quotes mapping](mapping-8-01/quotes-booking.md).
+
 ## 0.3.0 — Unified packing and multiple shipments
 
 | Change | What it means for your integration |

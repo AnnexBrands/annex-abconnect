@@ -72,6 +72,10 @@ All three 8_01 writes check the job-modified timestamp with the *refresh* policy
 `jobModifiedDate` you last read; a stale one is rejected and `forceUpdate` does not bypass it.
 **[source]** `[CheckJobModification(JobModificationConflictResolution.Refresh)]`; verified on staging for 0.3.0.
 Each response returns the new `jobModifiedDate`; carry it into the next write.
+A stale stamp is HTTP 400 with `refreshRequired` in the body. From 0.3.1 the SDK raises
+`ab.JobModifiedConflictError` for it (a `RequestError` subclass, so existing handlers still catch it),
+with `modified_by` and `refresh_required`. Nothing was written; read the job again before retrying.
+**[staging]** job 5506118, 2026-11-23.
 
 ### What each write does on the server **[source]**
 
@@ -156,12 +160,47 @@ api.jobs.freight_providers.save_final_quote(
 - `save_final_quote` validates the response model `JobModifiedDateServiceResponseResult`:
   check `success` and `error_message`, not just the HTTP status.
 
+### One write instead of two (0.3.1) **[staging]**
+
+`POST .../freightproviders/final` adds the posted quote when its id is not stored yet
+(**[source]** `FinalQuoteService.Save`), so a complete override can be created with its amounts in
+one request. `save_new_final_override` does that under an id it generates and returns:
+
+```python
+new = api.jobs.freight_providers.save_new_final_override(
+    job_id, shipping_id=shipping_id, shipment_type=PARCEL, provider_id=carrier_company_id,
+    provider_code=code, provider_company_name=name, freight_amount=freight_amount,
+    job_modified_date=job_modified_date)          # pro_number=... to record in the same write
+quote_id, next_stamp = new.quote_id, new.response.job_modified_date
+```
+
+Run on staging job 5506118 (2026-11-23): the quote was created under the client's id, active, with
+freight 33.10 and accessorial 2.20, and the shipping's other quotes were deactivated. A stale stamp
+was refused and created nothing. This removes the window where a failed second write leaves an
+active override at 0. It needs an existing shipping; `create_final_override` is still the only
+override call that creates one.
+
+### What 8_01 does not offer **[source]**
+
+- **No call deactivates a quote.** The API has four quote routes (`finaloverride`, `ratequote`,
+  `final`, and the read). Every write leaves its own quote active and deactivates the others of the
+  shipping; none leaves a shipping with no active quote, and none deletes a quote. The legacy web
+  application has a manage-all-quotes save that can, but it is not exposed through the API. To
+  retire an approval, make another quote of the shipping final (`mark_selected` on the earlier
+  quote does it without changing that quote). To retire the last quote of a shipping there is no
+  call; clear its PRO and treat it as void on the client.
+- **No call creates an empty shipping.** A shipping appears only as a side effect: of
+  `create_final_override` or `select_rate_quote` without `shippingId`, or of `handling_units.manage`.
+- **An override with a PRO reads `shipment_accepted = true`**, and loses it when the PRO is
+  cleared. `ab.api.selection.is_recorded_override(quote)` and `is_carrier_booked(quote)` tell the
+  two apart.
+
 Answers to the open assumptions in `expectations.md`:
 
 | ID | Answer | Evidence |
 |---|---|---|
 | A-17 | Yes at source level: a final override can be created on a shipping whose units have no inventory, without a PRO, and the PRO added later through `save_final_quote`. | [source]; staging write not run |
-| A-18 | **No, not in one call.** `create_final_override` takes provider id, code, name, shipment type and PRO, but not freight amount, accessorial amount or the active flag. Amounts go through `save_final_quote`; the quote is always created active. | [source] `FinalOverrideProviderModel`, staging Swagger |
+| A-18 | **Not through `create_final_override`; yes through `save_new_final_override` (0.3.1, above).** `create_final_override` takes provider id, code, name, shipment type and PRO, but not freight amount, accessorial amount or the active flag. Amounts go through `save_final_quote`; the quote is always created active. | [source] `FinalOverrideProviderModel`, staging Swagger |
 | A-19 | Yes, per shipping rather than per job. Both writes leave exactly one active quote in the shipping. Read back with `get_quotes(active=True)` filtered by `shipping_id`. | [source]; read filter [staging] |
 
 ## 5. The ABConnect-rated path
@@ -175,6 +214,12 @@ Answers to the open assumptions in `expectations.md`:
 
 - `rates.select_quote` only previews; it persists nothing. `select_rate_quote` persists.
 - Omitting `shippingId` on `select_rate_quote` creates a new shipping.
+  A rate selected into a shipping that had no quote is stored exactly like an estimate, so
+  `is_untouched_estimate` reads it as one. Call `freight_providers.mark_selected(job_id, quote,
+  job_modified_date=...)` on the returned quote: it posts the quote back unchanged as the final
+  quote of its shipping, the server stamps it as modified, and the estimate test then reads it as a
+  selection. **[staging]** job 5523070, shipping 1522773, 2026-11-23: amounts and state unchanged,
+  `is_untouched_estimate` went from true to false.
 - Only active, top-level units with quantity above zero and a transportation container type are
   rated. **[source]** `TransportationQuoteValidator`, `JobShipmentPlanService`
 - `book_v2` returns `success`, `error_message`, `shipment_id` (a carrier id, not a shipping id) and

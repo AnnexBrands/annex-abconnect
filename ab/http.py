@@ -17,7 +17,7 @@ import requests
 from ab.auth.base import Token, TokenStorage
 from ab.auth.claims import BearerClaims
 from ab.config import ABConnectSettings
-from ab.exceptions import AuthenticationError, ConfigurationError, RequestError
+from ab.exceptions import AuthenticationError, ConfigurationError, JobModifiedConflictError, RequestError
 
 logger = logging.getLogger(__name__)
 
@@ -331,11 +331,25 @@ class HttpClient:
             return None
 
         if not (200 <= resp.status_code < 300):
+            error_info = None
             try:
                 error_info = resp.json()
                 message = error_info.get("message", resp.text)
             except Exception:
                 message = resp.text
+            if (
+                resp.status_code == 400
+                and isinstance(error_info, dict)
+                and (error_info.get("refreshRequired") is True or error_info.get("forceUpdateRequired") is True)
+            ):
+                raise JobModifiedConflictError(
+                    resp.status_code,
+                    message,
+                    modified_by=error_info.get("modifiedBy"),
+                    modified_by_system=error_info.get("modifiedBySystem"),
+                    refresh_required=error_info.get("refreshRequired") is True,
+                    force_update_required=error_info.get("forceUpdateRequired") is True,
+                )
             if not (message or "").strip():
                 # Some server failures (an unhandled 500, for one) carry no body.
                 # Name the call so the error is not just "HTTP 500: ".

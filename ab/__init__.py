@@ -6,6 +6,7 @@ from ab.exceptions import (
     ABConnectError,
     AuthenticationError,
     ConfigurationError,
+    JobModifiedConflictError,
     RequestError,
     ValidationError,
 )
@@ -17,6 +18,7 @@ __all__ = [
     "ABConnectError",
     "AuthenticationError",
     "ConfigurationError",
+    "JobModifiedConflictError",
     "RequestError",
     "ValidationError",
     "paginate",

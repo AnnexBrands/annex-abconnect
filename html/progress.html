@@ -104,7 +104,7 @@ code { background: #f0f0f0; padding: 1px 4px; border-radius: 2px;
 </head>
 <body>
 <h1>ABConnect SDK — Progress Report</h1>
-<p class='subtitle'>Generated 2026-11-22 03:43 UTC</p>
+<p class='subtitle'>Generated 2026-11-23 05:07 UTC</p>
 <h2>Certification Status</h2><p class='subtitle'><em>Structural completeness is presence of files, not proof of execution. Only <strong>Live verified</strong> and <strong>Certified</strong> reflect a call that actually ran.</em></p><div class='gate-cards'><div class='gate-card card-overall'><h4>Implemented</h4><div class='count'>258/284</div><div class='label'>91% — Public SDK method with a Route</div></div><div class='gate-card card-overall'><h4>Structurally complete</h4><div class='count'>202/284</div><div class='label'>71% — Example + fixture + model test + Sphinx page present</div></div><div class='gate-card card-overall'><h4>Operator ready</h4><div class='count'>193/284</div><div class='label'>68% — Example uses an approved shared constant</div></div><div class='gate-card card-overall'><h4>Live verified</h4><div class='count'>38/284</div><div class='label'>13% — Committed evidence of a successful run</div></div><div class='gate-card card-overall'><h4>Certified</h4><div class='count'>38/284</div><div class='label'>13% — Every applicable requirement passes</div></div></div><p class='subtitle'>Run evidence: <strong>38</strong> verified · <strong>2</strong> stale · <strong>3</strong> failing · <strong>239</strong> missing &nbsp;|&nbsp; mutating endpoints: <strong>161</strong>, restoration verified: <strong>2</strong></p>
 <h2>Implementation Inventory</h2><p class='subtitle'><em>Routes present in code. "Implemented" means the SDK method exists — it is not a completion or verification signal; see Certification Status above.</em></p><table><tr><th>API Surface</th><th>Total</th><th>Implemented</th><th>Pending</th><th>Not Started</th><th>%</th><th>Progress</th></tr><tr><td><strong>ACPortal</strong></td><td>269</td><td class='done'>269</td><td class='pending'>0</td><td class='not-started'>0</td><td>100%</td><td><div class='progress-bar'><div class='seg-done' style='width:100.0%'></div><div class='seg-pending' style='width:0.0%'></div><div class='seg-ns' style='width:0.0%'></div></div></td></tr>
 <tr><td><strong>Catalog</strong></td><td>27</td><td class='done'>27</td><td class='pending'>0</td><td class='not-started'>0</td><td>100%</td><td><div class='progress-bar'><div class='seg-done' style='width:100.0%'></div><div class='seg-pending' style='width:0.0%'></div><div class='seg-ns' style='width:0.0%'></div></div></td></tr>
@@ -685,11 +685,13 @@ code { background: #f0f0f0; padding: 1px 4px; border-radius: 2px;
 <tr><td class='col-method'>GET</td><td class='col-path'>/job/{jobDisplayId}/form/shipments</td><td>shipments</td><td><code>api.jobs.form.shipments</code></td><td>list[ShipmentFormPlan]</td><td><span class='badge badge-done'>yes</span></td><td><span class='badge badge-done'>yes</span></td><td><span class='badge badge-pass' title=''>pass 2026-08-23</span></td><td><span class='badge badge-done'>yes</span></td></tr>
 <tr><td class='col-method'>GET</td><td class='col-path'>/job/{jobDisplayId}/form/usar/editable</td><td>usar_editable</td><td><code>api.jobs.form.usar_editable</code></td><td>EditableFormContent</td><td><span class='badge badge-done'>yes</span></td><td><span class='badge badge-done'>yes</span></td><td><span class='badge badge-notrun' title=''>not run</span></td><td><span class='badge badge-done'>yes</span></td></tr>
 </table>
-<h3>jobs.freight_providers (8 methods)</h3>
+<h3>jobs.freight_providers (10 methods)</h3>
 <p>Path root: <code>/job</code></p>
 <h4>Helpers</h4>
 <table><tr><th>Method</th><th>Python Path</th><th>Doc</th><th>Ex</th><th>CLI</th></tr>
 <tr><td>list</td><td><code>api.jobs.freight_providers.list</code></td><td><span class='badge badge-done'>yes</span></td><td><span class='badge badge-ns'>no</span></td><td><span class='badge badge-done'>yes</span></td></tr>
+<tr><td>mark_selected</td><td><code>api.jobs.freight_providers.mark_selected</code></td><td><span class='badge badge-done'>yes</span></td><td><span class='badge badge-ns'>no</span></td><td><span class='badge badge-done'>yes</span></td></tr>
+<tr><td>save_new_final_override</td><td><code>api.jobs.freight_providers.save_new_final_override</code></td><td><span class='badge badge-done'>yes</span></td><td><span class='badge badge-ns'>no</span></td><td><span class='badge badge-done'>yes</span></td></tr>
 </table>
 <h4>freightproviders (7 methods)</h4>
 <table><tr><th>HTTP</th><th>Path</th><th>Method</th><th>Python Path</th><th>Return</th><th>Doc</th><th>Ex</th><th>Run</th><th>CLI</th></tr>

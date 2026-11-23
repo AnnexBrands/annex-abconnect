@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Any, List, Optional
 from uuid import UUID
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from ab.api.models.base import RequestModel, ResponseModel
 
@@ -48,6 +48,18 @@ class DashboardItem(ResponseModel):
     # int that happened to arrive as text. Kept as the string the API sends
     # rather than coerced, which would have to invent a reading for "2.".
     step: Optional[str] = Field(None, description="Workflow step label")
+
+    @field_validator("step", mode="before")
+    @classmethod
+    def _step_as_label(cls, value: Any) -> Any:
+        # Some grid views (19, 28 and 49 on 8_01 staging) send the step as a JSON
+        # number. It is the same label, so it is kept as text, unpadded.
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)):
+            return str(int(value)) if float(value).is_integer() else str(value)
+        return value
+
     ship_by: Optional[datetime] = Field(None, alias="shipBy", description="Ship-by date-time")
     expedite: Optional[str] = Field(None, description="Expedite flag")
     note: Optional[str] = Field(None, description="Note")

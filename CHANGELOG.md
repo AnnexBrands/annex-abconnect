@@ -10,6 +10,10 @@ Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
 (server `release` through 2026-11-20; contract taken from the staging Swagger).
 
 ### Fixed
+- `dashboard.get`: grid views that send `step` as a number (19, 28 and 49 on 8_01
+  staging) no longer fail validation; the value is kept as its text label.
+- An error response with no body now names the call
+  (`HTTP 500: empty response body from GET /api/dashboard`) instead of `HTTP 500: `.
 
 - `jobs.handling_units.update` and `manage` no longer wipe what the caller did not
   mention. The server overwrites a unit with the request: an omitted scalar becomes

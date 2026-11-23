@@ -10,6 +10,7 @@ from __future__ import annotations
 import logging
 import time
 from typing import Any, Callable, Dict, Mapping, Optional, Union
+from urllib.parse import urlsplit
 
 import requests
 
@@ -335,6 +336,12 @@ class HttpClient:
                 message = error_info.get("message", resp.text)
             except Exception:
                 message = resp.text
+            if not (message or "").strip():
+                # Some server failures (an unhandled 500, for one) carry no body.
+                # Name the call so the error is not just "HTTP 500: ".
+                method = getattr(resp.request, "method", None) or "request"
+                path = urlsplit(getattr(resp, "url", "") or "").path
+                message = f"empty response body from {method} {path}".rstrip()
             raise RequestError(resp.status_code, message)
 
         content_type = resp.headers.get("Content-Type", "").lower()

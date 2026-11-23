@@ -4,7 +4,7 @@ All notable changes to `annex-abconnect` are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/) (pre-1.0: minor/patch
 per 0.x pragmatics). The package is imported as `ab`.
 
-## [0.3.1] - Unreleased
+## [0.3.1] - 2026-11-23
 
 Follows the ABConnect 8_01 handling-unit changes made on the server after 0.3.0
 (server `release` through 2026-11-20; contract taken from the staging Swagger).
